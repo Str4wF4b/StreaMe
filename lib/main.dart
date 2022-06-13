@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:stream_me/android/app/src/view/loginpage.dart';
+import 'android/app/src/view/loginpage.dart';
 
 void main() {
   runApp(const MyApp());
@@ -31,8 +31,6 @@ class MyApp extends StatelessWidget {
   }
 }
 
-class LoginPage {
-}
 
 /*class MyHomePage extends StatefulWidget {
   const MyHomePage({Key? key, required this.title}) : super(key: key);
