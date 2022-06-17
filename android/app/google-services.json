@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "78552792222",
+    "project_id": "streame-9d137",
+    "storage_bucket": "streame-9d137.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:78552792222:android:b2ee8f6143930c51b78f8f",
+        "android_client_info": {
+          "package_name": "com.example.stream_me"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "78552792222-5dti9ads3t4nkkoeul0ct6e2nci94idq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCNCuzxaf-hBEQGXsCUimCgdpbxaS9oFmg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "78552792222-5dti9ads3t4nkkoeul0ct6e2nci94idq.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
