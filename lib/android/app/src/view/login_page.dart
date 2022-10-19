@@ -60,6 +60,10 @@ class LoginPageState extends State<LoginPage> {
 // TODO: Move functionality to controller (separate the code into MVC pattern)
 // TODO: Connect with Firebase/Firestore DB (https://github.com/NearHuscarl/flutter_login/issues/162#issuecomment-869908814)
 
+
+// TODO: Move functionality to controller (separate the code into MVC pattern)
+// TODO: Connect with Firebase/Firestore DB (https://github.com/NearHuscarl/flutter_login/issues/162#issuecomment-869908814)
+
   @override
   Widget build(BuildContext context) {
     return FlutterLogin(
