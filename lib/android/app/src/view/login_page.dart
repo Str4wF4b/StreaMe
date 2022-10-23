@@ -14,51 +14,6 @@ class LoginPage extends StatefulWidget {
 
 class LoginPageState extends State<LoginPage> {
   final LoginController logCon = LoginController();
-/*
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            TextField(
-
-            ),
-            Text(widget.subtitle),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-            children: <Widget>[
-              FloatingActionButton(onPressed: () {
-                setState(() {
-                  logCon.decrementCounter;
-                });
-              },
-              tooltip: "Decrement",
-              child: const Icon(Icons.remove)),
-              Text(logCon!=null ? '${logCon.counter}' : "Hello"),
-
-              FloatingActionButton(onPressed: () {
-                setState(() {
-                  logCon.incrementCounter;
-                });
-              },
-              tooltip: "Increment",
-              child: const Icon(Icons.add))
-            ],
-          )],
-        )
-      )
-    );
-  }
-  */
-
-
-// TODO: Move functionality to controller (separate the code into MVC pattern)
-// TODO: Connect with Firebase/Firestore DB (https://github.com/NearHuscarl/flutter_login/issues/162#issuecomment-869908814)
 
 
 // TODO: Move functionality to controller (separate the code into MVC pattern)
