@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
 import '../controller/login_controller.dart';
-import 'app_bar.dart';
+import 'home_page.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
@@ -63,7 +63,7 @@ class LoginPageState extends State<LoginPage> {
         }
         //return _signupUser(signupData);
       },
-      onSubmitAnimationCompleted: () => Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => MovieAppBar(title: "StreaMe",))),
+      onSubmitAnimationCompleted: () => Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const HomePage())),
       /*onSubmitAnimationCompleted: () {
         Navigator.of(context).pushReplacement(FadePageRoute(
           builder: (context) => const DashboardScreen(),
