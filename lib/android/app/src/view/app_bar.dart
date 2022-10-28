@@ -4,10 +4,11 @@ import 'package:stream_me/android/app/src/view/favourites_page.dart';
 import 'package:stream_me/android/app/src/view/help.dart';
 
 class MovieAppBar extends StatefulWidget {
-  const MovieAppBar({Key? key, required this.title}) : super(key: key);
+  const MovieAppBar({Key? key, required this.title, required this.body}) : super(key: key);
 
   final String title;
   final Color backgroundColor = const Color.fromRGBO(38, 35, 35, 1.0);
+  final Widget body;
 
   @override
   State<MovieAppBar> createState() => _MovieAppBarState();
@@ -58,26 +59,7 @@ class _MovieAppBarState extends State<MovieAppBar> {
             ),
           ),
         ),
-        actions: <Widget>[
-          /*CircleAvatar(
-          radius: 20,
-          foregroundColor: Colors.black,
-          backgroundColor: Colors.white,
-          child: IconButton(
-            icon: const Icon(Icons.person),
-            onPressed: () {
-              setState(() {
-                //TODO: function that does something
-              });
-            },
-          ),
-        ),*/
-          /*TextButton(
-          style: TextButton.styleFrom(foregroundColor: Colors.white),
-          onPressed: () {
-          },
-          child: Icon(Icons.menu),
-        ),*/
+        actions: const <Widget>[
         ],
       ),
       endDrawer: Drawer(
@@ -92,6 +74,7 @@ class _MovieAppBarState extends State<MovieAppBar> {
           ),
         ),
       ),
+      body: widget.body,
     );
   }
 
@@ -111,19 +94,19 @@ class _MovieAppBarState extends State<MovieAppBar> {
     padding: const EdgeInsetsDirectional.fromSTEB(6.0, 8.0, 6.0, 0.0),
     child: Wrap(
         children: [
-          buildListItems(Icons.travel_explore_rounded, "Explore", ExplorePage()),
+          buildListItems(Icons.travel_explore_rounded, "Explore", const ExplorePage()),
           const Divider(
             color: Colors.white,
           ),
-          buildListItems(Icons.local_movies_outlined, "My Movies", FavouritesPage()),
+          buildListItems(Icons.local_movies_outlined, "My Movies", const FavouritesPage()),
           const Divider(
             color: Colors.white,
           ),
-          buildListItems(Icons.movie_outlined, "My Series", FavouritesPage()),
+          buildListItems(Icons.movie_outlined, "My Series", const FavouritesPage()),
           const Divider(
             color: Colors.white,
           ),
-          buildListItems(Icons.help_outline, "Help", HelpPage()),
+          buildListItems(Icons.help_outline, "Help", const HelpPage()),
         ]),
   );
 
