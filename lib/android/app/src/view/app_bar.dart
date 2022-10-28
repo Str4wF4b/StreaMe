@@ -1,4 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:stream_me/android/app/src/view/explore_page.dart';
+import 'package:stream_me/android/app/src/view/favourites_page.dart';
+import 'package:stream_me/android/app/src/view/help.dart';
 
 class MovieAppBar extends StatefulWidget {
   const MovieAppBar({Key? key, required this.title}) : super(key: key);
@@ -18,44 +21,45 @@ class _MovieAppBarState extends State<MovieAppBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-        appBar: AppBar(
-      title: Text(widget.title),
-      centerTitle: true,
-      backgroundColor: widget.backgroundColor,
-      shape: const Border(
-          //border line under AppBar
-          bottom: BorderSide(
-        color: Colors.white,
-        width: 2.0,
-      )),
-      leading: Padding(
-        padding: const EdgeInsetsDirectional.fromSTEB(10.0, 5.0, 5.0, 7.0),
-        child: CircleAvatar(
-          radius: 20,
-          foregroundColor: Colors.black,
-          backgroundColor: Colors.white,
-          child: IconButton(
-            icon: const Icon(Icons.person),
-            onPressed: () {
-              setState(() {
-                showGeneralDialog(
-                  context: context,
-                  barrierColor: widget.backgroundColor,
-                  // Background color
-                  barrierDismissible: false,
-                  barrierLabel: 'Dialog',
-                  transitionDuration: const Duration(milliseconds: 350),
-                  pageBuilder: (_, __, ___) {
-                    return EditProfile(backgroundColor: widget.backgroundColor);
-                  },
-                );
-              });
-            },
+      appBar: AppBar(
+        title: Text(widget.title),
+        centerTitle: true,
+        backgroundColor: widget.backgroundColor,
+        shape: const Border(
+            //border line under AppBar
+            bottom: BorderSide(
+          color: Colors.white,
+          width: 2.0,
+        )),
+        leading: Padding(
+          padding: const EdgeInsetsDirectional.fromSTEB(10.0, 5.0, 5.0, 7.0),
+          child: CircleAvatar(
+            radius: 20,
+            foregroundColor: Colors.black,
+            backgroundColor: Colors.white,
+            child: IconButton(
+              icon: const Icon(Icons.person),
+              onPressed: () {
+                setState(() {
+                  showGeneralDialog(
+                    context: context,
+                    barrierColor: widget.backgroundColor,
+                    // Background color
+                    barrierDismissible: false,
+                    barrierLabel: 'Dialog',
+                    transitionDuration: const Duration(milliseconds: 350),
+                    pageBuilder: (_, __, ___) {
+                      return EditProfile(
+                          backgroundColor: widget.backgroundColor);
+                    },
+                  );
+                });
+              },
+            ),
           ),
         ),
-      ),
-      actions: <Widget>[
-        /*CircleAvatar(
+        actions: <Widget>[
+          /*CircleAvatar(
           radius: 20,
           foregroundColor: Colors.black,
           backgroundColor: Colors.white,
@@ -68,13 +72,78 @@ class _MovieAppBarState extends State<MovieAppBar> {
             },
           ),
         ),*/
-        TextButton(
+          /*TextButton(
           style: TextButton.styleFrom(foregroundColor: Colors.white),
-          onPressed: () {},
-          child: const Icon(Icons.menu),
+          onPressed: () {
+          },
+          child: Icon(Icons.menu),
+        ),*/
+        ],
+      ),
+      endDrawer: Drawer(
+        backgroundColor: widget.backgroundColor,
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget>[
+              buildHeader(context),
+              buildMenuItems(context),
+            ],
+          ),
         ),
-      ],
-    ));
+      ),
+    );
+  }
+
+  /**
+   * Function that builds the header space of the navigation drawer
+   */
+  Widget buildHeader(BuildContext context) => Container(
+        padding: EdgeInsets.only(
+          top: MediaQuery.of(context).padding.top,
+        ),
+      );
+
+  /**
+   * Function that builds the elements of the navigation drawer
+   */
+  Widget buildMenuItems(BuildContext context) => Container(
+    padding: const EdgeInsetsDirectional.fromSTEB(6.0, 8.0, 6.0, 0.0),
+    child: Wrap(
+        children: [
+          buildListItems(Icons.travel_explore_rounded, "Explore", ExplorePage()),
+          const Divider(
+            color: Colors.white,
+          ),
+          buildListItems(Icons.local_movies_outlined, "My Movies", FavouritesPage()),
+          const Divider(
+            color: Colors.white,
+          ),
+          buildListItems(Icons.movie_outlined, "My Series", FavouritesPage()),
+          const Divider(
+            color: Colors.white,
+          ),
+          buildListItems(Icons.help_outline, "Help", HelpPage()),
+        ]),
+  );
+
+  /**
+   * Function that determines the style of an element of the navigation drawer
+   */
+  ListTile buildListItems(IconData icon, String label, StatefulWidget widget) {
+    return ListTile(
+      leading: Icon(
+        icon,
+        color: Colors.white,
+      ),
+      title: Text(
+          label,
+          style: const TextStyle(
+            color: Colors.white,
+            fontSize: 15,
+          ),),
+      onTap: () => Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => widget)),
+    );
   }
 }
 
@@ -160,7 +229,6 @@ class EditProfilePage extends StatefulWidget {
 
 class _EditProfilePageState extends State<EditProfilePage> {
   bool showPassword = false;
-
 
   @override
   Widget build(BuildContext context) {
@@ -261,11 +329,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
               buildTextFields("E-Mail", "Enter new E-Mail address here", false),
               buildTextFields("Password", "Enter new Password here", true),
               Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween, //setting space between buttons cancel and save
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                //setting space between buttons cancel and save
                 children: [
                   Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(16.0, 10.0, 0.0, 0.0),
-                    child: OutlinedButton( //styling of cancel button
+                    padding: const EdgeInsetsDirectional.fromSTEB(
+                        16.0, 10.0, 0.0, 0.0),
+                    child: OutlinedButton(
+                      //styling of cancel button
                       style: OutlinedButton.styleFrom(
                         backgroundColor: Colors.blueGrey,
                         shape: RoundedRectangleBorder(
@@ -274,7 +345,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         padding: const EdgeInsets.symmetric(horizontal: 50),
                       ),
                       onPressed: () {
-                        //TODO: Delete input
+                        //TODO: Delete input function
                       },
                       child: const Text(
                         "Cancel",
@@ -287,8 +358,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     ),
                   ),
                   Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(0.0, 10.0, 16.0, 0.0),
-                    child: ElevatedButton( //styling of save button
+                    padding: const EdgeInsetsDirectional.fromSTEB(
+                        0.0, 10.0, 16.0, 0.0),
+                    child: ElevatedButton(
+                        //styling of save button
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.green,
                           shape: RoundedRectangleBorder(
@@ -324,7 +397,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       child: TextField(
         //text fields for input
         style: const TextStyle(
-          //style of written of input
+          //style of written input
           color: Colors.blueAccent,
         ),
         obscureText: isPassword ? showPassword : false,
@@ -334,7 +407,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 ? IconButton(
                     onPressed: () {
                       setState(() {
-                        showPassword = !showPassword; //switch between showing and not showing password
+                        showPassword =
+                            !showPassword; //switch between showing and not showing password
                       });
                     },
                     icon: const Icon(
