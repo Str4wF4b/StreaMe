@@ -2,14 +2,14 @@ import 'package:flutter/material.dart';
 
 import 'app_bar.dart';
 
-class FavouritesPage extends StatefulWidget {
-  const FavouritesPage({Key? key}) : super(key: key);
+class HelpPage extends StatefulWidget {
+  const HelpPage({Key? key}) : super(key: key);
 
   @override
-  State<FavouritesPage> createState() => _FavouritesPageState();
+  State<HelpPage> createState() => _HelpPageState();
 }
 
-class _FavouritesPageState extends State<FavouritesPage> {
+class _HelpPageState extends State<HelpPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -26,4 +26,3 @@ class _FavouritesPageState extends State<FavouritesPage> {
     );
   }
 }
-
