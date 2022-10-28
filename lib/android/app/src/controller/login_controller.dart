@@ -4,8 +4,7 @@ import 'package:stream_me/android/app/src/model/login_model.dart';
 
 class LoginController extends ControllerMVC {
   factory LoginController() {
-    if (_this == null) _this = LoginController._();
-    return _this;
+    return  LoginController._();
   }
 
   static LoginController _this = LoginController();

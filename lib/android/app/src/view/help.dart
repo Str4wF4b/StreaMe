@@ -2,19 +2,19 @@ import 'package:flutter/material.dart';
 import 'app_bar.dart';
 import 'home_page.dart';
 
-class FavouritesPage extends StatefulWidget {
-  const FavouritesPage({Key? key}) : super(key: key);
+class HelpPage extends StatefulWidget {
+  const HelpPage({Key? key}) : super(key: key);
 
   final Color backgroundColor = const Color.fromRGBO(38, 35, 35, 1.0);
 
   @override
-  State<FavouritesPage> createState() => _FavouritesPageState();
+  State<HelpPage> createState() => _HelpPageState();
 }
 
-class _FavouritesPageState extends State<FavouritesPage> {
+class _HelpPageState extends State<HelpPage> {
   @override
   Widget build(BuildContext context) {
-    return MovieAppBar(title: "Favourites", body: buildBody(),);
+    return MovieAppBar(title: "Help", body: buildBody(),);
   }
 
   Widget buildBody() {
@@ -40,4 +40,3 @@ class _FavouritesPageState extends State<FavouritesPage> {
     );
   }
 }
-
