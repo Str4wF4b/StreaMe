@@ -15,7 +15,8 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return const MaterialApp(
-      home: MovieAppBar(title: 'StreaMe',),
+      //home: MovieAppBar(title: 'StreaMe',),
+      home: LoginPage(),
       /*home: const MyHomePage(title: 'Flutter Demo Home Page'),*/
     );
   }
