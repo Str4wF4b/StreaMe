@@ -1,10 +1,16 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:stream_me/android/app/src/view/explore_page.dart';
 import 'package:stream_me/android/app/src/view/favourites_page.dart';
 import 'package:stream_me/android/app/src/view/help.dart';
 
+import 'home_page.dart';
+
 class MovieAppBar extends StatefulWidget {
-  const MovieAppBar({Key? key, required this.title, required this.body}) : super(key: key);
+  const MovieAppBar({Key? key, required this.title, required this.body})
+      : super(key: key);
 
   final String title;
   final Color backgroundColor = const Color.fromRGBO(38, 35, 35, 1.0);
@@ -59,8 +65,7 @@ class _MovieAppBarState extends State<MovieAppBar> {
             ),
           ),
         ),
-        actions: const <Widget>[
-        ],
+        actions: const <Widget>[],
       ),
       endDrawer: Drawer(
         backgroundColor: widget.backgroundColor,
@@ -91,24 +96,31 @@ class _MovieAppBarState extends State<MovieAppBar> {
    * Function that builds the elements of the navigation drawer
    */
   Widget buildMenuItems(BuildContext context) => Container(
-    padding: const EdgeInsetsDirectional.fromSTEB(6.0, 8.0, 6.0, 0.0),
-    child: Wrap(
-        children: [
-          buildListItems(Icons.travel_explore_rounded, "Explore", const ExplorePage()),
+        padding: const EdgeInsetsDirectional.fromSTEB(6.0, 8.0, 6.0, 0.0),
+        child: Wrap(children: [
+          buildListItems(
+              Icons.home, "Home", const HomePage()),
           const Divider(
             color: Colors.white,
           ),
-          buildListItems(Icons.local_movies_outlined, "My Movies", const FavouritesPage()),
+          buildListItems(
+              Icons.travel_explore_rounded, "Explore", const ExplorePage()),
           const Divider(
             color: Colors.white,
           ),
-          buildListItems(Icons.movie_outlined, "My Series", const FavouritesPage()),
+          buildListItems(
+              Icons.local_movies_outlined, "My Movies", const FavouritesPage()),
+          const Divider(
+            color: Colors.white,
+          ),
+          buildListItems(
+              Icons.movie_outlined, "My Series", const FavouritesPage()),
           const Divider(
             color: Colors.white,
           ),
           buildListItems(Icons.help_outline, "Help", const HelpPage()),
         ]),
-  );
+      );
 
   /**
    * Function that determines the style of an element of the navigation drawer
@@ -120,12 +132,14 @@ class _MovieAppBarState extends State<MovieAppBar> {
         color: Colors.white,
       ),
       title: Text(
-          label,
-          style: const TextStyle(
-            color: Colors.white,
-            fontSize: 15,
-          ),),
-      onTap: () => Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => widget)),
+        label,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 15,
+        ),
+      ),
+      onTap: () => Navigator.of(context)
+          .pushReplacement(MaterialPageRoute(builder: (context) => widget)),
     );
   }
 }
@@ -212,28 +226,30 @@ class EditProfilePage extends StatefulWidget {
 
 class _EditProfilePageState extends State<EditProfilePage> {
   bool showPassword = false;
+  PickedFile? _imageFile;
+  final ImagePicker _picker = ImagePicker();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       /*appBar: AppBar(
-          backgroundColor: widget.backgroundColor,
-          leading: IconButton(
-            icon: Icon(
-              Icons.arrow_back,
-              color: Colors.white,
+            backgroundColor: widget.backgroundColor,
+            leading: IconButton(
+              icon: Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+              ),
+              onPressed: () {},
             ),
-            onPressed: () {},
-          ),
-          actions: [
-            IconButton(
-                onPressed: () {},
-                icon: Icon(
-                  Icons.settings,
-                  color: Colors.white,)
-            )
-          ],
-        ),*/
+            actions: [
+              IconButton(
+                  onPressed: () {},
+                  icon: Icon(
+                    Icons.settings,
+                    color: Colors.white,)
+              )
+            ],
+          ),*/
       body: Container(
         color: widget.backgroundColor,
         padding: const EdgeInsetsDirectional.fromSTEB(0.0, 5.0, 0.0, 0.0),
@@ -266,12 +282,15 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         ],
                         shape: BoxShape.circle,
                         //profile picture in circle shape
-                        image: const DecorationImage(
+                        image: DecorationImage(
                             //default profile picture
                             fit: BoxFit.cover,
-                            image:
-                                AssetImage("assets/blank-profile-picture.png")),
+                            image: selectImage()),
                       ),
+                      /*child: CircleAvatar(
+                        radius: 130.0,
+                        backgroundImage: selectImage(),
+                      ),*/
                     ),
                     Positioned(
                         //positioning the "change picture" item
@@ -295,9 +314,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             shape: BoxShape.circle,
                             color: Colors.green,
                           ),
-                          child: const Icon(
-                            Icons.edit,
-                            color: Colors.white,
+                          child: InkWell(
+                            onTap: () {
+                              showModalBottomSheet(
+                                context: context,
+                                builder: ((builder) => bottomProfileSheet()),
+                                backgroundColor: widget.backgroundColor,
+                              );
+                            },
+                            child: const Icon(
+                              Icons.edit,
+                              color: Colors.white,
+                            ),
                           ),
                         ))
                   ],
@@ -419,4 +447,104 @@ class _EditProfilePageState extends State<EditProfilePage> {
       ),
     );
   }
+
+  Widget bottomProfileSheet() {
+    return Container(
+      height: 100.0,
+      width: MediaQuery.of(context).size.width,
+      margin: const EdgeInsets.symmetric(
+        horizontal: 20.0,
+        vertical: 20.0,
+      ),
+      child: Column(
+        children: <Widget>[
+          const Text(
+            'Choose photo from ...',
+            style: TextStyle(
+              fontSize: 20,
+              color: Colors.white,
+            ),
+          ),
+          const SizedBox(
+            //spacing
+            height: 20.0,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsetsDirectional.fromSTEB(16.0, 5.0, 0.0, 0.0),
+                child: TextButton.icon(
+                  icon: const Icon(
+                    Icons.camera_alt,
+                    size: 30,
+                    color: Colors.cyan,
+                  ),
+                  onPressed: () {
+                    takePhoto(ImageSource.camera);
+                  },
+                  label: const Text(
+                    'Camera',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.cyan,
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsetsDirectional.fromSTEB(0.0, 5.0, 16.0, 0.0),
+                child: TextButton.icon(
+                  icon: const Icon(
+                    Icons.image,
+                    size: 30,
+                    color: Colors.cyan,
+                  ),
+                  onPressed: () {
+                    takePhoto(ImageSource.gallery);
+                  },
+                  label: const Text(
+                    'Gallery',
+                    style: TextStyle(
+                      fontSize: 20,
+                      color: Colors.cyan,
+                    ),
+                  ),
+                ),
+              )
+            ],
+          )
+        ],
+      ),
+    );
+  }
+
+  void takePhoto(ImageSource source) async {
+    final pickedFile = await _picker.getImage(source: source); //TODO: maybe change function getImage to pickImage if it works
+    setState(() {
+      _imageFile = pickedFile;
+    });
+  }
+
+  ImageProvider<Object> selectImage() {
+    return _imageFile == null
+        ? const AssetImage(
+        "assets/blank-profile-picture.png")
+        : FileImage(File(_imageFile!.path)) as ImageProvider;
+  }
+
+/*  Future<bool?> showCancelDialog() => showDialog<bool>(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: const Text('Are you sure?'),
+          actions: [
+            TextButton(
+                onPressed: () => Navigator.pop(context, false),
+                child: const Text('Yes')),
+            TextButton(
+                onPressed: () => Navigator.pop(context, true),
+                child: const Text('No')),
+          ],
+        ),
+      );*/
 }
