@@ -98,8 +98,7 @@ class _MovieAppBarState extends State<MovieAppBar> {
   Widget buildMenuItems(BuildContext context) => Container(
         padding: const EdgeInsetsDirectional.fromSTEB(6.0, 8.0, 6.0, 0.0),
         child: Wrap(children: [
-          buildListItems(
-              Icons.home, "Home", const HomePage()),
+          buildListItems(Icons.home, "Home", const HomePage()),
           const Divider(
             color: Colors.white,
           ),
@@ -161,52 +160,36 @@ class _EditProfileState extends State<EditProfile> {
       backgroundColor: widget.backgroundColor,
       body: Column(
         children: <Widget>[
-          Expanded(
-            flex: 1,
-            child: SizedBox.expand(
-              child: Row(
-                children: <Widget>[
-                  const Padding(
-                      padding:
-                          EdgeInsetsDirectional.fromSTEB(16.0, 90.0, 0.0, 0.0),
-                      child: Text(
-                        "Edit Profile",
-                        style: TextStyle(
-                          fontSize: 25,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.white,
-                        ),
-                      )),
-                  const Spacer(),
-                  Align(
-                      alignment: Alignment.centerRight,
-                      child: Padding(
-                        padding: const EdgeInsetsDirectional.fromSTEB(
-                            0.0, 20.0, 5.0, 0.0),
-                        /*child: Ink(
-                      decoration: ShapeDecoration(
-                        color: Colors.red.withOpacity(0.3),
-                        shape: const CircleBorder(),
-                      ),*/
-                        child: IconButton(
-                          //alignment: Alignment.centerRight,
-                          onPressed: () => Navigator.pop(context),
-                          icon: const Icon(
-                            Icons.close,
-                            color: Colors.white,
-                            size: 32,
-                          ),
-                        ),
-                        //), Ink
-                      )),
-                ],
+          AppBar(
+              title: const Padding(
+                padding: EdgeInsets.fromLTRB(0.0, 0.0, 0.0, 0.0),
+                child: Text(
+                  "Edit Profile",
+                  style: TextStyle(
+                    fontWeight: FontWeight.w500,
+                    fontSize: 22,
+                  ),
+                ),
               ),
-            ),
-          ),
+              backgroundColor: widget.backgroundColor,
+              automaticallyImplyLeading: false,
+              actions: <Widget>[
+                IconButton(
+                  //alignment: Alignment.centerRight,
+                  onPressed: () => Navigator.pop(context),
+                  icon: const Icon(
+                    Icons.close,
+                    color: Colors.white,
+                    size: 32,
+                  ),
+                ),
+              ]),
           Expanded(
             flex: 5,
             child: SizedBox.expand(
-              child: EditProfilePage(backgroundColor: widget.backgroundColor),
+              child: EditProfilePage(
+                backgroundColor: widget.backgroundColor,
+              ),
             ),
           ),
         ],
@@ -473,7 +456,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[
               Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(16.0, 5.0, 0.0, 0.0),
+                padding:
+                    const EdgeInsetsDirectional.fromSTEB(16.0, 5.0, 0.0, 0.0),
                 child: TextButton.icon(
                   icon: const Icon(
                     Icons.camera_alt,
@@ -493,7 +477,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 ),
               ),
               Padding(
-                padding: const EdgeInsetsDirectional.fromSTEB(0.0, 5.0, 16.0, 0.0),
+                padding:
+                    const EdgeInsetsDirectional.fromSTEB(0.0, 5.0, 16.0, 0.0),
                 child: TextButton.icon(
                   icon: const Icon(
                     Icons.image,
@@ -520,7 +505,9 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   void takePhoto(ImageSource source) async {
-    final pickedFile = await _picker.getImage(source: source); //TODO: maybe change function getImage to pickImage if it works
+    final pickedFile = await _picker.getImage(
+        source:
+            source); //TODO: maybe change function getImage to pickImage if it works
     setState(() {
       _imageFile = pickedFile;
     });
@@ -528,8 +515,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   ImageProvider<Object> selectImage() {
     return _imageFile == null
-        ? const AssetImage(
-        "assets/blank-profile-picture.png")
+        ? const AssetImage("assets/blank-profile-picture.png")
         : FileImage(File(_imageFile!.path)) as ImageProvider;
   }
 
