@@ -5,7 +5,9 @@ import 'package:image_picker/image_picker.dart';
 import 'package:stream_me/android/app/src/view/explore_page.dart';
 import 'package:stream_me/android/app/src/view/favourites_page.dart';
 import 'package:stream_me/android/app/src/view/help.dart';
+import 'package:stream_me/android/app/src/view/search_page.dart';
 
+import 'filter_page.dart';
 import 'home_page.dart';
 
 class MovieAppBar extends StatefulWidget {
@@ -32,12 +34,13 @@ class _MovieAppBarState extends State<MovieAppBar> {
         title: Text(widget.title),
         centerTitle: true,
         backgroundColor: widget.backgroundColor,
-        shape: const Border(
+        elevation: 0.0,
+        /*shape: const Border(
             //border line under AppBar
             bottom: BorderSide(
           color: Colors.white,
           width: 2.0,
-        )),
+        )),*/
         leading: Padding(
           padding: const EdgeInsetsDirectional.fromSTEB(10.0, 5.0, 5.0, 7.0),
           child: CircleAvatar(
@@ -79,7 +82,63 @@ class _MovieAppBarState extends State<MovieAppBar> {
           ),
         ),
       ),
+      bottomNavigationBar: BottomAppBar(
+        color: widget.backgroundColor,
+        child: Container(
+          //color: Color.fromRGBO(180, 180, 180, 1.0),
+          height: 52.0,
+          decoration: const BoxDecoration(
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(18.0),
+              topRight: Radius.circular(18.0),
+            ),
+            color: Color.fromRGBO(200, 200, 200, 1.0),
+          ),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: <Widget>[ //the icons of the BottomAppBar
+              addBottomIcons(Icons.search_outlined, "Search", const EdgeInsets.fromLTRB(20.0, 0.0, 0.0, 0.0), const SearchPage()),
+              addBottomIcons(Icons.favorite, "Saved", EdgeInsets.zero, const FavouritesPage()),
+              addBottomIcons(Icons.filter_list_outlined, "Filter", const EdgeInsets.fromLTRB(0.0, 0.0, 20.0, 0.0), const FilterPage()),
+            ],
+          ),
+        ),
+      ),
       body: widget.body,
+    );
+  }
+
+  /**
+   * Function that builds the icons of the BottomAppBar
+   */
+  Padding addBottomIcons(IconData icon, String iconLabel, EdgeInsets insets, StatefulWidget page) {
+    return Padding(
+      padding: insets,
+      child: SizedBox.fromSize(
+        size: const Size(66, 66),
+        child: ClipOval(
+          child: Material(
+            color: const Color.fromRGBO(200, 200, 200, 1.0),
+            child: InkWell(
+              onTap: () => Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => page)),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Icon(
+                    icon,
+                    color: widget.backgroundColor,), // <-- Icon
+                  Text(
+                      iconLabel,
+                      style: TextStyle(
+                        color: widget.backgroundColor,
+                        fontSize: 12,
+                      )), // <-- Text
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
     );
   }
 
@@ -215,24 +274,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      /*appBar: AppBar(
-            backgroundColor: widget.backgroundColor,
-            leading: IconButton(
-              icon: Icon(
-                Icons.arrow_back,
-                color: Colors.white,
-              ),
-              onPressed: () {},
-            ),
-            actions: [
-              IconButton(
-                  onPressed: () {},
-                  icon: Icon(
-                    Icons.settings,
-                    color: Colors.white,)
-              )
-            ],
-          ),*/
       body: Container(
         color: widget.backgroundColor,
         padding: const EdgeInsetsDirectional.fromSTEB(0.0, 5.0, 0.0, 0.0),
@@ -270,10 +311,6 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             fit: BoxFit.cover,
                             image: selectImage()),
                       ),
-                      /*child: CircleAvatar(
-                        radius: 130.0,
-                        backgroundImage: selectImage(),
-                      ),*/
                     ),
                     Positioned(
                         //positioning the "change picture" item
