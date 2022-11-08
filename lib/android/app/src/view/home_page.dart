@@ -23,12 +23,16 @@ class _HomePageState extends State<HomePage> {
     return Container(
       color: widget.backgroundColor,
       child: const Center(
-        child: Text(
-          "This is your home page",
-          style: TextStyle(
-            fontSize: 35,
-            fontWeight: FontWeight.bold,
-            color: Colors.white,
+        child: Padding(
+          padding: EdgeInsets.all(16.0),
+          child: Text(
+            "This is your home page",
+            style: TextStyle(
+              fontSize: 35,
+              fontWeight: FontWeight.bold,
+              color: Colors.white,
+            ),
+            textAlign: TextAlign.center,
           ),
         ),
       ),
