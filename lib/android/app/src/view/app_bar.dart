@@ -96,10 +96,20 @@ class _MovieAppBarState extends State<MovieAppBar> {
           ),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[ //the icons of the BottomAppBar
-              addBottomIcons(Icons.search_outlined, "Search", const EdgeInsets.fromLTRB(20.0, 0.0, 0.0, 0.0), const SearchPage()),
-              addBottomIcons(Icons.favorite, "Saved", EdgeInsets.zero, const FavouritesPage()),
-              addBottomIcons(Icons.filter_list_outlined, "Filter", const EdgeInsets.fromLTRB(0.0, 0.0, 20.0, 0.0), const FilterPage()),
+            children: <Widget>[
+              //the icons of the BottomAppBar
+              addBottomIcons(
+                  Icons.search_outlined,
+                  "Search",
+                  const EdgeInsets.fromLTRB(20.0, 0.0, 0.0, 0.0),
+                  const SearchPage()),
+              addBottomIcons(Icons.favorite, "Saved", EdgeInsets.zero,
+                  const FavouritesPage()),
+              addBottomIcons(
+                  Icons.filter_list_outlined,
+                  "Filter",
+                  const EdgeInsets.fromLTRB(0.0, 0.0, 20.0, 0.0),
+                  const FilterPage()),
             ],
           ),
         ),
@@ -111,7 +121,8 @@ class _MovieAppBarState extends State<MovieAppBar> {
   /**
    * Function that builds the icons of the BottomAppBar
    */
-  Padding addBottomIcons(IconData icon, String iconLabel, EdgeInsets insets, StatefulWidget page) {
+  Padding addBottomIcons(
+      IconData icon, String iconLabel, EdgeInsets insets, StatefulWidget page) {
     return Padding(
       padding: insets,
       child: SizedBox.fromSize(
@@ -120,15 +131,16 @@ class _MovieAppBarState extends State<MovieAppBar> {
           child: Material(
             color: const Color.fromRGBO(200, 200, 200, 1.0),
             child: InkWell(
-              onTap: () => Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => page)),
+              onTap: () => Navigator.of(context).pushReplacement(
+                  MaterialPageRoute(builder: (context) => page)),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Icon(
                     icon,
-                    color: widget.backgroundColor,), // <-- Icon
-                  Text(
-                      iconLabel,
+                    color: widget.backgroundColor,
+                  ), // <-- Icon
+                  Text(iconLabel,
                       style: TextStyle(
                         color: widget.backgroundColor,
                         fontSize: 12,
