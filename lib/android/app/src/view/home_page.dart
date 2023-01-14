@@ -5,6 +5,8 @@ class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
 
   final Color backgroundColor = const Color.fromRGBO(38, 35, 35, 1.0);
+  final Color middleBackgroundColor = const Color.fromRGBO(
+      44, 40, 40, 1.0);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -21,7 +23,7 @@ class _HomePageState extends State<HomePage> {
 
   Widget buildBody() {
     return Container(
-      color: widget.backgroundColor,
+      color: widget.middleBackgroundColor,
       child: const Center(
         child: Padding(
           padding: EdgeInsets.all(16.0),
