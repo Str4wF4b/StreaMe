@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:stream_me/android/app/src/view/explore_page.dart';
 import 'package:stream_me/android/app/src/view/favourites_page.dart';
 import 'package:stream_me/android/app/src/view/help.dart';
+import 'package:stream_me/android/app/src/view/login_page.dart';
 import 'package:stream_me/android/app/src/view/search_page.dart';
 
 import 'filter_page.dart';
@@ -186,6 +187,10 @@ class _MovieAppBarState extends State<MovieAppBar> {
             color: Colors.white,
           ),
           buildListItems(Icons.help_outline, "Help", const HelpPage()),
+          const Divider(
+            color: Colors.white,
+          ),
+          buildListItems(Icons.logout_outlined, "Logout", const LoginPage()),
         ]),
       );
 
