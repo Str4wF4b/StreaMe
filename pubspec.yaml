@@ -39,6 +39,8 @@ dependencies:
   flutter_login: ^4.0.0
   font_awesome_flutter: ^10.1.0
   image_picker: ^0.8.6
+  firebase_auth: ^4.4.2
+  firebase_core: ^2.10.0
 
 dev_dependencies:
   flutter_test:
