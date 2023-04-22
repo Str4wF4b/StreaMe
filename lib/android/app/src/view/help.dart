@@ -6,6 +6,8 @@ class HelpPage extends StatefulWidget {
   const HelpPage({Key? key}) : super(key: key);
 
   final Color backgroundColor = const Color.fromRGBO(38, 35, 35, 1.0);
+  final Color middleBackgroundColor = const Color.fromRGBO(
+      44, 40, 40, 1.0);
 
   @override
   State<HelpPage> createState() => _HelpPageState();
@@ -19,7 +21,7 @@ class _HelpPageState extends State<HelpPage> {
 
   Widget buildBody() {
     return Container(
-      color: widget.backgroundColor,
+      color: widget.middleBackgroundColor,
       child: Center(
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
