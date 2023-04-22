@@ -567,7 +567,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   ImageProvider<Object> selectImage() {
     return _imageFile == null
-        ? const AssetImage("assets/blank-profile-picture.png")
+        ? const AssetImage("assets/images/blank-profile-picture.png")
         : FileImage(File(_imageFile!.path)) as ImageProvider;
   }
 
