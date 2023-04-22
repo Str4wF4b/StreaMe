@@ -7,6 +7,8 @@ class ExplorePage extends StatefulWidget {
   const ExplorePage({Key? key}) : super(key: key);
 
   final Color backgroundColor = const Color.fromRGBO(38, 35, 35, 1.0);
+  final Color middleBackgroundColor = const Color.fromRGBO(
+      44, 40, 40, 1.0);
 
   @override
   State<ExplorePage> createState() => _ExplorePageState();
@@ -21,7 +23,7 @@ class _ExplorePageState extends State<ExplorePage> {
 
   Widget buildBody() {
   return Container(
-    color: widget.backgroundColor,
+    color: widget.middleBackgroundColor,
     child: Center(
       child: ElevatedButton(
         style: ElevatedButton.styleFrom(

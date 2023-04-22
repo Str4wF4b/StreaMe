@@ -5,6 +5,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:stream_me/android/app/src/view/explore_page.dart';
 import 'package:stream_me/android/app/src/view/favourites_page.dart';
 import 'package:stream_me/android/app/src/view/help.dart';
+import 'package:stream_me/android/app/src/view/login_page.dart';
 import 'package:stream_me/android/app/src/view/search_page.dart';
 
 import 'filter_page.dart';
@@ -16,6 +17,7 @@ class MovieAppBar extends StatefulWidget {
 
   final String title;
   final Color backgroundColor = const Color.fromRGBO(38, 35, 35, 1.0);
+
   final Widget body;
 
   @override
@@ -26,10 +28,12 @@ class MovieAppBar extends StatefulWidget {
  * The part of the AppBar that is the same for every page
  * includes: AppBar overlay, profile changes, menu navigation
  */
+//TODO: make appBar transparent when scrolling
 class _MovieAppBarState extends State<MovieAppBar> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: widget.backgroundColor,
       appBar: AppBar(
         title: Text(widget.title),
         centerTitle: true,
@@ -44,27 +48,30 @@ class _MovieAppBarState extends State<MovieAppBar> {
         leading: Padding(
           padding: const EdgeInsetsDirectional.fromSTEB(10.0, 5.0, 5.0, 7.0),
           child: CircleAvatar(
-            radius: 20,
-            foregroundColor: Colors.black,
             backgroundColor: Colors.white,
-            child: IconButton(
-              icon: const Icon(Icons.person),
-              onPressed: () {
-                setState(() {
-                  showGeneralDialog(
-                    context: context,
-                    barrierColor: widget.backgroundColor,
-                    // Background color
-                    barrierDismissible: false,
-                    barrierLabel: 'Dialog',
-                    transitionDuration: const Duration(milliseconds: 350),
-                    pageBuilder: (_, __, ___) {
-                      return EditProfile(
-                          backgroundColor: widget.backgroundColor);
-                    },
-                  );
-                });
-              },
+            child: CircleAvatar(
+              radius: 19,
+              foregroundColor: Colors.white,
+              backgroundColor: widget.backgroundColor,
+              child: IconButton(
+                icon: const Icon(Icons.person, size: 22),
+                onPressed: () {
+                  setState(() {
+                    showGeneralDialog(
+                      context: context,
+                      barrierColor: widget.backgroundColor,
+                      // Background color
+                      barrierDismissible: false,
+                      barrierLabel: 'Dialog',
+                      transitionDuration: const Duration(milliseconds: 350),
+                      pageBuilder: (_, __, ___) {
+                        return EditProfile(
+                            backgroundColor: widget.backgroundColor);
+                      },
+                    );
+                  });
+                },
+              ),
             ),
           ),
         ),
@@ -87,29 +94,20 @@ class _MovieAppBarState extends State<MovieAppBar> {
         child: Container(
           //color: Color.fromRGBO(180, 180, 180, 1.0),
           height: 52.0,
-          decoration: const BoxDecoration(
+          color: widget.backgroundColor,
+          /*decoration: const BoxDecoration(
             borderRadius: BorderRadius.only(
               topLeft: Radius.circular(18.0),
               topRight: Radius.circular(18.0),
             ),
             color: Color.fromRGBO(200, 200, 200, 1.0),
-          ),
+          ),*/
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              //the icons of the BottomAppBar
-              addBottomIcons(
-                  Icons.search_outlined,
-                  "Search",
-                  const EdgeInsets.fromLTRB(20.0, 0.0, 0.0, 0.0),
-                  const SearchPage()),
-              addBottomIcons(Icons.favorite, "Saved", EdgeInsets.zero,
-                  const FavouritesPage()),
-              addBottomIcons(
-                  Icons.filter_list_outlined,
-                  "Filter",
-                  const EdgeInsets.fromLTRB(0.0, 0.0, 20.0, 0.0),
-                  const FilterPage()),
+            children: <Widget>[ //the icons of the BottomAppBar
+              addBottomIcons(Icons.search_outlined, "Search", const EdgeInsets.fromLTRB(20.0, 0.0, 0.0, 0.0), const SearchPage()),
+              addBottomIcons(Icons.favorite, "Saved", EdgeInsets.zero, const FavouritesPage()),
+              addBottomIcons(Icons.filter_list_outlined, "Filter", const EdgeInsets.fromLTRB(0.0, 0.0, 20.0, 0.0), const FilterPage()),
             ],
           ),
         ),
@@ -121,28 +119,28 @@ class _MovieAppBarState extends State<MovieAppBar> {
   /**
    * Function that builds the icons of the BottomAppBar
    */
-  Padding addBottomIcons(
-      IconData icon, String iconLabel, EdgeInsets insets, StatefulWidget page) {
+  //TODO: make icons selected if selected and unselected if not
+  Padding addBottomIcons(IconData icon, String iconLabel, EdgeInsets insets, StatefulWidget page) {
     return Padding(
       padding: insets,
       child: SizedBox.fromSize(
         size: const Size(66, 66),
         child: ClipOval(
           child: Material(
-            color: const Color.fromRGBO(200, 200, 200, 1.0),
+            //color: const Color.fromRGBO(200, 200, 200, 1.0),
+            color: widget.backgroundColor,
             child: InkWell(
-              onTap: () => Navigator.of(context).pushReplacement(
-                  MaterialPageRoute(builder: (context) => page)),
+              onTap: () => Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => page)),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Icon(
                     icon,
-                    color: widget.backgroundColor,
-                  ), // <-- Icon
-                  Text(iconLabel,
-                      style: TextStyle(
-                        color: widget.backgroundColor,
+                    color: Colors.white,), // <-- Icon
+                  Text(
+                      iconLabel,
+                      style: const TextStyle(
+                        color: Colors.white,
                         fontSize: 12,
                       )), // <-- Text
                 ],
@@ -189,6 +187,10 @@ class _MovieAppBarState extends State<MovieAppBar> {
             color: Colors.white,
           ),
           buildListItems(Icons.help_outline, "Help", const HelpPage()),
+          const Divider(
+            color: Colors.white,
+          ),
+          buildListItems(Icons.logout_outlined, "Logout", const LoginPage()),
         ]),
       );
 
@@ -286,6 +288,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: widget.backgroundColor,
       body: Container(
         color: widget.backgroundColor,
         padding: const EdgeInsetsDirectional.fromSTEB(0.0, 5.0, 0.0, 0.0),
@@ -381,7 +384,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     child: OutlinedButton(
                       //styling of cancel button
                       style: OutlinedButton.styleFrom(
-                        backgroundColor: Colors.blueGrey,
+                        backgroundColor: Colors.red.shade500,
                         shape: RoundedRectangleBorder(
                           borderRadius: BorderRadius.circular(20.0),
                         ),
@@ -564,7 +567,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   ImageProvider<Object> selectImage() {
     return _imageFile == null
-        ? const AssetImage("assets/blank-profile-picture.png")
+        ? const AssetImage("assets/images/blank-profile-picture.png")
         : FileImage(File(_imageFile!.path)) as ImageProvider;
   }
 

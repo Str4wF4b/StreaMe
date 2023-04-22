@@ -6,6 +6,8 @@ class FavouritesPage extends StatefulWidget {
   const FavouritesPage({Key? key}) : super(key: key);
 
   final Color backgroundColor = const Color.fromRGBO(38, 35, 35, 1.0);
+  final Color middleBackgroundColor = const Color.fromRGBO(
+      44, 40, 40, 1.0);
 
   @override
   State<FavouritesPage> createState() => _FavouritesPageState();
@@ -19,7 +21,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
 
   Widget buildBody() {
     return Container(
-      color: widget.backgroundColor,
+      color: widget.middleBackgroundColor,
       child: Center(
         child: ElevatedButton(
           style: ElevatedButton.styleFrom(
