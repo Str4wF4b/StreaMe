@@ -16,7 +16,7 @@ class _HomePageState extends State<HomePage> {
   @override
   Widget build(BuildContext context) {
     return MovieAppBar(
-      title: "Home Page Dummy",
+      title: "Home",
       body: buildBody(),
     );
   }
@@ -24,20 +24,46 @@ class _HomePageState extends State<HomePage> {
   Widget buildBody() {
     return Container(
       color: widget.middleBackgroundColor,
-      child: const Center(
         child: Padding(
-          padding: EdgeInsets.all(16.0),
-          child: Text(
-            "This is your home page",
-            style: TextStyle(
-              fontSize: 35,
-              fontWeight: FontWeight.bold,
-              color: Colors.white,
-            ),
-            textAlign: TextAlign.center,
-          ),
+          padding: const EdgeInsets.all(16.0),
+          child: Row(
+            children: [
+              Column(
+                children: [
+                  //TODO: IconButtons
+                  IconButton(
+                    icon: const Icon(
+                      Icons.travel_explore_rounded,
+                      size: 50,
+                      color: Colors.white,
+                    ), onPressed: () {  },),
+                  IconButton(
+                    icon: const Icon(
+                      Icons.movie_outlined,
+                      size: 50,
+                      color: Colors.white,
+                    ), onPressed: () {  },),
+                ],
+              ),
+              Column(
+                children: [
+                  IconButton(
+                    icon: const Icon(
+                      Icons.local_movies_outlined,
+                      size: 50,
+                      color: Colors.white,
+                    ), onPressed: () {  },),
+                  IconButton(
+                    icon: const Icon(
+                      Icons.help_outline,
+                      size: 50,
+                      color: Colors.white,
+                    ), onPressed: () {  },)
+                ],
+              )
+            ],
+          )
         ),
-      ),
     );
   }
 }
