@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
 import '../controller/login_controller.dart';
@@ -9,7 +11,6 @@ class LoginPage extends StatefulWidget {
   const LoginPage({Key? key}) : super(key: key);
 
   final String title = "Login";
-  final String subtitle = "Do something";
   final Color backgroundColor = const Color.fromRGBO(38, 35, 35, 1.0);
 
   FirebaseFirestore get firestore => FirebaseFirestore.instance;
@@ -28,23 +29,21 @@ class LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return FlutterLogin(
-      title: "Login",
+      logo: const AssetImage("assets/images/streame.png"),
       theme: LoginTheme(
         primaryColor: widget.backgroundColor,
         pageColorLight: Colors.deepOrangeAccent,
         buttonTheme: LoginButtonTheme(
           backgroundColor: Colors.lightBlueAccent.shade700,
         ),
-        cardTheme: CardTheme(
+        cardTheme: const CardTheme(
           elevation: 10,
-
         ),
-        titleStyle: TextStyle(
+        titleStyle: const TextStyle(
           color: Colors.white,
           fontSize: 50,
           fontWeight: FontWeight.bold,
         ),
-
       ),
       navigateBackAfterRecovery: true,
 
