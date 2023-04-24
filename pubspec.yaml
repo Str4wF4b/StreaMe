@@ -39,6 +39,8 @@ dependencies:
   flutter_login: ^4.0.0
   font_awesome_flutter: ^10.1.0
   image_picker: ^0.8.6
+  firebase_auth: ^4.4.2
+  firebase_core: ^2.10.0
 
 dev_dependencies:
   flutter_test:
@@ -64,7 +66,8 @@ flutter:
 
   # To add assets to your application, add an assets section, like this:
   assets:
-    - assets/blank-profile-picture.png
+    - assets/images/blank-profile-picture.png
+    - assets/images/streame.png
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 
