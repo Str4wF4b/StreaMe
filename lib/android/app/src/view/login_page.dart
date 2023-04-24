@@ -22,7 +22,6 @@ class LoginPage extends StatefulWidget {
 class LoginPageState extends State<LoginPage> {
   final LoginController logCon = LoginController();
 
-
 // TODO: Move functionality to controller (separate the code into MVC pattern)
 // TODO: Connect with Firebase/Firestore DB (https://github.com/NearHuscarl/flutter_login/issues/162#issuecomment-869908814)
 
@@ -84,7 +83,8 @@ class LoginPageState extends State<LoginPage> {
         }
         //return _signupUser(signupData);
       },
-      onSubmitAnimationCompleted: () => Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const HomePage())),
+      onSubmitAnimationCompleted: () => Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => const HomePage())),
       /*onSubmitAnimationCompleted: () {
         Navigator.of(context).pushReplacement(FadePageRoute(
           builder: (context) => const DashboardScreen(),
