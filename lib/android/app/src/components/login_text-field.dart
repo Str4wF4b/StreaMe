@@ -1,9 +1,9 @@
 import 'package:flutter/material.dart';
 
 class LoginTextField extends StatelessWidget {
-  final inputController;
-  final bool obscureText;
-  final String hintText;
+  final inputController; // user's input
+  final bool obscureText; // obscured text for password in text field
+  final String hintText; // hint text in text field
   final IconData prefixIcon;
 
   //final Icon suffixIcon;
