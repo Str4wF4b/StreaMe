@@ -68,6 +68,9 @@ flutter:
   assets:
     - assets/images/blank-profile-picture.png
     - assets/images/streame.png
+    - assets/images/google.png
+    - assets/images/anonymous.png
+    - assets/images/apple.png
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
 

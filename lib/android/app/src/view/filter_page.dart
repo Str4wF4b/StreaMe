@@ -36,7 +36,7 @@ class _FilterPageState extends State<FilterPage> {
             ),
             padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
           ),
-          onPressed: () => Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => const HomePage())),
+          onPressed: () => Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomePage())),
           child: const Text("Go Back"),
         ),
       ),

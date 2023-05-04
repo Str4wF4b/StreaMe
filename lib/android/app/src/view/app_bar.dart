@@ -1,13 +1,17 @@
 import 'dart:io';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:stream_me/android/app/src/view/explore_page.dart';
 import 'package:stream_me/android/app/src/view/favourites_page.dart';
 import 'package:stream_me/android/app/src/view/help.dart';
 import 'package:stream_me/android/app/src/view/login_page.dart';
+import 'package:stream_me/android/app/src/view/login_page_alpha.dart';
 import 'package:stream_me/android/app/src/view/search_page.dart';
 
+import '../components/edit_profile_page.dart';
+import 'auth_page.dart';
 import 'filter_page.dart';
 import 'home_page.dart';
 
@@ -105,9 +109,9 @@ class _MovieAppBarState extends State<MovieAppBar> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: <Widget>[ //the icons of the BottomAppBar
-              addBottomIcons(Icons.search_outlined, "Search", const EdgeInsets.fromLTRB(20.0, 0.0, 0.0, 0.0), const SearchPage()),
-              addBottomIcons(Icons.favorite, "Saved", EdgeInsets.zero, const FavouritesPage()),
-              addBottomIcons(Icons.filter_list_outlined, "Filter", const EdgeInsets.fromLTRB(0.0, 0.0, 20.0, 0.0), const FilterPage()),
+              addBottomIcons(Icons.search_outlined, "Search", const EdgeInsets.fromLTRB(20.0, 0.0, 0.0, 0.0), SearchPage()),
+              addBottomIcons(Icons.favorite, "Saved", EdgeInsets.zero, FavouritesPage()),
+              addBottomIcons(Icons.filter_list_outlined, "Filter", const EdgeInsets.fromLTRB(0.0, 0.0, 20.0, 0.0), FilterPage()),
             ],
           ),
         ),
@@ -190,7 +194,7 @@ class _MovieAppBarState extends State<MovieAppBar> {
           const Divider(
             color: Colors.white,
           ),
-          buildListItems(Icons.logout_outlined, "Logout", const LoginPage()),
+          buildLogoutItem(Icons.logout_outlined, "Logout"),
         ]),
       );
 
@@ -212,6 +216,26 @@ class _MovieAppBarState extends State<MovieAppBar> {
       ),
       onTap: () => Navigator.of(context)
           .pushReplacement(MaterialPageRoute(builder: (context) => widget)),
+    );
+  }
+
+  /**
+   * Function that causes a user logout inside the navigation drawer
+   */
+  ListTile buildLogoutItem(IconData icon, String label) {
+    return ListTile(
+      leading: Icon(
+        icon,
+        color: Colors.white,
+      ),
+      title: Text(
+        label,
+        style: const TextStyle(
+          color: Colors.white,
+          fontSize: 15,
+        ),
+      ),
+      onTap: () async => await FirebaseAuth.instance.signOut().then((value) => Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (context) => const AuthPage()), (route) => false))
     );
   }
 }
@@ -269,320 +293,4 @@ class _EditProfileState extends State<EditProfile> {
       ),
     );
   }
-}
-
-class EditProfilePage extends StatefulWidget {
-  const EditProfilePage({Key? key, required this.backgroundColor})
-      : super(key: key);
-  final Color backgroundColor;
-
-  @override
-  State<EditProfilePage> createState() => _EditProfilePageState();
-}
-
-class _EditProfilePageState extends State<EditProfilePage> {
-  bool showPassword = false;
-  PickedFile? _imageFile;
-  final ImagePicker _picker = ImagePicker();
-
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: widget.backgroundColor,
-      body: Container(
-        color: widget.backgroundColor,
-        padding: const EdgeInsetsDirectional.fromSTEB(0.0, 5.0, 0.0, 0.0),
-        child: GestureDetector(
-          onTap: () {
-            FocusScope.of(context).unfocus();
-          },
-          child: ListView(
-            children: [
-              Center(
-                //centering the profile picture
-                child: Stack(
-                  children: [
-                    Container(
-                      //container for profile picture
-                      width: 130,
-                      height: 130,
-                      decoration: BoxDecoration(
-                        border: Border.all(
-                          //border around profile picture
-                          width: 3,
-                          color: Theme.of(context).scaffoldBackgroundColor,
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            spreadRadius: 2,
-                            blurRadius: 10,
-                            color: Colors.white.withOpacity(0.3),
-                          )
-                        ],
-                        shape: BoxShape.circle,
-                        //profile picture in circle shape
-                        image: DecorationImage(
-                            //default profile picture
-                            fit: BoxFit.cover,
-                            image: selectImage()),
-                      ),
-                    ),
-                    Positioned(
-                        //positioning the "change picture" item
-                        bottom: 0,
-                        right: 0,
-                        child: Container(
-                          height: 35,
-                          width: 35,
-                          decoration: BoxDecoration(
-                            border: Border.all(
-                              //border around profile picture
-                              width: 1,
-                              color: Theme.of(context).scaffoldBackgroundColor,
-                            ),
-                            boxShadow: [
-                              BoxShadow(
-                                spreadRadius: 2,
-                                color: Colors.white.withOpacity(0.3),
-                              )
-                            ],
-                            shape: BoxShape.circle,
-                            color: Colors.green,
-                          ),
-                          child: InkWell(
-                            onTap: () {
-                              showModalBottomSheet(
-                                context: context,
-                                builder: ((builder) => bottomProfileSheet()),
-                                backgroundColor: widget.backgroundColor,
-                              );
-                            },
-                            child: const Icon(
-                              Icons.edit,
-                              color: Colors.white,
-                            ),
-                          ),
-                        ))
-                  ],
-                ),
-              ),
-              const SizedBox(
-                //spacing between profile picture and text field
-                height: 46,
-              ),
-              buildTextFields("Username", "Enter new Username here", false),
-              buildTextFields("Full Name", "Enter new Full Name here", false),
-              buildTextFields("E-Mail", "Enter new E-Mail address here", false),
-              buildTextFields("Password", "Enter new Password here", true),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //setting space between buttons cancel and save
-                children: [
-                  Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(
-                        16.0, 10.0, 0.0, 0.0),
-                    child: OutlinedButton(
-                      //styling of cancel button
-                      style: OutlinedButton.styleFrom(
-                        backgroundColor: Colors.red.shade500,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                        padding: const EdgeInsets.symmetric(horizontal: 50),
-                      ),
-                      onPressed: () {
-                        //TODO: Delete input function
-                      },
-                      child: const Text(
-                        "Cancel",
-                        style: TextStyle(
-                          fontSize: 14,
-                          letterSpacing: 2.2,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(
-                        0.0, 10.0, 16.0, 0.0),
-                    child: ElevatedButton(
-                        //styling of save button
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green,
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(20.0),
-                          ),
-                          padding: const EdgeInsets.symmetric(horizontal: 50),
-                        ),
-                        onPressed: () {
-                          //TODO: Save input (into DB also)
-                        },
-                        child: const Text(
-                          "Save",
-                          style: TextStyle(
-                            fontSize: 14,
-                            letterSpacing: 2.2,
-                            color: Colors.white,
-                          ),
-                        )),
-                  )
-                ],
-              )
-            ],
-          ),
-        ),
-      ),
-    );
-  }
-
-  Padding buildTextFields(
-      String labelText, String placeholder, bool isPassword) {
-    return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 35.0),
-      child: TextField(
-        //text fields for input
-        style: const TextStyle(
-          //style of written input
-          color: Colors.blueAccent,
-        ),
-        obscureText: isPassword ? showPassword : false,
-        decoration: InputDecoration(
-            //style of label
-            suffixIcon: isPassword //show password icon
-                ? IconButton(
-                    onPressed: () {
-                      setState(() {
-                        showPassword =
-                            !showPassword; //switch between showing and not showing password
-                      });
-                    },
-                    icon: const Icon(
-                      Icons.remove_red_eye,
-                      color: Colors.grey,
-                    ),
-                  )
-                : null,
-            floatingLabelBehavior: FloatingLabelBehavior.always,
-            //input labels are always open
-            labelText: labelText,
-            labelStyle: const TextStyle(
-              color: Colors.white,
-              fontSize: 17,
-              fontWeight: FontWeight.bold,
-            ),
-            enabledBorder: const UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.white)),
-            hintText: placeholder,
-            //style of placeholder
-            hintStyle: const TextStyle(
-              fontSize: 14,
-              color: Colors.blueGrey,
-            )),
-      ),
-    );
-  }
-
-  Widget bottomProfileSheet() {
-    return Container(
-      height: 100.0,
-      width: MediaQuery.of(context).size.width,
-      margin: const EdgeInsets.symmetric(
-        horizontal: 20.0,
-        vertical: 20.0,
-      ),
-      child: Column(
-        children: <Widget>[
-          const Text(
-            'Choose photo from ...',
-            style: TextStyle(
-              fontSize: 20,
-              color: Colors.white,
-            ),
-          ),
-          const SizedBox(
-            //spacing
-            height: 20.0,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: <Widget>[
-              Padding(
-                padding:
-                    const EdgeInsetsDirectional.fromSTEB(16.0, 5.0, 0.0, 0.0),
-                child: TextButton.icon(
-                  icon: const Icon(
-                    Icons.camera_alt,
-                    size: 30,
-                    color: Colors.cyan,
-                  ),
-                  onPressed: () {
-                    takePhoto(ImageSource.camera);
-                  },
-                  label: const Text(
-                    'Camera',
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.cyan,
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding:
-                    const EdgeInsetsDirectional.fromSTEB(0.0, 5.0, 16.0, 0.0),
-                child: TextButton.icon(
-                  icon: const Icon(
-                    Icons.image,
-                    size: 30,
-                    color: Colors.cyan,
-                  ),
-                  onPressed: () {
-                    takePhoto(ImageSource.gallery);
-                  },
-                  label: const Text(
-                    'Gallery',
-                    style: TextStyle(
-                      fontSize: 20,
-                      color: Colors.cyan,
-                    ),
-                  ),
-                ),
-              )
-            ],
-          )
-        ],
-      ),
-    );
-  }
-
-  void takePhoto(ImageSource source) async {
-    final pickedFile = await _picker.getImage(
-        source:
-            source); //TODO: maybe change function getImage to pickImage if it works
-    setState(() {
-      _imageFile = pickedFile;
-    });
-  }
-
-  ImageProvider<Object> selectImage() {
-    return _imageFile == null
-        ? const AssetImage("assets/images/blank-profile-picture.png")
-        : FileImage(File(_imageFile!.path)) as ImageProvider;
-  }
-
-/*  Future<bool?> showCancelDialog() => showDialog<bool>(
-        context: context,
-        builder: (context) => AlertDialog(
-          title: const Text('Are you sure?'),
-          actions: [
-            TextButton(
-                onPressed: () => Navigator.pop(context, false),
-                child: const Text('Yes')),
-            TextButton(
-                onPressed: () => Navigator.pop(context, true),
-                child: const Text('No')),
-          ],
-        ),
-      );*/
 }
