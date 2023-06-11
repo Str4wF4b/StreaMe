@@ -5,7 +5,7 @@ import 'package:stream_me/android/app/src/view/explore_page.dart';
 import 'package:stream_me/android/app/src/view/favourites_page.dart';
 import 'package:stream_me/android/app/src/view/help.dart';
 
-import 'auth_page.dart';
+import '../services/auth_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);

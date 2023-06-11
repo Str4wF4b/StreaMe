@@ -1,5 +1,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     package="com.example.stream_me">
+    <uses-permission android:name="android.permission.INTERNET" /> <!-- Internet permission for app -->
    <application
         android:label="stream_me"
         android:name="${applicationName}"

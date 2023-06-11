@@ -110,26 +110,6 @@ class LoginController extends ControllerMVC {
   }
   */
 
-/*  Future signInAnon() async {
-    try {
-      UserCredential anonCredential = await _auth.signInAnonymously();
-      User? user = anonCredential.user;
-      return user;
-    } catch (e) {
-      print(e.toString());
-      return null;
-    }
-  }
-  */
-
-//TODO: Sign in with Google
-
-//TODO: Register with e-mail & password
-
-//TODO: Register with Google
-
-//TODO: Sign out
-
 /*
   Padding loginTextField(TextEditingController inputController,
       bool obscureText, String hintText, IconData prefixIcon/*, Icon suffixIcon*/) {

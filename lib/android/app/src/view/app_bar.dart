@@ -11,7 +11,7 @@ import 'package:stream_me/android/app/src/view/login_page_alpha.dart';
 import 'package:stream_me/android/app/src/view/search_page.dart';
 
 import '../components/edit_profile_page.dart';
-import 'auth_page.dart';
+import '../services/auth_page.dart';
 import 'filter_page.dart';
 import 'home_page.dart';
 

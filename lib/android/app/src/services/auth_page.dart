@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:stream_me/android/app/src/view/home_page.dart';
 
-import 'login-or-register_page.dart';
+import '../view/login-or-register_page.dart';
 
 /**
  * Class that checks if the user is signed in or not
