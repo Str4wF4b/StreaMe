@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_login/flutter_login.dart';
 import 'package:stream_me/android/app/src/components/login_divider.dart';
 import 'package:stream_me/android/app/src/components/login_tile.dart';
 import '../components/login_sign-buttons.dart';
@@ -10,9 +9,7 @@ import '../components/login_text-field.dart';
 import '../controller/login_controller.dart';
 import '../services/auth_service.dart';
 import 'forgotpassword_page.dart';
-import 'home_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_login/theme.dart';
 
 class LoginPage extends StatefulWidget {
   final Function()? onTap;
