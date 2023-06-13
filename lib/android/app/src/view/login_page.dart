@@ -2,18 +2,18 @@ import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_login/flutter_login.dart';
 import 'package:stream_me/android/app/src/components/login_divider.dart';
 import 'package:stream_me/android/app/src/components/login_tile.dart';
 import '../components/login_sign-buttons.dart';
 import '../components/login_text-field.dart';
 import '../controller/login_controller.dart';
-import 'home_page.dart';
+import '../services/auth_service.dart';
+import 'forgotpassword_page.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_login/theme.dart';
 
 class LoginPage extends StatefulWidget {
   final Function()? onTap;
+
   LoginPage({super.key, required this.onTap});
 
   final String title = "Login";
@@ -72,11 +72,23 @@ class LoginPageState extends State<LoginPage> {
                       inputController: widget.passwordController,
                       obscureText: true,
                       hintText: "Password",
-                      prefixIcon: Icons
-                          .lock_outline_rounded /*, const Icon(Icons.remove_red_eye)*/),
+                      prefixIcon:
+                          Icons.lock /*, const Icon(Icons.remove_red_eye)*/),
                   const SizedBox(height: 18),
-                  const Text("Forgot Password?",
-                      style: TextStyle(color: Colors.white60)),
+                  GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) {
+                            return ForgotPasswordPage();
+                          },
+                        ),
+                      );
+                    },
+                    child: const Text("Forgot Password?",
+                        style: TextStyle(color: Colors.white60)),
+                  ),
                   const SizedBox(height: 30),
                   SignButton(onTap: signUserIn, text: "Sign In"),
                   const SizedBox(height: 55),
@@ -84,21 +96,25 @@ class LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 55),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
+                    children: [
                       LoginTile(
                           isIcon: false,
                           imagePath: "assets/images/google.png",
-                          iconData: Icons.back_hand),
-                      SizedBox(width: 12),
+                          iconData: Icons.back_hand,
+                          onTap: () => AuthService().signInWithGoogle()),
+                      const SizedBox(width: 12),
                       LoginTile(
                           isIcon: false,
                           imagePath: "assets/images/apple.png",
-                          iconData: Icons.back_hand),
-                      SizedBox(width: 12),
+                          iconData: Icons.back_hand,
+                          onTap: () => AuthService().signInWithApple()),
+                      const SizedBox(width: 12),
                       LoginTile(
                           isIcon: false,
                           imagePath: "assets/images/anonymous.png",
-                          iconData: Icons.back_hand),
+                          iconData: Icons.back_hand,
+                          //TODO: show restricted anonymous site
+                          onTap: () => AuthService().signInAnon()),
                     ],
                   ),
                   const SizedBox(height: 35),

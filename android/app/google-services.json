@@ -15,6 +15,14 @@
       "oauth_client": [
         {
           "client_id": "78552792222-j17h9puh0hdn1m62713ij5tcmkc254im.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.stream_me",
+            "certificate_hash": "4be231a8d55ec5dd5f478870bfbbdbddc455c3e3"
+          }
+        },
+        {
+          "client_id": "78552792222-j17h9puh0hdn1m62713ij5tcmkc254im.apps.googleusercontent.com",
           "client_type": 3
         }
       ],

@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:stream_me/android/app/src/services/auth_service.dart';
 
 import '../components/login_divider.dart';
 import '../components/login_sign-buttons.dart';
@@ -70,15 +71,15 @@ class _RegisterPageState extends State<RegisterPage> {
                       obscureText: false,
                       hintText: "Email",
                       prefixIcon: Icons.person /*, const Icon(Icons.abc)*/),
-                  const SizedBox(height: 13),
+                  const SizedBox(height: 10),
                   LoginTextField(
                       // password textfield
                       inputController: widget.passwordController,
                       obscureText: true,
                       hintText: "Password",
                       prefixIcon: Icons
-                          .lock_outline_rounded /*, const Icon(Icons.remove_red_eye)*/),
-                  const SizedBox(height: 13),
+                          .lock /*, const Icon(Icons.remove_red_eye)*/),
+                  const SizedBox(height: 10),
                   LoginTextField(
                       // confirm password textfield
                       inputController: widget.confirmPasswordController,
@@ -93,21 +94,24 @@ class _RegisterPageState extends State<RegisterPage> {
                   const SizedBox(height: 55),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
+                    children: [
                       LoginTile(
                           isIcon: false,
                           imagePath: "assets/images/google.png",
-                          iconData: Icons.back_hand),
-                      SizedBox(width: 12),
+                          iconData: Icons.back_hand,
+                          onTap: () => AuthService().signInWithGoogle()),
+                      const SizedBox(width: 12),
                       LoginTile(
                           isIcon: false,
                           imagePath: "assets/images/apple.png",
-                          iconData: Icons.back_hand),
-                      SizedBox(width: 12),
+                          iconData: Icons.back_hand,
+                          onTap: () => AuthService().signInWithApple()),
+                      const SizedBox(width: 12),
                       LoginTile(
                           isIcon: false,
                           imagePath: "assets/images/anonymous.png",
-                          iconData: Icons.back_hand),
+                          iconData: Icons.back_hand,
+                          onTap: () => AuthService().signInAnon()),
                     ],
                   ),
                   const SizedBox(height: 35),
@@ -121,7 +125,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       const SizedBox(width: 4),
                       GestureDetector(
                         onTap: widget.onTap,
-                        child: const Text("Login here",
+                        child: const Text("Sign in here",
                             style: TextStyle(color: Colors.lightBlue)),
                       )
                     ],

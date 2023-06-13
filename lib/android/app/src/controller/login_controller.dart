@@ -1,12 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:mvc_pattern/mvc_pattern.dart';
-import 'package:stream_me/android/app/src/model/login_model.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:stream_me/android/app/src/view/home_page.dart';
-import 'package:stream_me/android/app/src/view/login_page.dart';
 
 class LoginController extends ControllerMVC {
-  final FirebaseAuth _auth = FirebaseAuth.instance; // object
 
   /**
    * A function that returns a popup if the email or password is wrong when logging in
@@ -49,12 +44,15 @@ class LoginController extends ControllerMVC {
           ],
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(20.0)),
-              side: BorderSide(color: Colors.red, width: 3.0)),
+              side: BorderSide(color: Colors.blueAccent, width: 2.0)),
         );
       },
     );
   }
 
+  /**
+   * A function that simply checks if the user wants to login or register and returns the corresponding title in the popup
+   */
   String checkLoginOrRegisterTitle(bool isLogin) {
     if (isLogin) {
       return "Login not possible.";
@@ -63,6 +61,9 @@ class LoginController extends ControllerMVC {
     }
   }
 
+  /**
+   * A function that simply checks if the user wants to login or register and returns the corresponding content in the popup
+   */
   String checkLoginOrRegisterContent(bool isLogin, String input) {
     if (isLogin) {
       return "The $input is not correct. Please try again.";
@@ -70,158 +71,4 @@ class LoginController extends ControllerMVC {
       return "The passwords do not match. Please try again.";
     }
   }
-
-/*
-  void signUserIn(TextEditingController emailController, TextEditingController passwordController, BuildContext context) async {
-    // show loading circle
-    showDialog(
-      context: context,
-      builder: (context) {
-        return const Center(
-          child: CircularProgressIndicator(),
-        );
-      },
-    );
-
-    // sign in try
-    try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: emailController.text,
-          password: passwordController.text);
-      // pop loading circle
-      Navigator.pop(context);
-    } on FirebaseAuthException catch (e) {
-      // pop loading circle
-      Navigator.pop(context);
-
-      // if email is wrong:
-      if (e.code == "user-not-found") {
-        wrongInputPopup("Email", context);
-        //widget.emailController.text = "Wrong Email.";
-        // if password is wrong:
-      } else if (e.code == "wrong-password") {
-        wrongInputPopup("Password", context);
-      } else if (e.code == "user-not-found" && e.code == "wrong-password") {
-        //wrongEmailPopup();
-      }
-    }
-
-    // Navigator.pop(context);
-  }
-  */
-
-/*  Future signInAnon() async {
-    try {
-      UserCredential anonCredential = await _auth.signInAnonymously();
-      User? user = anonCredential.user;
-      return user;
-    } catch (e) {
-      print(e.toString());
-      return null;
-    }
-  }
-  */
-
-//TODO: Sign in with Google
-
-//TODO: Register with e-mail & password
-
-//TODO: Register with Google
-
-//TODO: Sign out
-
-/*
-  Padding loginTextField(TextEditingController inputController,
-      bool obscureText, String hintText, IconData prefixIcon/*, Icon suffixIcon*/) {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30.0),
-      child: TextField(
-        controller: inputController, // get user's input
-        obscureText: obscureText,
-        decoration: InputDecoration(
-            prefixIcon: Icon(prefixIcon, size: 28),
-            prefixIconColor: Colors.grey,
-            /*suffixIcon:
-                checkIconButton(suffixIcon, inputController, obscureText),*/
-            enabledBorder: OutlineInputBorder(
-                borderSide: const BorderSide(color: Colors.white),
-                borderRadius: BorderRadius.circular(20.0)),
-            focusedBorder: OutlineInputBorder(
-                borderSide: const BorderSide(color: Colors.blueAccent),
-                borderRadius: BorderRadius.circular(20.0)),
-            filled: true,
-            fillColor: Colors.grey.shade300,
-            hintText: hintText,
-            hintStyle: const TextStyle(color: Colors.grey)),
-      ),
-    );
-  }
-  */
-
-/*
-  Widget checkIconButton(
-      Icon icon, TextEditingController controller, bool obscureText) {
-    obscureText = this.obscureText;
-    if (icon.toString() == const Icon(Icons.remove_red_eye).toString()) {
-      // check if suffixIcon is the needed one or not
-      print(obscureText);
-      return ToggleWidgets(obscureText: obscureText);
-    } else {
-      return IconButton(
-          onPressed: null,
-          icon: icon,
-          disabledColor:
-              Colors.transparent); // disable other not needed suffixIcon
-    }
-  }
-  */
-
-/*
-  GestureDetector signInButton() {
-    return GestureDetector(
-      onTap: signUserIn,
-      child: Container(
-        padding: const EdgeInsets.all(20.0),
-        // padding inside button
-        margin: const EdgeInsets.symmetric(horizontal: 100.0),
-        // padding outside button
-        decoration: BoxDecoration(
-            //border: Border.all(color: Colors.white70),
-            color: Colors.blueAccent,
-            borderRadius: BorderRadius.circular(30.0)),
-        child: const Center(
-            child: Text("Sign In",
-                style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.bold,
-                    fontSize: 16.0))),
-      ),
-    );
-  }
-   */
-
-/*
-  Padding loginDivider() {
-    return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 30.0),
-      child: Row(
-        children: const [
-          Expanded(
-              child: Divider(
-            thickness: 0.5,
-            color: Colors.white70,
-          )),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10.0),
-            child: Text(
-              "Or continue with",
-              style: TextStyle(color: Colors.white60),
-            ),
-          ),
-          Expanded(child: Divider(thickness: 0.5, color: Colors.white70))
-        ],
-      ),
-    );
-  }
-   */
 }

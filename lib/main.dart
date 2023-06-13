@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:stream_me/firebase_options.dart';
-import 'android/app/src/view/auth_page.dart';
+import 'android/app/src/services/auth_page.dart';
 import 'android/app/src/view/login_page.dart';
 import 'android/app/src/view/login_page_alpha.dart';
 
