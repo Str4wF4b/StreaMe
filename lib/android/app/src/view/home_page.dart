@@ -1,9 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:stream_me/android/app/src/view/app_bar.dart';
 import 'package:stream_me/android/app/src/view/explore_page.dart';
 import 'package:stream_me/android/app/src/view/favourites_page.dart';
 import 'package:stream_me/android/app/src/view/help.dart';
-import 'package:stream_me/android/app/src/view/login_page.dart';
+
+import '../services/auth_page.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -24,66 +26,79 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
+  /**
+   * Body of the home page of the app.
+   * The stack widget connects a container with a Logout button inside and a container with icon buttons
+   */
   Widget buildBody() {
     return Stack(children: [
+      // Logout button at the bottom
       Container(
         color: widget.middleBackgroundColor,
         child: Padding(
-            padding: const EdgeInsets.fromLTRB(0.0, 60.0, 16.0, 0.0),
+          //Logout button on home page
+          padding: const EdgeInsetsDirectional.fromSTEB(0.0, 550.0, 0.0, 0.0),
+          child: Container(
+            alignment: Alignment.center,
             child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Column(children: [
-                  const SizedBox(height: 30),
-                  addHomeButton(
-                      const ExplorePage(), Icons.travel_explore_outlined),
-                  addHomeButtonText("Explore"),
-                  const SizedBox(
-                    height: 130,
+                const Text(
+                  "Logout",
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
                   ),
-                  addHomeButton(const FavouritesPage(), Icons.movie_outlined),
-                  addHomeButtonText("My Movies")
-                ]),
-                Column(
-                  children: [
+                ),
+                IconButton(
+                  onPressed: () async {
+                    await FirebaseAuth.instance.signOut().then((value) =>
+                        Navigator.of(context).pushAndRemoveUntil(
+                            MaterialPageRoute(
+                                builder: (context) => const AuthPage()),
+                            (route) => false));
+                  },
+                  icon: const Icon(Icons.logout_outlined),
+                  color: Colors.white,
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
+      // Icon buttons at the rest of the page
+      Container(
+        color: widget.middleBackgroundColor,
+        child: SingleChildScrollView(
+          child: Padding(
+              padding: const EdgeInsets.fromLTRB(0.0, 60.0, 16.0, 0.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceAround,
+                children: [
+                  Column(children: [
                     const SizedBox(height: 30),
                     addHomeButton(
-                        const FavouritesPage(), Icons.local_movies_outlined),
-                    addHomeButtonText("My Series"),
-                    const SizedBox(height: 130),
-                    addHomeButton(const HelpPage(), Icons.help_outline),
-                    addHomeButtonText("Help")
-                  ],
-                ),
-              ],
-            )),
-      ),
-      Padding( //Logout button on home page
-        padding: const EdgeInsetsDirectional.fromSTEB(0.0, 550.0, 0.0, 0.0),
-        child: Container(
-          alignment: Alignment.center,
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text(
-                "Logout",
-                style: TextStyle(
-                  color: Colors.white,
-                  fontSize: 16,
-                ),
-              ),
-              IconButton(
-                onPressed: () {
-                  Navigator.push(
-                    context,
-                    MaterialPageRoute(builder: (context) => const LoginPage()),
-                  );
-                },
-                icon: const Icon(Icons.logout_outlined),
-                color: Colors.white,
-              )
-            ],
-          ),
+                        const ExplorePage(), Icons.travel_explore_outlined),
+                    addHomeButtonText("Explore"),
+                    const SizedBox(
+                      height: 130,
+                    ),
+                    addHomeButton(const FavouritesPage(), Icons.movie_outlined),
+                    addHomeButtonText("My Movies")
+                  ]),
+                  Column(
+                    children: [
+                      const SizedBox(height: 30),
+                      addHomeButton(
+                          const FavouritesPage(), Icons.local_movies_outlined),
+                      addHomeButtonText("My Series"),
+                      const SizedBox(height: 130),
+                      addHomeButton(const HelpPage(), Icons.help_outline),
+                      addHomeButtonText("Help")
+                    ],
+                  ),
+                ],
+              )),
         ),
       ),
     ]);
@@ -106,7 +121,7 @@ class _HomePageState extends State<HomePage> {
       shape: const CircleBorder(),
       child: Icon(
         icon,
-        size: 50,
+        size: 45,
       ),
     );
   }
