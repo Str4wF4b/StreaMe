@@ -1,7 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:stream_me/android/app/src/components/login_sign-buttons.dart';
 
 import '../components/login_text-field.dart';
+import '../controller/forgotpassword_controller.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
   ForgotPasswordPage({Key? key}) : super(key: key);
@@ -12,10 +14,17 @@ class ForgotPasswordPage extends StatefulWidget {
   final Color backgroundColor = const Color.fromRGBO(38, 35, 35, 1.0);
   final Color middleBackgroundColor = const Color.fromRGBO(44, 40, 40, 1.0);
 
-  final emailController = TextEditingController();
+  final ForgotPasswordController _forgotPwCon = ForgotPasswordController();
+  final _emailController = TextEditingController();
 }
 
 class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
+  @override
+  void dispose() {
+    widget._emailController.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -43,23 +52,27 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                       "assets/images/streame.png",
                       width: 200,
                     ),
-                    const SizedBox(height: 50),
-                    Text("Enter your Email to reset your password",
-                        style: TextStyle(
-                            color: Colors.grey.shade300,
-                            fontWeight: FontWeight.bold,
-                            fontSize: 18.0)),
+                    const SizedBox(height: 90),
+                    Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 30.0),
+                      child: Text("Enter your Email here and reset your password",
+                          style: TextStyle(
+                              color: Colors.grey.shade300,
+                              fontWeight: FontWeight.bold,
+                              fontSize: 18.0),
+                          textAlign: TextAlign.center),
+                    ),
                     const SizedBox(height: 15),
                     LoginTextField(
-                      inputController: widget.emailController,
+                      inputController: widget._emailController,
                       obscureText: false,
-                      hintText: "Sending password to this Email",
-                      prefixIcon: Icons.mail_outline,
+                      hintText: "Sending password link to this Email",
+                      prefixIcon: Icons.mail_outline
                     ),
                     const SizedBox(
-                      height: 50,
+                      height: 40,
                     ),
-                    SignButton(onTap: () {}, text: "Reset Password"),
+                    SignButton(onTap: resetPassword, text: "Reset Password"),
                     const SizedBox(
                       height: 20,
                     ),
@@ -100,5 +113,19 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
         ),
       ),
     );
+  }
+
+  /**
+   * A function sending an email to the entered email address if clicked on the "Reset Password"
+   */
+  Future resetPassword() async {
+    try {
+      await FirebaseAuth.instance
+          .sendPasswordResetEmail(email: widget._emailController.text.trim());
+      widget._forgotPwCon.wrongInputPopup(context, true, widget._emailController);
+      //widget._emailController.text = ""; //making TextField empty
+    } on FirebaseAuthException catch (e) {
+      widget._forgotPwCon.wrongInputPopup(context, false, widget._emailController);
+    }
   }
 }
