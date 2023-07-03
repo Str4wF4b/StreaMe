@@ -27,6 +27,7 @@ class LoginTextField extends StatelessWidget {
         decoration: InputDecoration(
             prefixIcon: Icon(prefixIcon, size: 28),
             prefixIconColor: Colors.grey,
+            //TODO: suffixIcon
             /*suffixIcon:
                 checkIconButton(suffixIcon, inputController, obscureText),*/
             enabledBorder: OutlineInputBorder(

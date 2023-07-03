@@ -29,7 +29,7 @@ class LoginPageAlphaState extends State<LoginPageAlpha> {
   @override
   Widget build(BuildContext context) {
     return FlutterLogin(
-      logo: const AssetImage("assets/images/streame.png"),
+      logo: const AssetImage("assets/images/icons/streame.png"),
       theme: LoginTheme( // the theme of the login window
         primaryColor: widget.backgroundColor,
         pageColorLight: Colors.deepOrangeAccent,
