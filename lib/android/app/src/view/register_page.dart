@@ -49,7 +49,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   const SizedBox(height: 30),
                   Image.asset(
                     //logo
-                    "assets/images/streame.png",
+                    "assets/images/icons/streame.png",
                     width: 170,
                   ),
                   const SizedBox(height: 35),
@@ -97,19 +97,19 @@ class _RegisterPageState extends State<RegisterPage> {
                     children: [
                       LoginTile(
                           isIcon: false,
-                          imagePath: "assets/images/google.png",
+                          imagePath: "assets/images/login/google.png",
                           iconData: Icons.back_hand,
                           onTap: () => AuthService().signInWithGoogle()),
                       const SizedBox(width: 12),
                       LoginTile(
                           isIcon: false,
-                          imagePath: "assets/images/apple.png",
+                          imagePath: "assets/images/login/apple.png",
                           iconData: Icons.back_hand,
                           onTap: () => AuthService().signInWithApple()),
                       const SizedBox(width: 12),
                       LoginTile(
                           isIcon: false,
-                          imagePath: "assets/images/anonymous.png",
+                          imagePath: "assets/images/login/anonymous.png",
                           iconData: Icons.back_hand,
                           onTap: () => AuthService().signInAnon()),
                     ],

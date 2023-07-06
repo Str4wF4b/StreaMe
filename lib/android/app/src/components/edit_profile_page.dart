@@ -5,9 +5,10 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 
 class EditProfilePage extends StatefulWidget {
+  final Color backgroundColor;
+
   EditProfilePage({Key? key, required this.backgroundColor})
       : super(key: key);
-  final Color backgroundColor;
 
   @override
   State<EditProfilePage> createState() => _EditProfilePageState();

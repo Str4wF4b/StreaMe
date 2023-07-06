@@ -56,7 +56,7 @@ class LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 50),
                   Image.asset(
                     //logo
-                    "assets/images/streame.png",
+                    "assets/images/icons/streame.png",
                     width: 200,
                   ),
                   const SizedBox(height: 50),
@@ -99,19 +99,19 @@ class LoginPageState extends State<LoginPage> {
                     children: [
                       LoginTile(
                           isIcon: false,
-                          imagePath: "assets/images/google.png",
+                          imagePath: "assets/images/login/google.png",
                           iconData: Icons.back_hand,
                           onTap: () => AuthService().signInWithGoogle()),
                       const SizedBox(width: 12),
                       LoginTile(
                           isIcon: false,
-                          imagePath: "assets/images/apple.png",
+                          imagePath: "assets/images/login/apple.png",
                           iconData: Icons.back_hand,
                           onTap: () => AuthService().signInWithApple()),
                       const SizedBox(width: 12),
                       LoginTile(
                           isIcon: false,
-                          imagePath: "assets/images/anonymous.png",
+                          imagePath: "assets/images/login/anonymous.png",
                           iconData: Icons.back_hand,
                           //TODO: show restricted anonymous site
                           onTap: () => AuthService().signInAnon()),
