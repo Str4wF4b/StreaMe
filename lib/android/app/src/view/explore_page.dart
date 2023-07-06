@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
 
-import 'app_bar.dart';
+import 'app_overlay.dart';
 import 'home_page.dart';
 
 class ExplorePage extends StatefulWidget {
-  const ExplorePage({Key? key}) : super(key: key);
+  ExplorePage({Key? key}) : super(key: key);
 
   final Color backgroundColor = const Color.fromRGBO(38, 35, 35, 1.0);
   final Color middleBackgroundColor = const Color.fromRGBO(
@@ -17,12 +17,12 @@ class ExplorePage extends StatefulWidget {
 class _ExplorePageState extends State<ExplorePage> {
   @override
   Widget build(BuildContext context) {
-    return MovieAppBar(title: "Explore", body: buildBody(),);
+    /*return AppOverlay(title: "Explore", body: buildBody(),);
   }
 
 
   Widget buildBody() {
-  return Container(
+    */return Container(
     color: widget.middleBackgroundColor,
     child: Center(
       child: ElevatedButton(
@@ -37,7 +37,7 @@ class _ExplorePageState extends State<ExplorePage> {
           ),
           padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
         ),
-        onPressed: () => Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => HomePage())),
+        onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => AppOverlay(title: "Home", body: HomePage(), currentPageIndex: 0,))),
         child: const Text("Go Back"),
       ),
     ),

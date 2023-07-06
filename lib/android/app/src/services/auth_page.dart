@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:stream_me/android/app/src/view/app_overlay.dart';
 import 'package:stream_me/android/app/src/view/home_page.dart';
 
 import '../view/login-or-register_page.dart';
@@ -21,7 +22,7 @@ class AuthPage extends StatelessWidget {
           builder: (context, snapshot) {
             // user is logged in:
             if (snapshot.hasData) {
-              return const HomePage();
+              return AppOverlay(title: "Home", body: const HomePage(), currentPageIndex: 0) /*HomePage()*/;
             } else {
               // user is not logged in:
               return LoginOrRegisterPage();
