@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
+import 'package:stream_me/android/app/src/data/stream_data.dart';
 import 'package:stream_me/android/app/src/view/app_overlay.dart';
 import 'package:stream_me/android/app/src/view/explore_page.dart';
 import 'package:stream_me/android/app/src/view/favourites_page.dart';
@@ -9,6 +10,7 @@ import 'package:stream_me/android/app/src/view/help.dart';
 import 'package:stream_me/android/app/src/view/watchlist.dart';
 
 import '../services/auth_page.dart';
+import '../model/stream_model.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -25,8 +27,13 @@ class HomePage extends StatefulWidget {
  * The stack widget connects a container with a Logout button inside and a container with icon buttons
  */
 class _HomePageState extends State<HomePage> {
+  late List<Stream> streams = allStreams; //temporarily
+
   @override
   Widget build(BuildContext context) {
+    streams.sort((a, b) => a.title.toString().toLowerCase().compareTo(
+        b.title.toString().toLowerCase())); //temporarily
+
     return Container(
       color: widget.middleBackgroundColor,
       child: Column(

@@ -1,8 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:screenshot/screenshot.dart';
 import 'package:stream_me/android/app/src/components/stream_page.dart';
 
-import '../data/stream_data.dart';
 import '../model/stream_model.dart';
 
 class StreamTile extends StatelessWidget {
@@ -156,26 +154,27 @@ class StreamTile extends StatelessWidget {
 
   String getCast(List list) {
     String cast = "";
-    list.forEach((actor) {
+
+    for (var actor in list) {
       if (actor != list.last) {
         cast += "$actor, ";
       } else {
         cast += actor;
       }
-    });
+    }
     return cast;
   }
 
   String getProvider(List list) {
     String provider = "";
 
-    list.forEach((platform) {
+    for (var platform in list) {
       if (platform != list.last) {
         provider += "$platform, ";
       } else {
         provider += platform;
       }
-    });
+    }
     return provider;
   }
 }
