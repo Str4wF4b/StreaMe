@@ -2,8 +2,8 @@ import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
 
+import 'package:expand_widget/expand_widget.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
@@ -11,7 +11,6 @@ import 'package:share_plus/share_plus.dart';
 import '../model/stream_model.dart';
 import '../data/stream_data.dart';
 
-//TODO: Maybe Stateful?
 //TODO: SliverAppBar
 class StreamPage extends StatefulWidget {
   final Stream stream;
@@ -27,8 +26,8 @@ class StreamPage extends StatefulWidget {
 
 class _StreamPageState extends State<StreamPage> {
   final Color backgroundColor = const Color.fromRGBO(38, 35, 35, 1.0);
-
   //final Color middleBackgroundColor = const Color.fromRGBO(44, 40, 40, 1.0);
+  final Color mainColor = Colors.grey.shade300;
 
   final screenshotController =
       ScreenshotController(); //controller to manage screenshots
@@ -42,282 +41,327 @@ class _StreamPageState extends State<StreamPage> {
     return Screenshot(
       controller: screenshotController,
       child: Scaffold(
-        backgroundColor: backgroundColor,
-        appBar: AppBar(
+          backgroundColor: backgroundColor,
+          /*appBar: AppBar(
           title: FittedBox(child: Text(widget.stream.title)),
           centerTitle: true,
           backgroundColor: backgroundColor,
           elevation: 0.0,
-        ),
-        body: Container(
-          padding: const EdgeInsets.only(bottom: 15.0),
-          color: backgroundColor,
-          child: SingleChildScrollView(
-            child: Column(children: [
-              //Image:
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: isOnline(),
+        ),*/
+          body: CustomScrollView(slivers: [
+            SliverAppBar(
+              backgroundColor: backgroundColor,
+              title: FittedBox(child: Text(widget.stream.title)),
+              centerTitle: true,
+              elevation: 0.0,
+              pinned: true,
+              expandedHeight: 300,
+              flexibleSpace: FlexibleSpaceBar(
+                background: isOnline(),
               ),
+            ),
+            SliverToBoxAdapter(
+              child: Container(
+                padding: const EdgeInsets.only(bottom: 10.0),
+                color: backgroundColor,
+                child: SingleChildScrollView(
+                  child: Column(children: [
+                    //Image:
+                    /* Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: isOnline(),
+                    ),*/
 
-              //First row with share, rating, add to watchlist and add to favourites
-              Padding(
-                padding: const EdgeInsets.only(left: 15.0, right: 15.0),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    IconButton(
-                      //Share Button
-                      onPressed: () async {
-                        final imgBytes = await screenshotController.capture();
-                        share(imgBytes!);
-                      },
-                      icon: Icon(Icons.share_rounded,
-                          color: Colors.grey.shade400, size: 28.0),
-                    ),
-                    Stack(children: [
-                      //Rating Button + overall Rating //TODO: Function for overall rating in Text widget
-                      IconButton(
-                          onPressed: () async {
-                            await makeRating();
-                            setState(
-                                () {}); //needed in addition to async to update the rating inside the Stream Page
-                          },
-                          icon: Icon(Icons.star,
-                              color: Colors.grey.shade400, size: 28.0)),
-                      Padding(
-                        padding: const EdgeInsets.only(left: 40.0, top: 13.0),
-                        child: Text("$rating",
-                            style: TextStyle(
-                                fontSize: 20.0, color: Colors.grey.shade400)),
-                      )
-                    ]),
-                    IconButton(
-                        //Add to Watchlist Button
-                        onPressed: () {
-                          ScaffoldMessenger.of(context)
-                            ..removeCurrentSnackBar()
-                            ..showSnackBar(listSnackBar(widget.stream.type));
-                          setState(() {
-                            addWatchlist = !addWatchlist;
-                            //TODO: Save film to watchlist
-                          });
-                        },
-                        icon: addWatchlist
-                            ? Icon(Icons.check_rounded,
-                                color: Colors.grey.shade400, size: 34.0)
-                            : Icon(Icons.add_rounded,
-                                color: Colors.grey.shade400, size: 34.0)),
-                    IconButton(
-                        //Favourites Button
-                        onPressed: () {
-                          ScaffoldMessenger.of(context)
-                            ..removeCurrentSnackBar()
-                            ..showSnackBar(favSnackBar(widget.stream.type));
-                          setState(() {
-                            addFavourites = !addFavourites;
-                            //TODO: Save film to favourites
-                          });
-                        },
-                        icon: addFavourites
-                            ? const Icon(
-                                Icons.favorite,
-                                color: Colors.red,
-                                size: 32.0,
-                              )
-                            : const Icon(
-                                Icons.favorite_border_outlined,
-                                color: Colors.red,
-                                size: 32.0,
-                              )),
-                  ],
-                ),
-              ),
-
-              //Second row with year, pg and seasons/duration
-              Padding(
-                padding:
-                    const EdgeInsets.only(left: 15.0, right: 8.0, top: 25.0),
-                child: Row(
-                  children: [
-                    //Year:
-                    Text(
-                      widget.stream.year,
-                      style:
-                          TextStyle(color: Colors.grey.shade400, fontSize: 18),
-                    ),
-                    const SizedBox(width: 25.0),
-                    //PG:
-                    ClipRRect(
-                        borderRadius: BorderRadius.circular(5.0),
-                        child: Container(
-                          padding:
-                              const EdgeInsets.fromLTRB(2.2, 1.0, 2.2, 1.0),
-                          height: 23,
-                          width: 35.5,
-                          //25.5 for only numbers
-                          color: Colors.grey.shade400,
-                          child: Text(
-                            widget.stream.pg,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                color: backgroundColor,
-                                fontSize: 18,
-                                fontWeight: FontWeight.bold),
+                    //First row with share, rating, add to watchlist and add to favourites
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 15.0, right: 15.0, top: 10.0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          IconButton(
+                            //Share Button
+                            onPressed: () async {
+                              final imgBytes =
+                                  await screenshotController.capture();
+                              share(imgBytes!);
+                            },
+                            icon: Icon(Icons.share_rounded,
+                                color: mainColor, size: 28.0),
                           ),
-                        )),
-                    const SizedBox(width: 25.0),
-                    //Seasons / Duration:
-                    Text(
-                      widget.stream.seasonOrDuration,
-                      style:
-                          TextStyle(color: Colors.grey.shade400, fontSize: 18),
-                    )
-                  ],
-                ),
-              ),
-
-              //Third row with genres
-              Padding(
-                padding:
-                    const EdgeInsets.only(left: 15.0, right: 15.0, top: 20.0),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    //Genres:
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          textAlign: TextAlign.left,
-                          divideGenres(),
-                          style: TextStyle(
-                              color: Colors.grey.shade400,
-                              fontSize: 17,
-                              fontWeight: FontWeight.w500),
-                        ),
-                      ],
+                          Stack(children: [
+                            //Rating Button + overall Rating //TODO: Function for overall rating in Text widget
+                            IconButton(
+                                onPressed: () async {
+                                  await makeRating();
+                                  setState(
+                                      () {}); //needed in addition to async to update the rating inside the Stream Page
+                                },
+                                icon: Icon(Icons.star,
+                                    color:mainColor, size: 28.0)),
+                            Padding(
+                              padding:
+                                  const EdgeInsets.only(left: 40.0, top: 13.0),
+                              child: GestureDetector(
+                                onTap: () async {
+                                  await makeRating();
+                                  setState(
+                                      () {}); //needed in addition to async to update the rating inside the Stream Page
+                                },
+                                child: Text("$rating",
+                                    style: TextStyle(
+                                        fontSize: 20.0,
+                                        color: mainColor)),
+                              ),
+                            )
+                          ]),
+                          IconButton(
+                              //Add to Watchlist Button
+                              onPressed: () {
+                                ScaffoldMessenger.of(context)
+                                  ..removeCurrentSnackBar()
+                                  ..showSnackBar(
+                                      listSnackBar(widget.stream.type));
+                                setState(() {
+                                  addWatchlist = !addWatchlist;
+                                  //TODO: Save film to watchlist
+                                });
+                              },
+                              icon: addWatchlist
+                                  ? Icon(Icons.check_rounded,
+                                      color: mainColor, size: 34.0)
+                                  : Icon(Icons.add_rounded,
+                                      color: mainColor, size: 34.0)),
+                          IconButton(
+                              //Favourites Button
+                              onPressed: () {
+                                ScaffoldMessenger.of(context)
+                                  ..removeCurrentSnackBar()
+                                  ..showSnackBar(
+                                      favSnackBar(widget.stream.type));
+                                setState(() {
+                                  addFavourites = !addFavourites;
+                                  //TODO: Save film to favourites
+                                });
+                              },
+                              icon: addFavourites
+                                  ? const Icon(
+                                      Icons.favorite,
+                                      color: Colors.red,
+                                      size: 32.0,
+                                    )
+                                  : const Icon(
+                                      Icons.favorite_border_outlined,
+                                      color: Colors.red,
+                                      size: 32.0,
+                                    )),
+                        ],
+                      ),
                     ),
-                  ),
-                ),
-              ),
 
-              //Fourth row with plot
-              Padding(
-                  padding:
-                      const EdgeInsets.only(left: 15.0, right: 15.0, top: 18.0),
-                  //top only 18 instead of 20, because the text in checkForMaxLines gets added 2 top-padding
-                  child: LayoutBuilder(builder: (context, constraints) {
-                    return checkForMaxLines(
-                        widget.stream.plot, context, constraints);
-                  })),
-
-              //Fifth row with cast
-              Padding(
-                  padding:
-                      const EdgeInsets.only(left: 15.0, right: 15.0, top: 10.0),
-                  child: Row(
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.only(right: 15.0),
-                        child: Text(
-                          "Cast:",
-                          style: TextStyle(
-                              color: Colors.grey.shade400,
-                              fontSize: 17,
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ),
-                      Expanded(
-                        child: Container(
-                          color: Colors.transparent,
-                          height: 50,
-                          child: ListView.builder(
-                              scrollDirection: Axis.horizontal,
-                              itemCount: widget.stream.cast.length,
-                              itemBuilder: (context, index) {
-                                final actor = widget.stream.cast[index];
-                                return castAndDirectorButton(actor);
-                              }),
-                        ),
-                      ),
-                    ],
-                  )),
-
-              //Sixth row with director
-              Padding(
-                padding:
-                    const EdgeInsets.only(left: 15.0, right: 15.0, top: 10.0),
-                child: Row(
-                  children: [
+                    //Second row with year, pg and seasons/duration
                     Padding(
-                      padding: const EdgeInsets.only(right: 15.0),
-                      child: Text(
-                        "Directed by:",
-                        style: TextStyle(
-                            color: Colors.grey.shade400,
-                            fontSize: 17,
-                            fontWeight: FontWeight.bold),
+                      padding: const EdgeInsets.only(
+                          left: 15.0, right: 8.0, top: 25.0),
+                      child: Row(
+                        children: [
+                          //Year:
+                          Text(
+                            widget.stream.year,
+                            style: TextStyle(
+                                color: mainColor, fontSize: 18),
+                          ),
+                          const SizedBox(width: 25.0),
+                          //PG:
+                          ClipRRect(
+                              borderRadius: BorderRadius.circular(5.0),
+                              child: Container(
+                                padding: const EdgeInsets.fromLTRB(
+                                    2.2, 1.0, 2.2, 1.0),
+                                height: 23,
+                                width: 35.5,
+                                //25.5 for only numbers
+                                color: Colors.grey.shade400,
+                                child: Text(
+                                  widget.stream.pg,
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: backgroundColor,
+                                      fontSize: 18,
+                                      fontWeight: FontWeight.bold),
+                                ),
+                              )),
+                          const SizedBox(width: 25.0),
+                          //Seasons / Duration:
+                          Text(
+                            widget.stream.seasonOrDuration,
+                            style: TextStyle(
+                                color: mainColor, fontSize: 18),
+                          )
+                        ],
                       ),
                     ),
-                    Expanded(
-                      child: Container(
-                        color: Colors.transparent,
-                        height: 50,
-                        child: ListView.builder(
-                            scrollDirection: Axis.horizontal,
-                            itemCount: widget.stream.direction.length,
-                            itemBuilder: (context, index) {
-                              final actor = widget.stream.direction[index];
-                              return castAndDirectorButton(actor);
-                            }),
-                      ),
-                    ),
-                  ],
-                ),
-              ),
 
-              //last row with streaming providers
-              Padding(
-                padding:
-                    const EdgeInsets.only(left: 15.0, top: 30.0, right: 15.0),
-                //Stream providers:
-                child: Column(
-                  children: [
-                    Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(checkEmptyList(),
-                          style: TextStyle(
-                              color: Colors.grey.shade400,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold)),
-                    ),
+                    //Third row with genres
                     Padding(
-                      padding: const EdgeInsets.only(top: 10.0),
+                      padding: const EdgeInsets.only(
+                          left: 15.0, right: 15.0, top: 20.0),
                       child: Align(
                         alignment: Alignment.centerLeft,
-                        child: Container(
-                          height: 95,
-                          color: Colors.transparent,
-                          child: ListView.builder(
-                              shrinkWrap: true,
-                              scrollDirection: Axis.horizontal,
-                              itemCount: widget.stream.provider.length,
-                              itemBuilder: (context, index) {
-                                final provider = widget.stream.provider[index];
-                                return buildCard(provider);
-                              }),
+                        child: SingleChildScrollView(
+                          scrollDirection: Axis.horizontal,
+                          //Genres:
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                textAlign: TextAlign.left,
+                                divideGenres(),
+                                style: TextStyle(
+                                    color: mainColor,
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ],
+                          ),
                         ),
                       ),
                     ),
-                  ],
+
+                    //Fourth row with plot
+                    Padding(
+                        padding: const EdgeInsets.only(
+                            left: 15.0, right: 15.0, top: 18.0),
+                        //top only 18 instead of 20, because the text in checkForMaxLines gets added 2 top-padding
+                        child: LayoutBuilder(builder: (context, constraints) {
+                          return /*checkForMaxLines(
+                              widget.stream.plot, context, constraints);*/
+                              ExpandText(widget.stream.plot,
+                                  style: TextStyle(
+                                      color: mainColor,
+                                      fontSize: 16 *
+                                          1 /
+                                          MediaQuery.of(context)
+                                              .textScaleFactor),
+                                  indicatorIcon: Icons.keyboard_arrow_down,
+                                  indicatorIconColor: Colors.grey.shade400,
+                                  indicatorPadding:
+                                      const EdgeInsets.only(bottom: 1.0),
+                                  maxLines: /*MediaQuery.of(context).textScaleFactor == 1.1 ? 6 : 5*/
+                                      6,
+                                  //TODO: !!
+                                  expandIndicatorStyle:
+                                      ExpandIndicatorStyle.icon);
+                        })),
+
+                    //Fifth row with cast
+                    Padding(
+                        padding: const EdgeInsets.only(
+                            left: 15.0, right: 15.0, top: 15.0),
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.only(right: 15.0),
+                              child: Text(
+                                "Cast:",
+                                style: TextStyle(
+                                    color: mainColor,
+                                    fontSize: 17,
+                                    fontWeight: FontWeight.bold),
+                              ),
+                            ),
+                            Expanded(
+                              child: Container(
+                                color: Colors.transparent,
+                                height: 50,
+                                child: ListView.builder(
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: widget.stream.cast.length,
+                                    itemBuilder: (context, index) {
+                                      final actor = widget.stream.cast[index];
+                                      return castAndDirectorButton(actor);
+                                    }),
+                              ),
+                            ),
+                          ],
+                        )),
+
+                    //Sixth row with director
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 15.0, right: 15.0, top: 10.0),
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.only(right: 15.0),
+                            child: Text(
+                              "Directed by:",
+                              style: TextStyle(
+                                  color: mainColor,
+                                  fontSize: 17,
+                                  fontWeight: FontWeight.bold),
+                            ),
+                          ),
+                          Expanded(
+                            child: Container(
+                              color: Colors.transparent,
+                              height: 50,
+                              child: ListView.builder(
+                                  scrollDirection: Axis.horizontal,
+                                  itemCount: widget.stream.direction.length,
+                                  itemBuilder: (context, index) {
+                                    final actor =
+                                        widget.stream.direction[index];
+                                    return castAndDirectorButton(actor);
+                                  }),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+
+                    //last row with streaming providers
+                    Padding(
+                      padding: const EdgeInsets.only(
+                          left: 15.0, top: 30.0, right: 15.0),
+                      //Stream providers:
+                      child: Column(
+                        children: [
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Text(checkEmptyList(),
+                                style: TextStyle(
+                                    color: mainColor,
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.bold)),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(top: 10.0),
+                            child: Align(
+                              alignment: Alignment.centerLeft,
+                              child: Container(
+                                height: 95,
+                                color: Colors.transparent,
+                                child: ListView.builder(
+                                    shrinkWrap: true,
+                                    scrollDirection: Axis.horizontal,
+                                    itemCount: widget.stream.provider.length,
+                                    itemBuilder: (context, index) {
+                                      final provider =
+                                          widget.stream.provider[index];
+                                      return buildCard(provider);
+                                    }),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ]),
                 ),
               ),
-            ]),
-          ),
-        ),
-      ),
+            ),
+          ])),
     );
   }
 
@@ -533,7 +577,7 @@ class _StreamPageState extends State<StreamPage> {
         },
         child: SizedBox(
           //the box container that enables to scroll
-          height: 88.0,
+          height: 100.0,
           child: SingleChildScrollView(
               scrollDirection: Axis.vertical, child: returnPlot),
         ),
@@ -548,9 +592,12 @@ class _StreamPageState extends State<StreamPage> {
    * When tapping on Button, the corresponding actor/director screen should be shown
    */
   Widget castAndDirectorButton(String actor) {
-    EdgeInsets outsidePadding = const EdgeInsets.fromLTRB(10.0, 7.0, 0.0, 7.0); //Normal padding between actor/director buttons
+    EdgeInsets outsidePadding = const EdgeInsets.fromLTRB(
+        10.0, 7.0, 0.0, 7.0); //Normal padding between actor/director buttons
 
-    if (widget.stream.cast.first == actor || widget.stream.direction.first == actor) { //No padding left if first actor/director button
+    if (widget.stream.cast.first == actor ||
+        widget.stream.direction.first == actor) {
+      //No padding left if first actor/director button
       outsidePadding = const EdgeInsets.fromLTRB(0.0, 7.0, 0.0, 7.0);
     }
 
@@ -578,8 +625,11 @@ class _StreamPageState extends State<StreamPage> {
 
   Image isOnline() {
     try {
-      return Image.network(widget.stream.image,
-          width: double.infinity, height: 320, fit: BoxFit.cover);
+      return Image.network(
+        widget.stream.image,
+        //width: double.infinity, height: 320, fit: BoxFit.cover
+        fit: BoxFit.cover, height: MediaQuery.of(context).size.height,
+      );
     } on SocketException catch (_) {
       return Image.asset("assets/images/questionMark.png",
           width: double.infinity, height: 320, fit: BoxFit.cover);
