@@ -66,6 +66,9 @@ dependencies:
   # Rating Bar
   flutter_rating_bar: ^4.0.1
 
+  # Expand for Plot
+  expand_widget: ^3.1.1
+
   # Stacked for Apple Sign in
   # stacked_firebase_auth: ^2.19.2
   # stacked: ^3.2.7
@@ -122,14 +125,16 @@ flutter:
     # StreamPage and Provider:
     - assets/images/pg.png
     - assets/images/questionMark.png
-    - assets/images/provider/amazon.png
     - assets/images/provider/appletv.png
     - assets/images/provider/appletvplus.png
     - assets/images/provider/crunchyroll.png
     - assets/images/provider/disneyplus.png
     - assets/images/provider/hulu.png
+    - assets/images/provider/magentatv.png
     - assets/images/provider/netflix.png
+    - assets/images/provider/prime.png
     - assets/images/provider/skygo.png
+    - assets/images/provider/wakanim.png
     - assets/images/provider/wow.png
 
     # HomePage Tiles:
