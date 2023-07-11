@@ -88,8 +88,9 @@ dev_dependencies:
   flutter_launcher_icons: ^0.13.1
 
 flutter_launcher_icons:
-  image_path: "assets/images/icons/streame_m_clear.png"
+  image_path: "assets/icons/streame_m_clear.png"
   android: true
+  ios: true
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -105,16 +106,13 @@ flutter:
   # To add assets to your application, add an assets section, like this:
   assets:
     # App icons:
-    - assets/images/icons/background.png #not used
-    - assets/images/icons/streame_appicon.png #not used
-    - assets/images/icons/streame.png
-    - assets/images/icons/streame_m.png #not used
-    - assets/images/icons/streame_m_clear.png
-    - assets/images/icons/streame_white.png
-    - assets/images/icons/theatre.png
-
-    # Edit Profile
-    - assets/images/blank-profile-picture.png
+    - assets/icons/background.png #not used
+    - assets/icons/streame_appicon.png #not used
+    - assets/icons/streame.png
+    - assets/icons/streame_m.png #not used
+    - assets/icons/streame_m_clear.png
+    - assets/icons/streame_white.png
+    - assets/icons/theatre.png
 
     # Login Tiles:
     - assets/images/login/anonymous.png
@@ -122,26 +120,30 @@ flutter:
     - assets/images/login/facebook.png #not used
     - assets/images/login/google.png
 
-    # StreamPage and Provider:
-    - assets/images/pg.png
-    - assets/images/questionMark.png
-    - assets/images/provider/appletv.png
-    - assets/images/provider/appletvplus.png
-    - assets/images/provider/crunchyroll.png
-    - assets/images/provider/disneyplus.png
-    - assets/images/provider/hulu.png
-    - assets/images/provider/magentatv.png
-    - assets/images/provider/netflix.png
-    - assets/images/provider/prime.png
-    - assets/images/provider/skygo.png
-    - assets/images/provider/wakanim.png
-    - assets/images/provider/wow.png
+    # StreamDetailsPage:
+    - assets/images/platforms/appletv.png
+    - assets/images/platforms/appletvplus.png
+    - assets/images/platforms/crunchyroll.png
+    - assets/images/platforms/disneyplus.png
+    - assets/images/platforms/hulu.png
+    - assets/images/platforms/magentatv.png
+    - assets/images/platforms/netflix.png
+    - assets/images/platforms/prime.png
+    - assets/images/platforms/skygo.png
+    - assets/images/platforms/wakanim.png
+    - assets/images/platforms/wow.png
 
     # HomePage Tiles:
-    - assets/images/deadpool_favourites.png
-    - assets/images/strangerthings_watchlist.png
-    - assets/images/potc_explore.png
-    - assets/images/spiderman_help.png
+    - assets/images/home/deadpool_favourites.png
+    - assets/images/home/strangerthings_watchlist.png
+    - assets/images/home/potc_explore.png
+    - assets/images/home/spiderman_help.png
+
+    # Edit Profile
+    - assets/images/blank-profile-picture.png
+
+    # Platform provider:
+    - assets/images/questionMark.png
 
   #   - images/a_dot_burr.jpeg
   #   - images/a_dot_ham.jpeg
