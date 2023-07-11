@@ -10,7 +10,7 @@ import 'package:stream_me/android/app/src/pages/others/help.dart';
 import 'package:stream_me/android/app/src/pages/tabs/search.dart';
 import 'package:stream_me/android/app/src/pages/tabs/watchlist.dart';
 
-import '../widgets/edit_profile_page.dart';
+import '../pages/others/edit_profile_page.dart';
 import '../widgets/navigation_icons.dart';
 import '../auth/auth_main.dart';
 import 'others/filter.dart';
