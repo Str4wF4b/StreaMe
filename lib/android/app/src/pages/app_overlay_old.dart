@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:stream_me/android/app/src/widgets/app_bar.dart';
+import 'package:stream_me/android/app/src/widgets/global/app_bar.dart';
 import 'package:stream_me/android/app/src/widgets/bottom_app_bar.dart';
 import 'package:stream_me/android/app/src/widgets/list_items.dart';
 import 'package:stream_me/android/app/src/pages/tabs/explore.dart';
@@ -42,6 +42,7 @@ class AppOverlayOld extends StatefulWidget {
     WatchlistPage(), //Index = 8, selectedMenuIndex = 8
     HelpPage(), //Index = 9, selectedMenuIndex = 9
   ];
+
   final titles = [
     "",
     "Search",

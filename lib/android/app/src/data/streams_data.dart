@@ -161,4 +161,18 @@ final allStreams = <Streams>[
       provider: ["DisneyPlus", "Prime"],
       image: "https://www.themoviedb.org/t/p/original/vOpV6HrtAkNQxCWAgtU4NmQ1KPe.jpg"
   ),
+  const Streams(
+      id: 11,
+      title: "One Piece",
+      type: "Series",
+      year: "1999 - current",
+      pg: "12",
+      seasonOrDuration: "1 h 56 min.",
+      genre: ["Animation", "Action", "Adventure", "Comedy"],
+      cast: ["Mayumi Tanaka", "Kazuya Nakai", "Akemi Okamura", "Kappei Yamaguchi", "Hiroaki Hirata"],
+      direction: ["Eiichirō Oda"],
+      plot: "Years ago, the fearsome Pirate King, Gol D. Roger was executed leaving a huge pile of treasure and the famous \"One Piece\" behind. Whoever claims the \"One Piece\" will be named the new King of the Pirates. \nMonkey D. Luffy, a boy who consumed a \"Devil Fruit,\" decides to follow in the footsteps of his idol, the pirate Shanks, and find the One Piece. It helps, of course, that his body has the properties of rubber and that he's surrounded by a bevy of skilled fighters and thieves to help him along the way. \nLuffy will do anything to get the One Piece and become King of the Pirates!",
+      provider: ["Crunchyroll"],
+      image: "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/fcXdJlbSdUEeMSJFsXKsznGwwok.jpg"
+  ),
 ];

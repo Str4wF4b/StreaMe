@@ -28,6 +28,7 @@ apply plugin: 'com.google.gms.google-services' // firestore
 
 android {
     namespace "com.example.stream_me" // for facebook?
+    //testNamespace "com.example.stream_me" // for testing
     compileSdkVersion 33
     ndkVersion flutter.ndkVersion
 
