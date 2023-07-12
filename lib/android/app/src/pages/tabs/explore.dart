@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
 
-import '../others/app_overlay.dart';
+import '../../widgets/global/app_overlay.dart';
 import 'home.dart';
 
 class ExplorePage extends StatefulWidget {

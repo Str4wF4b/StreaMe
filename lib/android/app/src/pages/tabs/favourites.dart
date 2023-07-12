@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:stream_me/android/app/src/data/streams_data.dart';
 
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
-import '../../widgets/stream_tile.dart';
+import '../../widgets/features/stream_tile.dart';
 
 class FavouritesPage extends StatefulWidget {
   const FavouritesPage({Key? key}) : super(key: key);

@@ -4,10 +4,10 @@ import 'package:stream_me/android/app/src/services/functions/auth_service.dart';
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
 import 'package:stream_me/android/app/src/utils/images.dart';
 
-import '../widgets/login_divider.dart';
-import '../widgets/login_sign-buttons.dart';
-import '../widgets/login_text-field.dart';
-import '../widgets/login_tile.dart';
+import '../widgets/features/login_divider.dart';
+import '../widgets/features/login_sign-buttons.dart';
+import '../widgets/features/login_text-field.dart';
+import '../widgets/features/login_tile.dart';
 import 'auth_popups.dart';
 
 class RegisterPage extends StatefulWidget {
