@@ -2,32 +2,38 @@ import 'dart:io';
 import 'dart:typed_data';
 //import 'dart:ui';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:expand_widget/expand_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
+import 'package:stream_me/android/app/src/data/actor_data.dart';
 import 'package:stream_me/android/app/src/data/streams_data.dart';
+import 'package:stream_me/android/app/src/model/actor_model.dart';
 import 'package:stream_me/android/app/src/model/streams_model.dart';
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
 import 'package:stream_me/android/app/src/utils/images.dart';
+import '../../utils/constants.dart';
+import '../others/actorDirectorDetails.dart';
 
 class StreamDetailsPage extends StatefulWidget {
   final Streams stream;
 
-  StreamDetailsPage({super.key, required this.stream});
+  const StreamDetailsPage({super.key, required this.stream});
 
   @override
   State<StreamDetailsPage> createState() => _StreamDetailsPageState();
-
-  List<bool> favourites = List.filled(allStreams.length,
-      false); //a list with all the favourite movies and streams
 }
 
 class _StreamDetailsPageState extends State<StreamDetailsPage> {
-  ColorPalette color = ColorPalette();
-  Images image = Images();
+  final ColorPalette color = ColorPalette();
+  final Images image = Images();
+  final Constants cons = Constants();
+
+  List<bool> favourites = List.filled(allStreams.length,
+      false); //a list with all the favourite movies and streams
 
   final screenshotController =
       ScreenshotController(); //controller to manage screenshots
@@ -36,8 +42,16 @@ class _StreamDetailsPageState extends State<StreamDetailsPage> {
   bool addWatchlist = false; //boolean to trigger the watchlist button option
   double rating = 1; //initial rating
 
+  final keyRating =
+      GlobalKey(); //GlobalKey to determine the size and position of the rating icon
+  Size? sizeRating; //The size of the rating icon
+  Offset? positionRating; //The position of the rating icon
+
+  late List actorsDirectors = allActors;
+
   @override
   Widget build(BuildContext context) {
+    getSizeAndPosition();
     return Screenshot(
       controller: screenshotController,
       child: Scaffold(
@@ -57,7 +71,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage> {
               pinned: true,
               expandedHeight: 300,
               flexibleSpace: FlexibleSpaceBar(
-                background: isOnline(),
+                background: loadCoverImage(),
               ),
             ),
             SliverToBoxAdapter(
@@ -87,7 +101,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage> {
                               share(imgBytes!);
                             },
                             icon: Icon(Icons.share_rounded,
-                                color: color.streamDetailsPageText, size: 28.0),
+                                color: color.bodyTextColor, size: 28.0),
                           ),
                           Stack(children: [
                             //Rating Button + overall Rating //TODO: Function for overall rating in Text widget
@@ -97,8 +111,12 @@ class _StreamDetailsPageState extends State<StreamDetailsPage> {
                                   setState(
                                       () {}); //needed in addition to async to update the rating inside the Stream Page
                                 },
-                                icon: Icon(Icons.star,
-                                    color: color.streamDetailsPageText, size: 28.0)),
+                                icon: Icon(
+                                  Icons.star,
+                                  color: color.bodyTextColor,
+                                  size: 28.0,
+                                  key: keyRating,
+                                )),
                             Padding(
                               padding:
                                   const EdgeInsets.only(left: 40.0, top: 13.0),
@@ -110,7 +128,8 @@ class _StreamDetailsPageState extends State<StreamDetailsPage> {
                                 },
                                 child: Text("$rating",
                                     style: TextStyle(
-                                        fontSize: 20.0, color: color.streamDetailsPageText)),
+                                        fontSize: 20.0,
+                                        color: color.bodyTextColor)),
                               ),
                             )
                           ]),
@@ -128,9 +147,9 @@ class _StreamDetailsPageState extends State<StreamDetailsPage> {
                               },
                               icon: addWatchlist
                                   ? Icon(Icons.check_rounded,
-                                      color: color.streamDetailsPageText, size: 34.0)
+                                      color: color.bodyTextColor, size: 34.0)
                                   : Icon(Icons.add_rounded,
-                                      color: color.streamDetailsPageText, size: 34.0)),
+                                      color: color.bodyTextColor, size: 34.0)),
                           IconButton(
                               //Favourites Button
                               onPressed: () {
@@ -167,7 +186,8 @@ class _StreamDetailsPageState extends State<StreamDetailsPage> {
                           //Year:
                           Text(
                             widget.stream.year,
-                            style: TextStyle(color: color.streamDetailsPageText, fontSize: 18),
+                            style: TextStyle(
+                                color: color.bodyTextColor, fontSize: 18),
                           ),
                           const SizedBox(width: 25.0),
                           //PG:
@@ -193,7 +213,8 @@ class _StreamDetailsPageState extends State<StreamDetailsPage> {
                           //Seasons / Duration:
                           Text(
                             widget.stream.seasonOrDuration,
-                            style: TextStyle(color: color.streamDetailsPageText, fontSize: 18),
+                            style: TextStyle(
+                                color: color.bodyTextColor, fontSize: 18),
                           )
                         ],
                       ),
@@ -215,7 +236,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage> {
                                 textAlign: TextAlign.left,
                                 divideGenres(),
                                 style: TextStyle(
-                                    color: color.streamDetailsPageText,
+                                    color: color.bodyTextColor,
                                     fontSize: 17,
                                     fontWeight: FontWeight.w500),
                               ),
@@ -235,7 +256,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage> {
                               widget.stream.plot, context, constraints);*/
                               ExpandText(widget.stream.plot,
                                   style: TextStyle(
-                                      color: color.streamDetailsPageText,
+                                      color: color.bodyTextColor,
                                       fontSize: 16 *
                                           1 /
                                           MediaQuery.of(context)
@@ -262,7 +283,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage> {
                               child: Text(
                                 "Cast:",
                                 style: TextStyle(
-                                    color: color.streamDetailsPageText,
+                                    color: color.bodyTextColor,
                                     fontSize: 17,
                                     fontWeight: FontWeight.bold),
                               ),
@@ -294,7 +315,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage> {
                             child: Text(
                               "Directed by:",
                               style: TextStyle(
-                                  color: color.streamDetailsPageText,
+                                  color: color.bodyTextColor,
                                   fontSize: 17,
                                   fontWeight: FontWeight.bold),
                             ),
@@ -307,9 +328,9 @@ class _StreamDetailsPageState extends State<StreamDetailsPage> {
                                   scrollDirection: Axis.horizontal,
                                   itemCount: widget.stream.direction.length,
                                   itemBuilder: (context, index) {
-                                    final actor =
+                                    final director =
                                         widget.stream.direction[index];
-                                    return castAndDirectorButton(actor);
+                                    return castAndDirectorButton(director);
                                   }),
                             ),
                           ),
@@ -328,7 +349,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage> {
                             alignment: Alignment.centerLeft,
                             child: Text(checkEmptyList(),
                                 style: TextStyle(
-                                    color: color.streamDetailsPageText,
+                                    color: color.bodyTextColor,
                                     fontSize: 18,
                                     fontWeight: FontWeight.bold)),
                           ),
@@ -489,47 +510,142 @@ class _StreamDetailsPageState extends State<StreamDetailsPage> {
   Future makeRating() => showDialog(
       context: context,
       builder: (context) => StatefulBuilder(
-            builder: (context, setState) => Dialog(
-                backgroundColor: color.backgroundColor,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0),
-                    side: BorderSide(color: Colors.grey.shade400)),
-                insetPadding:
-                    const EdgeInsets.only(left: 125, top: 140.0, right: 15.0),
-                child: Row(
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.fromLTRB(10.0, 5.0, 6.0, 5.0),
-                      child: RatingBar.builder(
-                          minRating: 1,
-                          maxRating: 5,
-                          initialRating: rating,
-                          allowHalfRating: true,
-                          itemSize: 32.0,
-                          itemPadding: const EdgeInsets.all(2.0),
-                          glowColor: Colors.blueAccent,
-                          glowRadius: 3.0,
-                          updateOnDrag: true,
-                          itemBuilder: (context, _) => const Icon(
-                                Icons.star,
-                                color: Colors.amber,
-                              ),
-                          onRatingUpdate: (rating) => setState(() {
-                                this.rating = rating;
-                                this.setState(
-                                    () {}); //changing value inside Dialog and inside the Stream Page
-                              })),
-                    ),
-                    Padding(
-                        padding: const EdgeInsets.only(left: 5.0),
-                        child: Text("$rating",
-                            style: TextStyle(
-                                color: Colors.grey.shade300,
-                                fontSize: 19,
-                                fontWeight: FontWeight.w600)))
-                  ],
-                )),
+            builder: (context, setState) => Stack(
+              children: [
+                Positioned(
+                  top: positionRating?.dy,
+                  child: SizedBox(
+                    width: 370.0,
+                    child: Dialog(
+                        backgroundColor: color.backgroundColor,
+                        shape: RoundedRectangleBorder(
+                            borderRadius: BorderRadius.circular(10.0),
+                            side: BorderSide(color: Colors.grey.shade400)),
+                        insetPadding:
+                            const EdgeInsets.only(left: 125.0, top: 10.0),
+                        child: Row(
+                          children: [
+                            Padding(
+                              padding: const EdgeInsets.fromLTRB(
+                                  10.0, 5.0, 6.0, 5.0),
+                              child: RatingBar.builder(
+                                  minRating: 1,
+                                  maxRating: 5,
+                                  initialRating: rating,
+                                  allowHalfRating: true,
+                                  itemSize: 32.0,
+                                  itemPadding: const EdgeInsets.all(2.0),
+                                  glowColor: Colors.blueAccent,
+                                  glowRadius: 3.0,
+                                  updateOnDrag: true,
+                                  itemBuilder: (context, _) => const Icon(
+                                        Icons.star,
+                                        color: Colors.amber,
+                                      ),
+                                  onRatingUpdate: (rating) => setState(() {
+                                        this.rating = rating;
+                                        this.setState(
+                                            () {}); //changing value inside Dialog and inside the Stream Page
+                                      })),
+                            ),
+                            Padding(
+                                padding: const EdgeInsets.only(left: 5.0),
+                                child: Text("$rating",
+                                    style: TextStyle(
+                                        color: Colors.grey.shade300,
+                                        fontSize: 19,
+                                        fontWeight: FontWeight.w600)))
+                          ],
+                        )),
+                  ),
+                ),
+              ],
+            ),
           ));
+
+  void getSizeAndPosition() =>
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final RenderBox box =
+            keyRating.currentContext!.findRenderObject() as RenderBox;
+
+        setState(() {
+          positionRating = box.localToGlobal(Offset.zero); //coordinate system
+          //sizeRating = box.size;
+        });
+      });
+
+  /**
+   * A function that returns a GestureDetector of a Button with the actors/directors
+   * When tapping on Button, the corresponding actor/director screen should be shown
+   */
+  Widget castAndDirectorButton(String actorDirector) {
+    EdgeInsets outsidePadding = const EdgeInsets.fromLTRB(
+        10.0, 7.0, 0.0, 7.0); //Normal padding between actor/director buttons
+
+    if (widget.stream.cast.first == actorDirector ||
+        widget.stream.direction.first == actorDirector) {
+      //No padding left if first actor/director button
+      outsidePadding = const EdgeInsets.fromLTRB(0.0, 7.0, 0.0, 7.0);
+    }
+
+    //Button with GestureDetector to navigate to actor/director screen if clicked on
+    return GestureDetector(
+      onTap: () => Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => ActorDirectorDetailsPage(
+                actorDirector: currentActorDirector(actorDirector)),
+          )),
+      child: Container(
+        padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
+        // padding inside button
+        margin: outsidePadding,
+        // padding outside button
+        decoration: BoxDecoration(
+            //border: Border.all(color: Colors.white70),
+            color: Colors.grey.shade600,
+            borderRadius: BorderRadius.circular(15.0)),
+        child: Center(
+            child: Text(actorDirector,
+                style: TextStyle(
+                    color: color.backgroundColor,
+                    fontWeight: FontWeight.w500,
+                    fontSize: 14.0))),
+      ),
+    );
+  }
+
+  Widget loadCoverImage() {
+    //try {
+    return GestureDetector(
+      onTap: () {
+        showDialog(
+            context: context,
+            builder: (context) => Dialog(
+                  backgroundColor: Colors.transparent,
+                  child: CachedNetworkImage(
+                    imageUrl: widget.stream.image,
+                    placeholder: (context, url) => cons.imagePlaceholderRect,
+                    errorWidget: (context, url, error) => cons.imageErrorWidget,
+                  ),
+                ));
+      },
+      child: CachedNetworkImage(
+        imageUrl: widget.stream.image,
+        //width: double.infinity, height: 320, fit: BoxFit.cover
+        fit: BoxFit.cover,
+        height: MediaQuery.of(context).size.height,
+        placeholder: (context, url) => cons.imagePlaceholderRect,
+        errorWidget: (context, url, error) => cons.imageErrorWidget,
+      ),
+    );
+    //} on SocketException catch (_) {
+    // return Image.asset(image.notOnline,
+    //     width: double.infinity, height: 320, fit: BoxFit.cover);
+    //}
+  }
+
+  // ---------------------------------------------------------------------------------------------------------------------------------------------------------
 
   /**
    * A function that checks if the movie or series has a plot with over 5 lines
@@ -584,63 +700,30 @@ class _StreamDetailsPageState extends State<StreamDetailsPage> {
     return returnPlot;
   }
 
-  /**
-   * A function that returns a GestureDetector of a Button with the actors/directors
-   * When tapping on Button, the corresponding actor/director screen should be shown
-   */
-  Widget castAndDirectorButton(String actor) {
-    EdgeInsets outsidePadding = const EdgeInsets.fromLTRB(
-        10.0, 7.0, 0.0, 7.0); //Normal padding between actor/director buttons
-
-    if (widget.stream.cast.first == actor ||
-        widget.stream.direction.first == actor) {
-      //No padding left if first actor/director button
-      outsidePadding = const EdgeInsets.fromLTRB(0.0, 7.0, 0.0, 7.0);
-    }
-
-    //Button with GestureDetector to navigate to actor/director screen if clicked on
-    return GestureDetector(
-      onTap: () {},
-      child: Container(
-        padding: const EdgeInsets.fromLTRB(8.0, 0.0, 8.0, 0.0),
-        // padding inside button
-        margin: outsidePadding,
-        // padding outside button
-        decoration: BoxDecoration(
-            //border: Border.all(color: Colors.white70),
-            color: Colors.grey.shade600,
-            borderRadius: BorderRadius.circular(15.0)),
-        child: Center(
-            child: Text(actor,
-                style: TextStyle(
-                    color: color.backgroundColor,
-                    fontWeight: FontWeight.w500,
-                    fontSize: 14.0))),
-      ),
-    );
-  }
-
-  Widget isOnline() {
+  Actor currentActorDirector(String actorDirector) {
+    Actor currentActor = const Actor(
+        //if the actor does not exist already, i.e. this means not that this is a placeholder if the internet connection etc. is not working
+        id: 99999999,
+        displayName: "No one 😢",
+        firstName: "No",
+        secondName: "Name",
+        age: 0,
+        birthday: "never born",
+        placeOfBirth: "Nowhere",
+        biography: "No Biography.",
+        acting: {},
+        production: {},
+        directing: {},
+        image:
+            "https://static9.depositphotos.com/1555678/1106/i/950/depositphotos_11060156-stock-photo-3d-white-leaning-back-against.jpg");
     try {
-      return GestureDetector(
-        onTap: () {
-          showDialog(
-              context: context,
-              builder: (context) => Dialog(
-                backgroundColor: Colors.transparent,
-                    child: Image.network(widget.stream.image),
-                  ));
-        },
-        child: Image.network(
-          widget.stream.image,
-          //width: double.infinity, height: 320, fit: BoxFit.cover
-          fit: BoxFit.cover, height: MediaQuery.of(context).size.height,
-        ),
-      );
-    } on SocketException catch (_) {
-      return Image.asset(image.notOnline,
-          width: double.infinity, height: 320, fit: BoxFit.cover);
+      currentActor = allActors
+          .where((element) => element.displayName.toString() == actorDirector)
+          .single;
+    } catch (e) {
+      print(e);
     }
+    return currentActor;
   }
 
 /**

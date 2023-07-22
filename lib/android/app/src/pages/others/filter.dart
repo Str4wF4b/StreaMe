@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:stream_me/android/app/src/data/actor_data.dart';
 import 'package:stream_me/android/app/src/pages/others/filter_results.dart';
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
 
@@ -31,7 +32,16 @@ class FilterPage extends StatefulWidget {
     "Science-Fiction",
     "Thriller"
   ];
-  final List<String> actors = [
+
+  @override
+  State<FilterPage> createState() => _FilterPageState();
+}
+
+class _FilterPageState extends State<FilterPage> {
+  ColorPalette color = ColorPalette();
+  final List<String> actors = [];
+
+  /* = [
     "Hailee Steinfeld",
     "Shameik Moore",
     "Oscar Isaac",
@@ -62,20 +72,22 @@ class FilterPage extends StatefulWidget {
     "Juno Temple",
     "Madison Wolfe",
     "Frances O'Connor"
-  ];
+  ];*/
 
   @override
-  State<FilterPage> createState() => _FilterPageState();
-}
+  void initState() {
+    super.initState();
 
-class _FilterPageState extends State<FilterPage> {
-  ColorPalette color = ColorPalette();
+    for (var actor in allActors) {
+      actors.add(actor.displayName);
+    }
+
+    actors.sort((a, b) => a.toLowerCase().compareTo(
+        b.toLowerCase())); //sort actors list before loading filter widget
+  }
 
   @override
   Widget build(BuildContext context) {
-    widget.actors.sort((a, b) => a.toLowerCase().compareTo(
-        b.toLowerCase())); //sort actors list before loading filter widget
-
     return Container(
       color: Colors.transparent,
       //Container transparent to show Dialog opacity background in SearchPage
@@ -141,7 +153,9 @@ class _FilterPageState extends State<FilterPage> {
                             color: Colors.grey.shade400,
                             fontSize: 18),
                         hintText: "Search for year",
-                        hintStyle: TextStyle(color: Colors.grey.shade400, fontWeight: FontWeight.normal),
+                        hintStyle: TextStyle(
+                            color: Colors.grey.shade400,
+                            fontWeight: FontWeight.normal),
                         border: OutlineInputBorder(
                             borderRadius: BorderRadius.circular(20.0)),
                         enabledBorder: OutlineInputBorder(
@@ -154,30 +168,64 @@ class _FilterPageState extends State<FilterPage> {
                   ),
                 ),
                 const SizedBox(height: 25.0),
-                makeFilter(widget.value, widget.actors, "Actor"),
+                makeFilter(widget.value, actors, "Actor"),
                 //search an Actor in the whole Database
                 const SizedBox(height: 30),
-                GestureDetector(
-                    onTap: () {
-                      Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                              builder: (context) => FilterResultsPage()));
-                    },
-                    child: Container(
-                      padding: const EdgeInsets.all(15.0),
-                      margin: const EdgeInsets.symmetric(horizontal: 100.0),
-                      decoration: BoxDecoration(
-                        color: Colors.blue.shade800,
-                          border: Border.all(
-                              color: Colors.grey.shade400, width: 1.5),
-                          borderRadius: BorderRadius.circular(30.0)),
-                      child: Text(
-                        "Search filters",
-                        style: TextStyle(
-                            fontSize: 16.0, color: Colors.grey.shade400, fontWeight: FontWeight.w500),
-                      ),
-                    ))
+                Padding(
+                  padding: const EdgeInsets.only(left: 60.0, right: 60.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (context) => FilterResultsPage()));
+                          },
+                          child: Container(
+                            padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+                            //margin: const EdgeInsets.symmetric(horizontal: 100.0),
+                            width: 120,
+                            decoration: BoxDecoration(
+                                color: Colors.blueAccent,
+                                border: Border.all(
+                                    color: Colors.grey.shade300, width: 1.5),
+                                borderRadius: BorderRadius.circular(30.0)),
+                            child: Center(
+                              child: Text(
+                                "Search",
+                                style: TextStyle(
+                                    fontSize: 16.0,
+                                    color: Colors.grey.shade300,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                          )),
+                      GestureDetector(
+                          onTap: () {},
+                          child: Container(
+                            padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
+                            //margin: const EdgeInsets.symmetric(horizontal: 100.0),
+                            width: 120,
+                            decoration: BoxDecoration(
+                                color: Colors.redAccent,
+                                border: Border.all(
+                                    color: Colors.grey.shade300, width: 1.5),
+                                borderRadius: BorderRadius.circular(30.0)),
+                            child: Center(
+                              child: Text(
+                                "Reset",
+                                style: TextStyle(
+                                    fontSize: 16.0,
+                                    color: Colors.grey.shade300,
+                                    fontWeight: FontWeight.w500),
+                              ),
+                            ),
+                          ))
+                    ],
+                  ),
+                )
               ],
             ),
           ),
@@ -237,7 +285,7 @@ class _FilterPageState extends State<FilterPage> {
                 color: Colors.grey.shade400,
                 fontSize: 18),
             border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(20.0)),
+            OutlineInputBorder(borderRadius: BorderRadius.circular(20.0)),
             enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.grey.shade400),
                 borderRadius: BorderRadius.circular(20.0)),

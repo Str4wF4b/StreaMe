@@ -1,7 +1,9 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:stream_me/android/app/src/model/streams_model.dart';
 import 'package:stream_me/android/app/src/pages/others/streamDetails.dart';
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
+import 'package:stream_me/android/app/src/utils/constants.dart';
 
 class StreamTile extends StatefulWidget {
   final Streams stream;
@@ -29,14 +31,15 @@ class StreamTile extends StatefulWidget {
 }
 
 class _StreamTileState extends State<StreamTile> {
-  ColorPalette color = ColorPalette();
+  final ColorPalette color = ColorPalette();
+  final Constants cons = Constants();
+
   final keyRow = GlobalKey();
-  Size? size;
-  Offset? position;
+  //Size? size;
+  //Offset? position;
 
   @override
   Widget build(BuildContext context) {
-
     return GestureDetector(
         onTap: () => Navigator.push(
             context,
@@ -51,11 +54,13 @@ class _StreamTileState extends State<StreamTile> {
               Column(children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(15.0),
-                  child: Image.network(
-                    widget.image,
+                  child: CachedNetworkImage(
+                    imageUrl: widget.image,
                     fit: BoxFit.cover,
                     width: 100,
                     height: 100,
+                    placeholder: (context, url) => cons.imagePlaceholder,
+                    errorWidget: (context, url, error) => cons.imageErrorWidget,
                   ),
                 ),
               ]),
@@ -76,7 +81,7 @@ class _StreamTileState extends State<StreamTile> {
                             child: Text(
                               widget.title,
                               style: TextStyle(
-                                  color: color.streamDetailsPageText,
+                                  color: color.bodyTextColor,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16.0),
                             ),
@@ -89,8 +94,7 @@ class _StreamTileState extends State<StreamTile> {
                               Text(
                                 widget.year,
                                 style: TextStyle(
-                                    color: color.streamDetailsPageText,
-                                    fontSize: 13.0),
+                                    color: color.bodyTextColor, fontSize: 13.0),
                               ),
                               const SizedBox(width: 13.0),
                               ClipRRect(
@@ -100,7 +104,7 @@ class _StreamTileState extends State<StreamTile> {
                                         1.5, 0.0, 1.5, 0.0),
                                     height: 16,
                                     width: 25.5,
-                                    color: color.streamDetailsPageText,
+                                    color: color.bodyTextColor,
                                     child: Text(
                                       widget.pg,
                                       textAlign: TextAlign.center,
@@ -113,12 +117,12 @@ class _StreamTileState extends State<StreamTile> {
                                   )),
                               const SizedBox(width: 13.0),
                               Icon(Icons.star,
-                                  color: color.streamDetailsPageText,
-                                  size: 15.0),
+                                  color: color.bodyTextColor, size: 15.0),
+                              const SizedBox(width: 0.6),
                               Text("${widget.rating}",
                                   style: TextStyle(
                                       fontSize: 13.0,
-                                      color: color.streamDetailsPageText)),
+                                      color: color.bodyTextColor)),
                             ],
                           ),
                           const SizedBox(height: 5.0),
@@ -131,7 +135,7 @@ class _StreamTileState extends State<StreamTile> {
                               text: TextSpan(
                                   text: "Starring: ",
                                   style: TextStyle(
-                                      color: color.streamDetailsPageText,
+                                      color: color.bodyTextColor,
                                       fontSize: 13,
                                       fontWeight: FontWeight.bold),
                                   children: [
@@ -154,7 +158,7 @@ class _StreamTileState extends State<StreamTile> {
                                     ? "Not streamable at the moment."
                                     : "On: ",
                                 style: TextStyle(
-                                    color: color.streamDetailsPageText,
+                                    color: color.bodyTextColor,
                                     fontSize: 13,
                                     fontWeight: FontWeight.bold),
                                 children: [
@@ -172,7 +176,6 @@ class _StreamTileState extends State<StreamTile> {
                       ),
                       Positioned(
                         left: MediaQuery.of(context).size.width - 168,
-                        //adapt position with width and factor, factor has to be multiplied with scaleFactor that is different in every device (e.g. 1.0, 1.1, ...)
                         bottom: 24,
                         child: IconButton(
                             onPressed: () {
@@ -233,13 +236,13 @@ class _StreamTileState extends State<StreamTile> {
         children: [
           Text(
             "$title removed from Favourites.",
-            style: TextStyle(color: color.streamDetailsPageText),
+            style: TextStyle(color: color.bodyTextColor),
             textAlign: TextAlign.center,
           ),
           const SizedBox(width: 5),
           GestureDetector(
             onTap: undoFavRemoved,
-            child: const Text("Undo",
+            child: const Text("Undo.",
                 style: TextStyle(
                     color: Colors.blueAccent,
                     decoration: TextDecoration.underline)),
@@ -255,8 +258,8 @@ class _StreamTileState extends State<StreamTile> {
             keyRow.currentContext!.findRenderObject() as RenderBox;
 
         setState(() {
-          position = box.localToGlobal(Offset.zero); //coordinate system
-          size = box.size;
+          //position = box.localToGlobal(Offset.zero); //coordinate system
+          //size = box.size;
         });
       });
 }
