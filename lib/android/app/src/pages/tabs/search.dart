@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -6,6 +7,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:stream_me/android/app/src/data/streams_data.dart';
 import 'package:stream_me/android/app/src/model/streams_model.dart';
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
+import '../../utils/constants_and_values.dart';
 
 import '../others/streamDetails.dart';
 import '../others/filter.dart';
@@ -24,8 +26,8 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  ColorPalette color = ColorPalette();
-
+  final ColorPalette color = ColorPalette();
+  final ConstantsAndValues cons = ConstantsAndValues();
 
   @override
   Widget build(BuildContext context) {
@@ -38,27 +40,40 @@ class _SearchPageState extends State<SearchPage> {
   Widget buildBody() {
     return*/
         Scaffold(
+      backgroundColor: Colors.transparent,
       body: Container(
         color: color.middleBackgroundColor,
         child: Column(
           children: [
-            const SizedBox(height: 38),
+            const SizedBox(height: 25),
             Padding(
-              padding: const EdgeInsets.fromLTRB(24.0, 0.0, 0.0, 0.0),
+              padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
               child: Align(
                 alignment: Alignment.centerLeft,
-                child: Text(
-                    //TODO: Different names (Google, Apple or Anon)
-                    "Hey ${checkUsername()}, \nsearch for the newest movies and series.",
-                    style: TextStyle(
-                        color: Colors.grey.shade300,
-                        fontSize: 16.0,
-                        height: 1.25)),
+                child: RichText(
+                  text: TextSpan(
+                      text: "Hey ",
+                      style: TextStyle(
+                          color: color.bodyTextColor,
+                          fontSize: 15,
+                          height: 1.2),
+                      children: [
+                        TextSpan(
+                            text: checkUsername(),
+                            //TODO: Different names (Google, Apple or Anon)
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 16)),
+                        const TextSpan(
+                            text:
+                                ", \nsearch for the newest Movies or Series and add them to your Watchlist.",
+                            style: TextStyle(fontSize: 15))
+                      ]),
+                ),
               ),
             ),
             Stack(children: [
               Container(
-                margin: const EdgeInsets.fromLTRB(20.0, 20.0, 42.0, 20.0),
+                margin: const EdgeInsets.fromLTRB(20.0, 30.0, 42.0, 20.0),
                 child: TextField(
                   controller: widget.searchController,
                   decoration: InputDecoration(
@@ -86,8 +101,10 @@ class _SearchPageState extends State<SearchPage> {
                   onChanged: searchStream,
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 354, top: 37),
+              Positioned(
+                //padding: const EdgeInsets.only(left: 354, top: 37),
+                left: MediaQuery.of(context).size.width - 40,
+                bottom: MediaQuery.of(context).size.height - 766,
                 child: InkWell(
                   onTap: () {
                     showDialog(
@@ -95,7 +112,7 @@ class _SearchPageState extends State<SearchPage> {
                         builder: (BuildContext context) {
                           return Dialog(
                             backgroundColor:
-                            color.middleBackgroundColor.withOpacity(0.93),
+                                color.middleBackgroundColor.withOpacity(0.93),
                             insetPadding: EdgeInsets.zero,
                             //full width and height
                             child: FilterPage(),
@@ -103,9 +120,9 @@ class _SearchPageState extends State<SearchPage> {
                         });
                   },
                   child: Icon(
-                    size: 21.0,
+                    size: 22.0,
                     Icons.tune,
-                    color: Colors.grey.shade400,
+                    color: color.bodyTextColor,
                   ),
                 ),
               ),
@@ -146,15 +163,18 @@ class _SearchPageState extends State<SearchPage> {
    * Function that returns the clicked stream site with information about the movie or series
    */
   Widget buildStream(Streams stream) => ListTile(
-        leading: Image.network(
-          stream.image,
+        leading: CachedNetworkImage(
+          imageUrl: stream.image,
+          key: UniqueKey(),
           fit: BoxFit.cover,
           width: 50,
           height: 50,
+          placeholder: (context, url) => cons.imagePlaceholder,
+          errorWidget: (context, url, error) => cons.imageErrorWidgetLittle,
         ),
         title: Text(
           stream.title,
-          style: TextStyle(color: Colors.grey.shade300),
+          style: TextStyle(color: color.bodyTextColor),
         ),
         onTap: () => Navigator.push(
             context,
@@ -168,7 +188,7 @@ class _SearchPageState extends State<SearchPage> {
    */
   String checkUsername() {
     if (widget.user?.displayName == null || widget.user?.displayName == "") {
-      return "ma G"; //shown if anonymous user
+      return "unknown User"; //shown if anonymous user
     } else {
       return "${widget.user?.displayName}"; //show username
     }

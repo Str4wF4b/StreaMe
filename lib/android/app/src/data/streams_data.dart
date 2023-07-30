@@ -14,7 +14,7 @@ final allStreams = <Streams>[
       plot: "After reuniting with Gwen Stacy, Brooklyn’s full-time, friendly neighborhood Spider-Man is catapulted across the Multiverse, where he encounters the Spider Society, a team of Spider-People charged with protecting the Multiverse’s very existence. But when the heroes clash on how to handle a new threat, Miles finds himself pitted against the other Spiders and must set out on his own to save those he loves most.",
       provider: [],
       image:
-      "https://de.web.img3.acsta.net/pictures/23/05/02/09/53/0897240.jpg"),
+      "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/8Vt6mWEReuy4Of61Lnj5Xj704m8.jpg"),
   const Streams(
       id: 1,
       title: "Atypical",
@@ -28,7 +28,7 @@ final allStreams = <Streams>[
       plot: "Sam, an 18-year-old on the autism spectrum, takes a funny, yet painful, journey of self-discovery for love and independence and upends his family.",
       provider: ["Netflix"],
       image:
-      "https://flxt.tmsimg.com/assets/p14273937_b_h9_aa.jpg"),
+      "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/iZ10Q7bEBP5bYD8DpKIbsRxdpeC.jpg"),
   const Streams(
       id: 2,
       title: "Alice in Borderland",
@@ -42,7 +42,7 @@ final allStreams = <Streams>[
       plot: "With his two friends, a video-game-obsessed young man finds himself in a strange version of Tokyo where they must compete in dangerous games to win.",
       provider: ["Netflix"],
       image:
-      "https://www.tvmovie.de/assets/2022/12/22/92575-alice-in-borderland-staffel-3-wann-und-wie-geht-es-weiter.jpg"
+      "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/20mOwAAPwZ1vLQkw0fvuQHiG7bO.jpg"
   ),
   const Streams(
       id: 3,
@@ -67,12 +67,12 @@ final allStreams = <Streams>[
       pg: "16",
       seasonOrDuration: "3 Seasons",
       genre: ["Animation", "Action", "Adventure", "Science-Fiction", "Fantasy"],
-      cast: ["Natsuki Hanae", "Akari Kito"],
+      cast: ["Natsuki Hanae", "Akari Kito", "Hiro Shimono", "Yoshitsugu Matsuoka"],
       direction: ["	Haruo Sotozaki"],
       plot: "It is the Taisho Period in Japan. Tanjiro, a kindhearted boy who sells charcoal for a living, finds his family slaughtered by a demon. To make matters worse, his younger sister Nezuko, the sole survivor, has been transformed into a demon herself. Though devastated by this grim reality, Tanjiro resolves to become a “demon slayer” so that he can turn his sister back into a human, and kill the demon that massacred his family.",
       provider: ["Crunchyroll", "Hulu", "Netflix", "Wakanim"],
       image:
-      "https://m.media-amazon.com/images/M/MV5BZjZjNzI5MDctY2Y4YS00NmM4LTljMmItZTFkOTExNGI3ODRhXkEyXkFqcGdeQXVyNjc3MjQzNTI@._V1_.jpg"
+      "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/xUfRZu2mi8jH6SzQEJGP6tjBuYj.jpg"
   ),
   const Streams(
       id: 5,
@@ -87,7 +87,7 @@ final allStreams = <Streams>[
       plot: "When renowned crime novelist Harlan Thrombey is found dead at his estate just after his 85th birthday, the inquisitive and debonair Detective Benoit Blanc is mysteriously enlisted to investigate. From Harlan's dysfunctional family to his devoted staff, Blanc sifts through a web of red herrings and self-serving lies to uncover the truth behind Harlan's untimely death.",
       provider: ["MagentaTV"],
       image:
-      "https://m.media-amazon.com/images/M/MV5BMGUwZjliMTAtNzAxZi00MWNiLWE2NzgtZGUxMGQxZjhhNDRiXkEyXkFqcGdeQXVyNjU1NzU3MzE@._V1_.jpg"
+      "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/pThyQovXQrw2m0s9x82twj48Jq4.jpg"
   ),
   const Streams(
       id: 6,
@@ -107,7 +107,7 @@ final allStreams = <Streams>[
   const Streams(
       id: 7,
       title: "Ted Lasso",
-      type: "Movie",
+      type: "Series",
       year: "2020 - 2023",
       pg: "12",
       seasonOrDuration: "3 Seasons",
@@ -117,7 +117,7 @@ final allStreams = <Streams>[
       plot: "Ted Lasso, an American football coach, moves to England when he’s hired to manage a soccer team — despite having no experience. With cynical players and a doubtful town, will he get them to see the Ted Lasso Way?",
       provider: ["AppleTVPlus"],
       image:
-      "https://www.werstreamt.es/assets/Media/Posters/apple/Ted_Lasso_key_art_2x3-small__ScaleWidthWzM0Ml0.png"
+      "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/5fhZdwP1DVJ0FyVH6vrFdHwpXIn.jpg"
   ),
   const Streams(
       id: 8,
@@ -160,5 +160,19 @@ final allStreams = <Streams>[
       plot: "Miles Morales is juggling his life between being a high school student and being a spider-man. When Wilson \"Kingpin\" Fisk uses a super collider, others from across the Spider-Verse are transported to this dimension.",
       provider: ["DisneyPlus", "Prime"],
       image: "https://www.themoviedb.org/t/p/original/vOpV6HrtAkNQxCWAgtU4NmQ1KPe.jpg"
+  ),
+  const Streams(
+      id: 11,
+      title: "One Piece",
+      type: "Series",
+      year: "1999 - present",
+      pg: "12",
+      seasonOrDuration: "13 Seasons",
+      genre: ["Animation", "Action", "Adventure", "Comedy"],
+      cast: ["Mayumi Tanaka", "Kazuya Nakai", "Akemi Okamura", "Kappei Yamaguchi", "Hiroaki Hirata"],
+      direction: ["Eiichirō Oda"],
+      plot: "Years ago, the fearsome Pirate King, Gol D. Roger was executed leaving a huge pile of treasure and the famous \"One Piece\" behind. Whoever claims the \"One Piece\" will be named the new King of the Pirates. \nMonkey D. Luffy, a boy who consumed a \"Devil Fruit,\" decides to follow in the footsteps of his idol, the pirate Shanks, and find the One Piece. It helps, of course, that his body has the properties of rubber and that he's surrounded by a bevy of skilled fighters and thieves to help him along the way. \nLuffy will do anything to get the One Piece and become King of the Pirates!",
+      provider: ["Crunchyroll"],
+      image: "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/fcXdJlbSdUEeMSJFsXKsznGwwok.jpg"
   ),
 ];

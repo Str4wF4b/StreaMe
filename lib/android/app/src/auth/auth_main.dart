@@ -1,6 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:stream_me/android/app/src/pages/others/app_overlay.dart';
+import 'package:stream_me/android/app/src/widgets/global/app_overlay.dart';
 import 'package:stream_me/android/app/src/pages/tabs/home.dart';
 import 'package:stream_me/android/app/src/auth/login_or_register.dart';
 

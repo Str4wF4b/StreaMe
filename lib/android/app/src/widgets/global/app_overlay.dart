@@ -2,20 +2,20 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
-import 'package:stream_me/android/app/src/widgets/app_bar.dart';
+import 'package:stream_me/android/app/src/widgets/global/app_bar.dart';
 import 'package:stream_me/android/app/src/widgets/bottom_app_bar.dart';
 import 'package:stream_me/android/app/src/widgets/list_items.dart';
 
 import '../../pages/others/edit_profile_page.dart';
-import '../../widgets/navigation_icons.dart';
+import '../navigation_icons.dart';
 import '../../auth/auth_main.dart';
-import '../others/filter.dart';
-import '../others/help.dart';
-import '../tabs/home.dart';
-import '../tabs/search.dart';
-import '../tabs/favourites.dart';
-import '../tabs/explore.dart';
-import '../tabs/watchlist.dart';
+import '../../pages/others/filter.dart';
+import '../../pages/others/help.dart';
+import '../../pages/tabs/home.dart';
+import '../../pages/tabs/search.dart';
+import '../../pages/tabs/favourites.dart';
+import '../../pages/tabs/explore.dart';
+import '../../pages/tabs/watchlist.dart';
 
 class AppOverlay extends StatefulWidget {
   AppOverlay(

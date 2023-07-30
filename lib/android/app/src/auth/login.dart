@@ -4,14 +4,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
 import 'package:stream_me/android/app/src/utils/images.dart';
-import 'package:stream_me/android/app/src/widgets/login_divider.dart';
-import 'package:stream_me/android/app/src/widgets/login_tile.dart';
-import '../widgets/login_sign-buttons.dart';
-import '../widgets/login_text-field.dart';
+import 'package:stream_me/android/app/src/widgets/features/login_divider.dart';
 import 'auth_popups.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import '../widgets/features/login_sign-buttons.dart';
+import '../widgets/features/login_text-field.dart';
+import '../widgets/features/login_tile.dart';
 import '../services/functions/auth_service.dart';
 import 'forgot_password.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 
 class LoginPage extends StatefulWidget {
   final Function()? onTap;
