@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:stream_me/android/app/src/model/streams_model.dart';
 import 'package:stream_me/android/app/src/pages/others/streamDetails.dart';
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
-import 'package:stream_me/android/app/src/utils/constants.dart';
+import '../../utils/constants_and_values.dart';
 
 class StreamTile extends StatefulWidget {
   final Streams stream;
@@ -32,7 +32,7 @@ class StreamTile extends StatefulWidget {
 
 class _StreamTileState extends State<StreamTile> {
   final ColorPalette color = ColorPalette();
-  final Constants cons = Constants();
+  final ConstantsAndValues cons = ConstantsAndValues();
 
   final keyRow = GlobalKey();
   //Size? size;

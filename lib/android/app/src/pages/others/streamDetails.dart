@@ -15,7 +15,7 @@ import 'package:stream_me/android/app/src/model/actor_model.dart';
 import 'package:stream_me/android/app/src/model/streams_model.dart';
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
 import 'package:stream_me/android/app/src/utils/images.dart';
-import '../../utils/constants.dart';
+import '../../utils/constants_and_values.dart';
 import '../others/actorDirectorDetails.dart';
 
 class StreamDetailsPage extends StatefulWidget {
@@ -30,7 +30,7 @@ class StreamDetailsPage extends StatefulWidget {
 class _StreamDetailsPageState extends State<StreamDetailsPage> {
   final ColorPalette color = ColorPalette();
   final Images image = Images();
-  final Constants cons = Constants();
+  final ConstantsAndValues cons = ConstantsAndValues();
 
   List<bool> favourites = List.filled(allStreams.length,
       false); //a list with all the favourite movies and streams

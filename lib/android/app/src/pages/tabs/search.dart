@@ -7,7 +7,7 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:stream_me/android/app/src/data/streams_data.dart';
 import 'package:stream_me/android/app/src/model/streams_model.dart';
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
-import 'package:stream_me/android/app/src/utils/constants.dart';
+import '../../utils/constants_and_values.dart';
 
 import '../others/streamDetails.dart';
 import '../others/filter.dart';
@@ -27,7 +27,7 @@ class SearchPage extends StatefulWidget {
 
 class _SearchPageState extends State<SearchPage> {
   final ColorPalette color = ColorPalette();
-  final Constants cons = Constants();
+  final ConstantsAndValues cons = ConstantsAndValues();
 
   @override
   Widget build(BuildContext context) {

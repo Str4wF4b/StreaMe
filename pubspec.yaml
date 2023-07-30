@@ -78,6 +78,9 @@ dependencies:
   # Explore Swipe
   appinio_swiper: ^2.0.2
 
+  # Expand Widget
+  expandable_widgets: ^1.0.3+1
+
   # Stacked for Apple Sign in
   # stacked_firebase_auth: ^2.19.2
   # stacked: ^3.2.7

@@ -1,10 +1,15 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:expand_widget/expand_widget.dart';
+import 'package:expandable_widgets/expandable_widgets.dart';
 import 'package:flutter/material.dart';
 import 'package:stream_me/android/app/src/model/actor_model.dart';
-import 'package:stream_me/android/app/src/utils/color_palette.dart';
-import '../../utils/constants.dart';
+import 'package:stream_me/android/app/src/data/streams_data.dart';
+import 'package:stream_me/android/app/src/model/streams_model.dart';
+import 'package:stream_me/android/app/src/widgets/features/actor_director_tab.dart';
+import '../../utils/color_palette.dart';
+import '../../utils/constants_and_values.dart';
+import '../../widgets/features/actor_director_tile.dart';
 
 class ActorDirectorDetailsPage extends StatefulWidget {
   final Actor actorDirector;
@@ -16,17 +21,27 @@ class ActorDirectorDetailsPage extends StatefulWidget {
       _ActorDirectorDetailsPageState();
 }
 
-class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage> {
+class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
+    with TickerProviderStateMixin {
   final ColorPalette color = ColorPalette();
-  final Constants cons = Constants();
+  final ConstantsAndValues cons = ConstantsAndValues();
 
   final keyImage = GlobalKey();
-
   Size? sizeImage;
+
+  late final TabController _tabController =
+      TabController(length: 3, vsync: this);
+  late final TabController _actingTabController =
+      TabController(length: 2, vsync: this);
+  late final TabController _productionTabController =
+      TabController(length: 2, vsync: this);
+  late final TabController _directionTabController =
+      TabController(length: 2, vsync: this);
 
   @override
   Widget build(BuildContext context) {
     getSizeAndPosition();
+
     return Scaffold(
       backgroundColor: color.backgroundColor,
       body: CustomScrollView(
@@ -40,14 +55,13 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage> {
             expandedHeight: 300,
             flexibleSpace: FlexibleSpaceBar(
               expandedTitleScale: 1.2,
-              background: ClipRRect(
-                  borderRadius: BorderRadius.circular(20.0),
-                  child: CachedNetworkImage(
-                    imageUrl: widget.actorDirector.image,
-                    key: keyImage,
-                    placeholder: (context, url) => cons.imagePlaceholderRect,
-                    errorWidget: (context, url, error) => cons.imageErrorWidget,
-                  )),
+              background: CachedNetworkImage(
+                imageUrl: widget.actorDirector.image,
+                fit: BoxFit.fitHeight,
+                key: keyImage,
+                placeholder: (context, url) => cons.imagePlaceholderRect,
+                errorWidget: (context, url, error) => cons.imageErrorWidget,
+              ),
               //titlePadding: const EdgeInsets.only(top: 0.0), //0.0 but necessary to put title on bottom of image
               centerTitle: true,
               title: FittedBox(
@@ -92,7 +106,55 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage> {
                                 //TODO: !!
                                 expandIndicatorStyle:
                                     ExpandIndicatorStyle.icon);
-                      })
+                      }),
+                      const SizedBox(height: 20),
+                      Column(
+                        children: [
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            //child: Padding(
+                              //padding: const EdgeInsets.only(bottom: 5.0),
+                              child: TabBar(
+                                labelColor: color.bodyTextColor,
+                                unselectedLabelColor: Colors.grey,
+                                //isScrollable: true,
+                                indicatorColor: Colors.deepOrangeAccent,
+                                indicatorPadding: const EdgeInsets.only(
+                                    left: 10.0, right: 10.0),
+                                controller: _tabController,
+                                tabs: [
+                                  addTab("Acting"),
+                                  addTab("Production"),
+                                  addTab("Direction"),
+                                ],
+                              ),
+                            //),
+                          ),
+                          SizedBox(
+                            height: 300,
+                            //width: double.maxFinite, //all available width
+                            child: TabBarView(
+                                controller: _tabController,
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.only(bottom: 0.0),
+                                      //child: actingTab(widget.actorDirector),
+                                    child: ActorDirectorTab(actorDirector: widget.actorDirector, tabContent: widget.actorDirector.acting)
+                                  ),
+                                  Padding(
+                                      padding: const EdgeInsets.only(bottom: 0.0),
+                                      //child: actingTab(widget.actorDirector),
+                                      child: ActorDirectorTab(actorDirector: widget.actorDirector, tabContent: widget.actorDirector.production)
+                                  ),
+                                  Padding(
+                                      padding: const EdgeInsets.only(bottom: 0.0),
+                                      //child: actingTab(widget.actorDirector),
+                                      child: ActorDirectorTab(actorDirector: widget.actorDirector, tabContent: widget.actorDirector.directing)
+                                  ),
+                                ]),
+                          ),
+                        ],
+                      )
                     ],
                   ),
                 ),
@@ -109,11 +171,11 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage> {
    */
   void getSizeAndPosition() =>
       WidgetsBinding.instance.addPostFrameCallback((_) {
-        final RenderBox box =
+        final RenderBox boxImage =
             keyImage.currentContext!.findRenderObject() as RenderBox;
 
         setState(() {
-          sizeImage = box.size;
+          sizeImage = boxImage.size;
         });
       });
 
@@ -139,5 +201,18 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage> {
             ]),
         maxLines: 2,
         textAlign: TextAlign.center,
+      );
+
+  /**
+   * aa
+   */
+  Widget addTab(String tabTitle) => Tab(
+        child: Padding(
+          padding: const EdgeInsets.fromLTRB(0.0, 20.0, 0.0, 3.0),
+          child: Text(
+            tabTitle,
+            style: TextStyle(fontSize: 14 * MediaQuery.of(context).textScaleFactor),
+          ),
+        ),
       );
 }

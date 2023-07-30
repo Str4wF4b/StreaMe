@@ -235,7 +235,7 @@ final allActors = <Actor>[
   const Actor(
       id: 12,
       displayName: "Jason Sudeikis",
-      firstName: "Jason",
+      firstName: "Daniel Jason",
       secondName: "Sudeikis",
       age: 47,
       birthday: "18.09.1975",
@@ -594,11 +594,11 @@ final allActors = <Actor>[
       biography:
           "Okamura Akemi, born on March 12, 1969, is a voice actress (seiyuu) and narrator from Tokyo, Japan, who works for Mausu Promotion. Her blood type is O. She has had at least one song appear on the NHK program Minna no Uta. \nOkamura graduated from the Tokyo Announcement Academy (東京アナウンスアカデミー) in 1990 and afterwards joined the Mausu Promotion voice actor's training school until she was contracted officially as full fledged voice actress in 1992, when she was selected for the role of Fio Piccolo in the 1992 film Kurenai no Buta (Porco Rosso), her major debut.",
       acting: {
-        "movies": ["One Piece"],
-        "series": []
+        "Movies": [],
+        "Series": ["One Piece"]
       },
-      production: {"movies": [], "series": []},
-      directing: {"movies": [], "series": []},
+      production: {"Movies": [], "Series": []},
+      directing: {"Movies": [], "Series": []},
       image:
           "https://www.themoviedb.org/t/p/w300_and_h450_bestv2/qEwVfsrA23SCzRZMSlghw2sHctQ.jpg"),
   const Actor(
@@ -610,9 +610,9 @@ final allActors = <Actor>[
       birthday: "15.01.1955",
       placeOfBirth: "Tokyo, Japan",
       biography: "Mayumi Tanaka was born on January 15, 1955 in Tokyo, Japan. She is an actress, known for Dragon Ball Z (1989), Dragon Ball Z Kai (2009) and Dragon Ball Z (1996).",
-      acting: {"movies": [], "series": ["One Piece"]},
-      production: {"movies": [], "series": []},
-      directing: {"movies": [], "series": []},
+      acting: {"Movies": [], "Series": ["One Piece"]},
+      production: {"Movies": [], "Series": []},
+      directing: {"Movies": [], "Series": []},
       image: "https://www.themoviedb.org/t/p/w300_and_h450_bestv2/dWh2Y3bQkSjPv3c7kyy5P6M3PLS.jpg"),
   const Actor(
       id: 33,
@@ -623,9 +623,9 @@ final allActors = <Actor>[
       birthday: "25.11.1967",
       placeOfBirth: "Hyogo, Japan",
       biography: "Kazuya Nakai (中井 和哉, Nakai Kazuya, born November 25, 1967) is a Japanese voice actor and narrator who was born in Kobe, Japan. \nHe plays Roronoa Zoro in One Piece, Toshiro Hijikata from Gintama, Date Masamune from Sengoku Basara, Xiahou Dun and Dian Wei from Dynasty Warriors and Warriors Orochi series, Shinjiro Aragaki from the Persona series, Mugen from Samurai Champloo, Mondo Owada from the Danganronpa series, Ultraman Max in Ultraman Max and Jin Sakai in the Japanese dub of the video game Ghost of Tsushima. \nHe won a Best Supporting Actor award at the 5th Seiyu Awards in 2011 for his roles in One Piece and Gin Tama.",
-      acting: {"movies": [], "series": ["One Piece"]},
-      production: {"movies": [], "series": []},
-      directing: {"movies": [], "series": []},
+      acting: {"Movies": [], "Series": ["One Piece"]},
+      production: {"Movies": [], "Series": []},
+      directing: {"Movies": [], "Series": []},
       image: "https://www.themoviedb.org/t/p/w300_and_h450_bestv2/78PKViY7brjF3AJI8h3tXyUyYT7.jpg"),
   const Actor(
       id: 34,
@@ -636,9 +636,9 @@ final allActors = <Actor>[
       birthday: "07.08.1963",
       placeOfBirth: "Tokyo, Japan",
       biography: "Hiroaki Hirata (平田 広明, Hirata Hiroaki, born August 7, 1963) is a Japanese actor, voice actor and narrator. He is the founder of Hirata Production Japan. \nHe is best known for voicing Vinsmoke Sanji in One Piece. His other known roles include Sha Gojyo in Saiyuki, Kotetsu T. Kaburagi in Tiger & Bunny, Klein in Sword Art Online, Vergil in the Devil May Cry series, Mutta Nanba in Space Brothers, Leomon in Digimon Adventure, George Kodama in Kaze no Yojimbo and Mr. Kondo in After the Rain. He is also the official Japanese dub-over artist for Johnny Depp, Matt Damon, Noah Wyle and Matt LeBlanc. In addition, he dubbed many roles of Jude Law, Ewan McGregor, and Josh Hartnett.",
-      acting: {"movies": [], "series": ["One Piece"]},
-      production: {"movies": [], "series": []},
-      directing: {"movies": [], "series": []},
+      acting: {"Movies": [], "Series": ["One Piece"]},
+      production: {"Movies": [], "Series": []},
+      directing: {"Movies": [], "Series": []},
       image: "https://www.themoviedb.org/t/p/w300_and_h450_bestv2/mMWEdlssJm3TVuXW4Wb7pQeX20Z.jpg"),
   const Actor(
       id: 35,
@@ -649,9 +649,9 @@ final allActors = <Actor>[
       birthday: "23.05.1965",
       placeOfBirth: "Fukuoka, Fukuoka Prefecture, Japan",
       biography: "Mitsuo Yamaguchi (山口 光雄, Yamaguchi Mitsuo), better known by his stage name of Kappei Yamaguchi (山口 勝平, Yamaguchi Kappei) is a Japanese voice actor and actor from Fukuoka, affiliated with Gokū and 21st Century Fox. He is best known for the roles of Ranma Saotome (Ranma), Jackson Neil (Miracle Girls), Tombo (Kiki's Delivery Service), Yattaro (Kyattou Ninden Teyandee), InuYasha (InuYasha), Ryuichi Sakuma (Gravitation), L (Death Note), Usopp (One Piece), Hideyoshi (Law of Ueki), and Kaito Kid and Shinichi Kudo (Case Closed). His current starring roles include that of Raimon \"Monta\" Taro, the Deimon Devil Bats' ace receiver in Eyeshield 21. \nYamaguchi has appeared in eroge as Kyōya Ushihisa (牛久 京也, Ushihisa Kyōya).  He made his first public appearance in North America at Otakon 2008;  and was also a guest at Sakura-Con 2009.  Yamaguchi's third appearance to date has been at Animazement in 2010. \nHe is married and has a daughter, Akane Yamaguchi (山口 茜), and a son, Ryunosuke Yamaguchi (山口 竜之介), who also are voice actors.",
-      acting: {"movies": [], "series": ["One Piece"]},
-      production: {"movies": [], "series": []},
-      directing: {"movies": [], "series": []},
+      acting: {"Movies": [], "Series": ["One Piece"]},
+      production: {"Movies": [], "Series": []},
+      directing: {"Movies": [], "Series": []},
       image: "https://www.themoviedb.org/t/p/w300_and_h450_bestv2/sbeWiK7FuUvPqF4yG6XR5CkPAqF.jpg"),
   /*const Actor(
       id: 999,

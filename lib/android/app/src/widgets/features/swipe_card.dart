@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:stream_me/android/app/src/model/streams_model.dart';
 import 'package:stream_me/android/app/src/pages/others/streamDetails.dart';
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
-import 'package:stream_me/android/app/src/utils/constants.dart';
+import '../../utils/constants_and_values.dart';
 
 class SwipeCard extends StatefulWidget {
   final Streams stream;
@@ -16,7 +16,7 @@ class SwipeCard extends StatefulWidget {
 
 class _SwipeCardState extends State<SwipeCard> {
   final ColorPalette color = ColorPalette();
-  final Constants cons = Constants();
+  final ConstantsAndValues cons = ConstantsAndValues();
 
   @override
   Widget build(BuildContext context) => SizedBox(
