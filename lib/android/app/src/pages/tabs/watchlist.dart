@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:stream_me/android/app/src/data/streams_data.dart';
+import 'package:stream_me/android/app/src/model/streams_model.dart';
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
+import 'package:stream_me/android/app/src/widgets/features/stream_tile.dart';
 
-import '../../widgets/global/app_overlay.dart';
-import 'home.dart';
+import '../../widgets/global/streame_tab.dart';
 
 class WatchlistPage extends StatefulWidget {
   const WatchlistPage({Key? key}) : super(key: key);
@@ -11,31 +13,122 @@ class WatchlistPage extends StatefulWidget {
   State<WatchlistPage> createState() => _WatchlistPageState();
 }
 
-class _WatchlistPageState extends State<WatchlistPage> {
+class _WatchlistPageState extends State<WatchlistPage>
+    with TickerProviderStateMixin {
   ColorPalette color = ColorPalette();
 
+  late final TabController _tabController =
+      TabController(length: 5, vsync: this);
+
+  List all = allStreams;
+  List movies = allStreams
+      .where((element) => (element.type.toString() == "Movie"))
+      .toList();
+  List series = allStreams
+      .where((element) => (element.type.toString() == "Series"))
+      .toList();
+  List alreadyWatched = allStreams.where((element) => element.id < 7 && element.id > 2).toList();
+  List watch = allStreams.where((element) => element.id < 3 || element.id > 6).toList();
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: color.middleBackgroundColor,
-      child: Center(
-        child: ElevatedButton(
-          style: ElevatedButton.styleFrom(
-            textStyle: const TextStyle(
-              color: Colors.white,
-              fontSize: 30,
-            ),
-            backgroundColor: Colors.lightBlueAccent,
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(40.0),
-            ),
-            padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
+    return Scaffold(
+      backgroundColor: color.backgroundColor,
+      body: SafeArea(
+        child: Container(
+          color: color.middleBackgroundColor,
+          child: Column(
+            children: [
+              Align(
+                  alignment: Alignment.centerLeft,
+                  child: TabBar(
+                    physics: const ClampingScrollPhysics(),
+                    isScrollable: true,
+                    labelColor: color.backgroundColor,
+                    unselectedLabelColor: Colors.grey,
+                    indicator: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30.0),
+                      color: color.bodyTextColor,
+                    ),
+                    indicatorSize: TabBarIndicatorSize.label,
+                    indicatorPadding:
+                        const EdgeInsets.fromLTRB(0.0, 10.5, 0.0, 11.0),
+                    //TODO: Try unselectedLabelStyle: , ??
+                    controller: _tabController,
+                    tabs: [
+                      addTab("All", 0),
+                      addTab("Movies", 1),
+                      addTab("Series", 2),
+                      addTab("Not Watched", 3),
+                      addTab("Watched", 4),
+                    ],
+                  )),
+              Expanded(
+                  child: TabBarView(controller: _tabController, children: [
+                SizedBox(width: 110, child: addWatchlistTab(all)),
+                addWatchlistTab(movies),
+                addWatchlistTab(series),
+                addWatchlistTab(watch),
+                addWatchlistTab(alreadyWatched)
+              ]))
+            ],
           ),
-          onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context) => AppOverlay(title: "Home", body: HomePage(), currentPageIndex: 0,))),
-          child: const Text("Go Back"),
         ),
       ),
     );
   }
+
+  /**
+   * aa
+   */
+  Widget addTab(String tabTitle, int tabIndex) => Padding(
+        padding: const EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 3.0),
+        child: Tab(
+            child: GestureDetector(
+                onTap: () => setState(() {
+                      _tabController.index = tabIndex;
+                    }),
+                child: StreaMeTab(
+                  tabTitle: tabTitle,
+                  tabIndex: tabIndex,
+                  tabController: _tabController,
+                  widthNeeded: true,
+                ))),
+      );
+
+  Padding addWatchlistTab(List list) => Padding(
+        padding: const EdgeInsets.fromLTRB(10.0, 2.0, 10.0, 5.0),
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                itemCount: list.length,
+                scrollDirection: Axis.vertical,
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  Streams currentStream = list.elementAt(index);
+                  StreamTile currentTile = StreamTile(
+                      stream: currentStream,
+                      image: currentStream.image,
+                      title: currentStream.title,
+                      year: currentStream.year,
+                      pg: currentStream.pg,
+                      rating: 4.7,
+                      cast: currentStream.cast,
+                      provider: currentStream.provider);
+
+                  if (currentStream == list.last &&
+                      currentStream != list.first) {
+                    return currentTile;
+                  } else {
+                    return Column(
+                      children: [currentTile, const SizedBox(height: 20)],
+                    );
+                  }
+                },
+              ),
+            )
+          ],
+        ),
+      );
 }

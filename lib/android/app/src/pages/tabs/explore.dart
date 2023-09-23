@@ -32,7 +32,6 @@ class _ExplorePageState extends State<ExplorePage> {
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     randomStreamList = allStreams..shuffle();
@@ -75,12 +74,12 @@ class _ExplorePageState extends State<ExplorePage> {
                       },
                       cardsCount: allStreams.length,
                       swipeOptions: const AppinioSwipeOptions.only(
-                          left: true),
+                          left: true, right: true, top: true),
                       controller: _swipeCardController,
                       maxAngle: 80,
                       loop: true,
                       //restart again if list is empty
-                      //onSwipe: _swipe,
+                      onSwipe: _swipe,
                       unswipe: _unswipe,
                       unlimitedUnswipe: true,
                     ),
@@ -115,7 +114,7 @@ class _ExplorePageState extends State<ExplorePage> {
                     onPressed: () {
                       ScaffoldMessenger.of(context)
                         ..removeCurrentSnackBar()
-                        ..showSnackBar(listSnackBar(currentStream.type));
+                        ..showSnackBar(favSnackBar(currentStream.type));
                       setState(() {
                         addFavourites = !addFavourites;
                         //TODO: Save film to favourites
@@ -211,7 +210,27 @@ class _ExplorePageState extends State<ExplorePage> {
     return MaterialStateProperty.resolveWith(getColor);
   }
 
-  checkSwipeDirection(AppinioSwiperController swipeCardController) {
+  void _swipe(int index, AppinioSwiperDirection direction) {
+    AppinioSwiperDirection right = AppinioSwiperDirection.right;
+    AppinioSwiperDirection top = AppinioSwiperDirection.top;
+
+    if (direction == right) {
+      print(direction);
+      ScaffoldMessenger.of(context)
+        ..removeCurrentSnackBar()
+        ..showSnackBar(favSnackBar(currentStream.type));
+      //TODO: Save movie/series to favourites
+    }
+    if (direction == top) {
+      print(direction);
+      ScaffoldMessenger.of(context)
+        ..removeCurrentSnackBar()
+        ..showSnackBar(listSnackBar(currentStream.type));
+      //TODO: Save movie/series to watchlist
+    }
+  }
+
+  void checkSwipeDirection(AppinioSwiperController swipeCardController) {
     //if (swipeCardController.swipe)
     //if left: nothing, card flies out
     //if right: load last card
