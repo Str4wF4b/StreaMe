@@ -3,7 +3,7 @@ import 'package:autoscale_tabbarview/autoscale_tabbarview.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:expand_widget/expand_widget.dart';
 import 'package:flutter/material.dart';
-//import 'package:intl/intl.dart';
+import 'package:intl/intl.dart';
 import 'package:stream_me/android/app/src/model/actor_model.dart';
 import 'package:stream_me/android/app/src/widgets/features/actor_director_tab.dart';
 import '../../utils/color_palette.dart';
@@ -40,7 +40,6 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
   @override
   Widget build(BuildContext context) {
     getSizeAndPosition();
-    print(DateTime.now().month);
 
     return Scaffold(
       backgroundColor: color.backgroundColor,
@@ -221,18 +220,23 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
    * a function that
    */
   int getAge(String actorAge) {
-    List firstNine = ["01", "02", "03", "04", "05", "06", "07", "08", "09"];
     int age = 0;
 
-    String actorDay = actorAge.substring(0, 1);
-    String actorMonth = actorAge.substring(3, 4);
-    String actorYear = actorAge.substring(6, 9);
-    String actorBirthday = "$actorDay--$actorMonth--$actorYear";
-    //DateTime actorBirthdayDateTime = DateFormat("dd-MM-yyyy").parse(actorBirthday);
+    String actorDay = actorAge.substring(0, 2);
+    String actorMonth = actorAge.substring(3, 5);
+    String actorYear = actorAge.substring(6);
+    String actorBirthday = "$actorDay-$actorMonth-$actorYear";
+    DateTime actorBirthdayDateTime =
+        DateFormat("dd-MM-yyyy").parse(actorBirthday);
 
 
-   //print("a: ${actorBirthdayDateTime.day}");
-   //print("b: ${DateTime.now().day}");
+    if (actorBirthdayDateTime.month < DateTime.now().month && actorBirthdayDateTime.day < DateTime.now().day) {
+      age = DateTime.now().year - actorBirthdayDateTime.year;
+    } else {
+      age = DateTime.now().year - actorBirthdayDateTime.year - 1;
+    }
+
+    //TODO: Check for age for dead people
 
     return age;
   }
@@ -264,12 +268,15 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
    * a function that decides whether the height of a tab is 530, 350 or 160 depending on empty movies and series lists
    */
   double getTabHeight(List movies, List series) {
-    if (movies!.isNotEmpty && series!.isNotEmpty) { //max height if movies and series list has input
+    if (movies!.isNotEmpty && series!.isNotEmpty) {
+      //max height if movies and series list has input
       return 530;
-    } else if (movies!.isNotEmpty && series!.isEmpty || //mid height if one of the lists is empty
+    } else if (movies!.isNotEmpty &&
+            series!.isEmpty || //mid height if one of the lists is empty
         series!.isNotEmpty && movies!.isEmpty) {
       return 350;
-    } else { //min height if both lists are empty
+    } else {
+      //min height if both lists are empty
       return 160;
     }
   }

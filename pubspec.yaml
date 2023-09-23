@@ -82,7 +82,7 @@ dependencies:
   autoscale_tabbarview: ^1.0.2
 
   # for age
-  #intl: ^0.18.1
+  intl: ^0.18.1
 
   # Expand Widget
   #expandable_widgets: ^1.0.3+1
