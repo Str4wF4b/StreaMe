@@ -4,6 +4,7 @@ import 'package:stream_me/android/app/src/model/streams_model.dart';
 
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
 import '../../widgets/features/stream_tile.dart';
+import '../../widgets/global/streame_tab.dart';
 
 class FavouritesPage extends StatefulWidget {
   const FavouritesPage({Key? key}) : super(key: key);
@@ -12,8 +13,12 @@ class FavouritesPage extends StatefulWidget {
   State<FavouritesPage> createState() => _FavouritesPageState();
 }
 
-class _FavouritesPageState extends State<FavouritesPage> {
+class _FavouritesPageState extends State<FavouritesPage>
+    with TickerProviderStateMixin {
   ColorPalette color = ColorPalette();
+
+  late final TabController _tabController =
+      TabController(length: 2, vsync: this);
 
   @override
   Widget build(BuildContext context) {
@@ -22,72 +27,64 @@ class _FavouritesPageState extends State<FavouritesPage> {
 
   Widget buildBody() {
     */
-    return Container(
-        color: color.middleBackgroundColor,
-        child: DefaultTabController(
-          length: 2,
-          child: Padding(
-            padding: const EdgeInsets.only(left: 10.0, right: 10.0),
-            child: Scaffold(
-              backgroundColor: color.middleBackgroundColor,
-              body: SafeArea(
-                child: Column(
-                    //mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Align(
-                        alignment: Alignment.centerLeft,
-                        child: TabBar(
-                          //overlayColor: MaterialStateColor,
-                          //dividerColor: Colors.redAccent,
-
-                          labelColor: Colors.grey.shade300,
-                          unselectedLabelColor: Colors.grey,
-                          isScrollable: true,
-                          indicatorColor: Colors.deepOrangeAccent,
-                          indicatorPadding:
-                              const EdgeInsets.only(left: 10.0, right: 10.0),
-                          tabs: const [
-                            Padding(
-                              padding:
-                                  EdgeInsets.fromLTRB(25.0, 20.0, 25.0, 3.0),
-                              child: Text(
-                                "Movies",
-                                style: TextStyle(fontSize: 16),
-                              ),
-                            ),
-                            Padding(
-                              padding:
-                                  EdgeInsets.fromLTRB(25.0, 20.0, 25.0, 3.0),
-                              child: Text(
-                                "Series",
-                                style: TextStyle(fontSize: 16),
-                              ),
-                            )
-                          ],
-                        ),
-                      ),
-                      Expanded(
-                          child: TabBarView(
-                        children: [
-                          Padding(
-                            padding:
-                                const EdgeInsets.only(top: 25.0, bottom: 5.0),
-                            child: moviesFavourites(),
-                          ),
-                          Padding(
-                              padding:
-                                  const EdgeInsets.only(top: 25.0, bottom: 5.0),
-                              child: seriesFavourites())
-                        ],
-                      ))
-                    ]),
-              ),
-            ),
-          ),
-        ));
+    return Scaffold(
+      backgroundColor: color.backgroundColor,
+      body: Scaffold(
+        backgroundColor: color.middleBackgroundColor,
+        body: SafeArea(
+          child: Column(
+              //mainAxisAlignment: MainAxisAlignment.start,
+              children: [
+                Align(
+                  alignment: Alignment.centerLeft,
+                  child: TabBar(
+                    //overlayColor: MaterialStateColor,
+                    //dividerColor: Colors.redAccent,
+                    physics: const ClampingScrollPhysics(),
+                    labelColor: color.backgroundColor,
+                    unselectedLabelColor: Colors.grey,
+                    indicator: BoxDecoration(
+                      borderRadius: BorderRadius.circular(30.0),
+                      color: color.bodyTextColor,
+                    ),
+                    indicatorSize: TabBarIndicatorSize.label,
+                    indicatorPadding:
+                        const EdgeInsets.fromLTRB(25.0, 10.5, 25.0, 11.0),
+                    controller: _tabController,
+                    tabs: [
+                      Padding(
+                          padding: const EdgeInsets.fromLTRB(
+                              25.0, 5.0, 25.0, 3.0),
+                          child: addTab("Movies", 0)),
+                      Padding(
+                          padding: const EdgeInsets.fromLTRB(
+                              25.0, 5.0, 25.0, 3.0),
+                          child: addTab("Series", 1))
+                    ],
+                  ),
+                ),
+                Expanded(
+                    child: TabBarView(
+                  controller: _tabController,
+                  children: [
+                    Padding(
+                      padding:
+                          const EdgeInsets.fromLTRB(10.0, 2.0, 10.0, 5.0),
+                      child: moviesFavourites(),
+                    ),
+                    Padding(
+                        padding:
+                            const EdgeInsets.fromLTRB(10.0, 2.0, 10.0, 5.0),
+                        child: seriesFavourites())
+                  ],
+                ))
+              ]),
+        ),
+      ),
+    );
   }
 
-  Widget moviesFavourites() {
+  Column moviesFavourites() {
     List movies = allStreams
         .where((element) => (element.type.toString() == "Movie"))
         .toList();
@@ -125,7 +122,7 @@ class _FavouritesPageState extends State<FavouritesPage> {
     );
   }
 
-  Widget seriesFavourites() {
+  Column seriesFavourites() {
     List series = allStreams
         .where((element) => (element.type.toString() == "Series"))
         .toList();
@@ -162,4 +159,19 @@ class _FavouritesPageState extends State<FavouritesPage> {
       ],
     );
   }
+
+  /**
+   * aa
+   */
+  Widget addTab(String tabTitle, int tabIndex) => Tab(
+      child: GestureDetector(
+          onTap: () => setState(() {
+                _tabController.index = tabIndex;
+              }),
+          child: StreaMeTab(
+            tabTitle: tabTitle,
+            tabIndex: tabIndex,
+            tabController: _tabController,
+            widthNeeded: false,
+          )));
 }

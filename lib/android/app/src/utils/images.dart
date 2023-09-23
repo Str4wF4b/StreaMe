@@ -8,7 +8,7 @@ class Images {
   // Images:
   // Home Page:
   String favourites = "assets/images/home/deadpool_favourites.png";
-  String watchlist = "assets/images/home/strangerthings_watchlist.png";
+  String watchlist = "assets/images/home/goonies_watchlist.png";
   String explore = "assets/images/home/potc_explore.png";
   String help = "assets/images/home/spiderman_help.png";
 

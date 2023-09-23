@@ -9,7 +9,7 @@ import 'package:stream_me/android/app/src/model/streams_model.dart';
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
 import '../../utils/constants_and_values.dart';
 
-import '../others/streamDetails.dart';
+import '../others/stream_details.dart';
 import '../others/filter.dart';
 
 class SearchPage extends StatefulWidget {
@@ -65,7 +65,7 @@ class _SearchPageState extends State<SearchPage> {
                                 fontWeight: FontWeight.bold, fontSize: 16)),
                         const TextSpan(
                             text:
-                                ", \nsearch for the newest Movies or Series and add them to your Watchlist.",
+                                ", \nsearch for your favourite Movies or Series and add them to your Watchlist.",
                             style: TextStyle(fontSize: 15))
                       ]),
                 ),
@@ -77,11 +77,11 @@ class _SearchPageState extends State<SearchPage> {
                 child: TextField(
                   controller: widget.searchController,
                   decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.search),
+                    prefixIcon: const Icon(Icons.search, size: 22),
                     suffixIcon: widget.searchController.text.isNotEmpty
                         ? GestureDetector(
                             child:
-                                const Icon(Icons.close, color: Colors.blueGrey),
+                                const Icon(Icons.close, color: Colors.blueGrey, size: 22),
                             onTap: () {
                               widget.searchController.clear();
                               FocusScope.of(context).requestFocus(
@@ -91,12 +91,13 @@ class _SearchPageState extends State<SearchPage> {
                     hintText: "Movie or Series",
                     enabledBorder: OutlineInputBorder(
                         borderSide: const BorderSide(color: Colors.white),
-                        borderRadius: BorderRadius.circular(20.0)),
+                        borderRadius: BorderRadius.circular(30.0)),
                     focusedBorder: OutlineInputBorder(
                         borderSide: const BorderSide(color: Colors.blueAccent),
-                        borderRadius: BorderRadius.circular(20.0)),
+                        borderRadius: BorderRadius.circular(30.0)),
                     filled: true,
                     fillColor: Colors.grey.shade300,
+                    isDense: true,
                   ),
                   onChanged: searchStream,
                 ),
@@ -104,7 +105,7 @@ class _SearchPageState extends State<SearchPage> {
               Positioned(
                 //padding: const EdgeInsets.only(left: 354, top: 37),
                 left: MediaQuery.of(context).size.width - 40,
-                bottom: MediaQuery.of(context).size.height - 766,
+                bottom: MediaQuery.of(context).size.height - 769, //766 when isDense = false
                 child: InkWell(
                   onTap: () {
                     showDialog(
@@ -145,9 +146,7 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
-  /**
-   * Function that searches after a stream if a keyword is entered in the text field
-   */
+  /// Function that searches after a stream if a keyword is entered in the text field
   void searchStream(String enteredKeyword) {
     final suggestions = allStreams.where((stream) {
       final streamTitle = stream.title.toLowerCase();
@@ -159,9 +158,7 @@ class _SearchPageState extends State<SearchPage> {
     setState(() => widget.streams = suggestions);
   }
 
-  /**
-   * Function that returns the clicked stream site with information about the movie or series
-   */
+  /// Function that returns the clicked stream site with information about the movie or series
   Widget buildStream(Streams stream) => ListTile(
         leading: CachedNetworkImage(
           imageUrl: stream.image,
@@ -183,9 +180,7 @@ class _SearchPageState extends State<SearchPage> {
             )),
       );
 
-  /**
-   * Function that checks if a user is logged in and so the Username is shown, or if it's an anonymous user
-   */
+  /// Function that checks if a user is logged in and so the Username is shown, or if it's an anonymous user
   String checkUsername() {
     if (widget.user?.displayName == null || widget.user?.displayName == "") {
       return "unknown User"; //shown if anonymous user
