@@ -1,7 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:stream_me/android/app/src/pages/others/streamDetails.dart';
+import 'package:stream_me/android/app/src/pages/others/stream_details.dart';
 import 'package:stream_me/android/app/src/model/streams_model.dart';
 import '../../utils/constants_and_values.dart';
 import '../../utils/color_palette.dart';
