@@ -43,7 +43,7 @@ dependencies:
   image_picker: ^0.8.6
 
   # Firebase
-  firebase_auth: ^4.4.2
+  firebase_auth: ^4.10.0
   firebase_core: ^2.10.0
 
   # For google sign in
@@ -68,6 +68,24 @@ dependencies:
 
   # Expand for Plot
   expand_widget: ^3.1.1
+
+  # Network image cache
+  cached_network_image: ^3.2.3
+
+  # FittedBox in maxLines
+  auto_size_text: ^3.0.0
+
+  # Explore Swipe
+  appinio_swiper: ^2.0.2
+
+  # TabBarView dynamic height
+  autoscale_tabbarview: ^1.0.2
+
+  # for age
+  intl: ^0.18.1
+
+  # Expand Widget
+  #expandable_widgets: ^1.0.3+1
 
   # Stacked for Apple Sign in
   # stacked_firebase_auth: ^2.19.2
@@ -135,9 +153,10 @@ flutter:
 
     # HomePage Tiles:
     - assets/images/home/deadpool_favourites.png
-    - assets/images/home/strangerthings_watchlist.png
+    - assets/images/home/goonies_watchlist.png
     - assets/images/home/potc_explore.png
     - assets/images/home/spiderman_help.png
+    - assets/images/home/strangerthings_watchlist.png #not used
 
     # Edit Profile
     - assets/images/blank-profile-picture.png

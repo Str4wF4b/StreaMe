@@ -2,8 +2,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
 
-import '../auth/auth_main.dart';
-import '../pages/others/edit_profile.dart';
+import '../../auth/auth_main.dart';
+import '../../pages/others/edit_profile.dart';
 
 class StreameAppBar extends StatefulWidget implements PreferredSizeWidget {
   final String title;

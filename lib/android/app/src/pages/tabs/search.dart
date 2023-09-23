@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -6,8 +7,9 @@ import 'package:get/get_core/src/get_main.dart';
 import 'package:stream_me/android/app/src/data/streams_data.dart';
 import 'package:stream_me/android/app/src/model/streams_model.dart';
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
+import '../../utils/constants_and_values.dart';
 
-import '../others/streamDetails.dart';
+import '../others/stream_details.dart';
 import '../others/filter.dart';
 
 class SearchPage extends StatefulWidget {
@@ -24,8 +26,8 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
-  ColorPalette color = ColorPalette();
-
+  final ColorPalette color = ColorPalette();
+  final ConstantsAndValues cons = ConstantsAndValues();
 
   @override
   Widget build(BuildContext context) {
@@ -38,35 +40,48 @@ class _SearchPageState extends State<SearchPage> {
   Widget buildBody() {
     return*/
         Scaffold(
+      backgroundColor: Colors.transparent,
       body: Container(
         color: color.middleBackgroundColor,
         child: Column(
           children: [
-            const SizedBox(height: 38),
+            const SizedBox(height: 25),
             Padding(
-              padding: const EdgeInsets.fromLTRB(24.0, 0.0, 0.0, 0.0),
+              padding: const EdgeInsets.fromLTRB(24.0, 0.0, 24.0, 0.0),
               child: Align(
                 alignment: Alignment.centerLeft,
-                child: Text(
-                    //TODO: Different names (Google, Apple or Anon)
-                    "Hey ${checkUsername()}, \nsearch for the newest movies and series.",
-                    style: TextStyle(
-                        color: Colors.grey.shade300,
-                        fontSize: 16.0,
-                        height: 1.25)),
+                child: RichText(
+                  text: TextSpan(
+                      text: "Hey ",
+                      style: TextStyle(
+                          color: color.bodyTextColor,
+                          fontSize: 15,
+                          height: 1.2),
+                      children: [
+                        TextSpan(
+                            text: checkUsername(),
+                            //TODO: Different names (Google, Apple or Anon)
+                            style: const TextStyle(
+                                fontWeight: FontWeight.bold, fontSize: 16)),
+                        const TextSpan(
+                            text:
+                                ", \nsearch for your favourite Movies or Series and add them to your Watchlist.",
+                            style: TextStyle(fontSize: 15))
+                      ]),
+                ),
               ),
             ),
             Stack(children: [
               Container(
-                margin: const EdgeInsets.fromLTRB(20.0, 20.0, 42.0, 20.0),
+                margin: const EdgeInsets.fromLTRB(20.0, 30.0, 42.0, 20.0),
                 child: TextField(
                   controller: widget.searchController,
                   decoration: InputDecoration(
-                    prefixIcon: const Icon(Icons.search),
+                    prefixIcon: const Icon(Icons.search, size: 22),
                     suffixIcon: widget.searchController.text.isNotEmpty
                         ? GestureDetector(
                             child:
-                                const Icon(Icons.close, color: Colors.blueGrey),
+                                const Icon(Icons.close, color: Colors.blueGrey, size: 22),
                             onTap: () {
                               widget.searchController.clear();
                               FocusScope.of(context).requestFocus(
@@ -76,18 +91,21 @@ class _SearchPageState extends State<SearchPage> {
                     hintText: "Movie or Series",
                     enabledBorder: OutlineInputBorder(
                         borderSide: const BorderSide(color: Colors.white),
-                        borderRadius: BorderRadius.circular(20.0)),
+                        borderRadius: BorderRadius.circular(30.0)),
                     focusedBorder: OutlineInputBorder(
                         borderSide: const BorderSide(color: Colors.blueAccent),
-                        borderRadius: BorderRadius.circular(20.0)),
+                        borderRadius: BorderRadius.circular(30.0)),
                     filled: true,
                     fillColor: Colors.grey.shade300,
+                    isDense: true,
                   ),
                   onChanged: searchStream,
                 ),
               ),
-              Padding(
-                padding: const EdgeInsets.only(left: 354, top: 37),
+              Positioned(
+                //padding: const EdgeInsets.only(left: 354, top: 37),
+                left: MediaQuery.of(context).size.width - 40,
+                bottom: MediaQuery.of(context).size.height - 769, //766 when isDense = false
                 child: InkWell(
                   onTap: () {
                     showDialog(
@@ -95,7 +113,7 @@ class _SearchPageState extends State<SearchPage> {
                         builder: (BuildContext context) {
                           return Dialog(
                             backgroundColor:
-                            color.middleBackgroundColor.withOpacity(0.93),
+                                color.middleBackgroundColor.withOpacity(0.93),
                             insetPadding: EdgeInsets.zero,
                             //full width and height
                             child: FilterPage(),
@@ -103,9 +121,9 @@ class _SearchPageState extends State<SearchPage> {
                         });
                   },
                   child: Icon(
-                    size: 21.0,
+                    size: 22.0,
                     Icons.tune,
-                    color: Colors.grey.shade400,
+                    color: color.bodyTextColor,
                   ),
                 ),
               ),
@@ -128,9 +146,7 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
-  /**
-   * Function that searches after a stream if a keyword is entered in the text field
-   */
+  /// Function that searches after a stream if a keyword is entered in the text field
   void searchStream(String enteredKeyword) {
     final suggestions = allStreams.where((stream) {
       final streamTitle = stream.title.toLowerCase();
@@ -142,19 +158,20 @@ class _SearchPageState extends State<SearchPage> {
     setState(() => widget.streams = suggestions);
   }
 
-  /**
-   * Function that returns the clicked stream site with information about the movie or series
-   */
+  /// Function that returns the clicked stream site with information about the movie or series
   Widget buildStream(Streams stream) => ListTile(
-        leading: Image.network(
-          stream.image,
+        leading: CachedNetworkImage(
+          imageUrl: stream.image,
+          key: UniqueKey(),
           fit: BoxFit.cover,
           width: 50,
           height: 50,
+          placeholder: (context, url) => cons.imagePlaceholder,
+          errorWidget: (context, url, error) => cons.imageErrorWidgetLittle,
         ),
         title: Text(
           stream.title,
-          style: TextStyle(color: Colors.grey.shade300),
+          style: TextStyle(color: color.bodyTextColor),
         ),
         onTap: () => Navigator.push(
             context,
@@ -163,12 +180,10 @@ class _SearchPageState extends State<SearchPage> {
             )),
       );
 
-  /**
-   * Function that checks if a user is logged in and so the Username is shown, or if it's an anonymous user
-   */
+  /// Function that checks if a user is logged in and so the Username is shown, or if it's an anonymous user
   String checkUsername() {
     if (widget.user?.displayName == null || widget.user?.displayName == "") {
-      return "ma G"; //shown if anonymous user
+      return "unknown User"; //shown if anonymous user
     } else {
       return "${widget.user?.displayName}"; //show username
     }

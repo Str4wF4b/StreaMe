@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:get/get_core/src/get_main.dart';
 import 'package:stream_me/android/app/src/data/streams_data.dart';
-import 'package:stream_me/android/app/src/pages/others/app_overlay.dart';
+import 'package:stream_me/android/app/src/widgets/global/app_overlay.dart';
 import 'package:stream_me/android/app/src/pages/others/help.dart';
 import 'package:stream_me/android/app/src/pages/tabs/explore.dart';
 import 'package:stream_me/android/app/src/pages/tabs/favourites.dart';
