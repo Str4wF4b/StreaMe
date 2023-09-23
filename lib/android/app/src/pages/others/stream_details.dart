@@ -16,7 +16,7 @@ import 'package:stream_me/android/app/src/model/streams_model.dart';
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
 import 'package:stream_me/android/app/src/utils/images.dart';
 import '../../utils/constants_and_values.dart';
-import '../others/actorDirectorDetails.dart';
+import '../others/actor_director_details.dart';
 
 class StreamDetailsPage extends StatefulWidget {
   final Streams stream;
