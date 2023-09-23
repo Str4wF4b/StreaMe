@@ -234,7 +234,6 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
    //print("a: ${actorBirthdayDateTime.day}");
    //print("b: ${DateTime.now().day}");
 
-
     return age;
   }
 
