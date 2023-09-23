@@ -230,10 +230,12 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
         DateFormat("dd-MM-yyyy").parse(actorBirthday);
 
 
-    if (actorBirthdayDateTime.month < DateTime.now().month && actorBirthdayDateTime.day < DateTime.now().day) {
+    if (actorBirthdayDateTime.month < DateTime.now().month || (actorBirthdayDateTime.month == DateTime.now().month && actorBirthdayDateTime.month <= DateTime.now().month)) {
       age = DateTime.now().year - actorBirthdayDateTime.year;
+      print(actorBirthdayDateTime.day);
     } else {
       age = DateTime.now().year - actorBirthdayDateTime.year - 1;
+      print(actorBirthdayDateTime.year);
     }
 
     //TODO: Check for age for dead people
