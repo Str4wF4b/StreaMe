@@ -34,4 +34,11 @@ class Images {
   // Others:
   String blank = "assets/images/blank-profile-picture.png";
   String notOnline = "assets/images/questionMark.png";
+
+
+  // Gifs:
+  String intro = "assets/gifs/intro.gif";
+  String introWhite = "assets/gifs/intro_white.gif";
+  String introWhiteLittle = "assets/gifs/intro_white_little.gif";
+  String introBasic = "assets/gifs/intro_basic.gif";
 }
