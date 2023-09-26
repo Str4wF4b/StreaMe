@@ -4,6 +4,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:stream_me/android/app/src/utils/images.dart';
+import 'package:stream_me/android/app/src/widgets/global/selection_button.dart';
+import '../../widgets/features/edit_text-field.dart';
 
 class EditProfilePage extends StatefulWidget {
   final Color backgroundColor;
@@ -29,7 +31,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
       backgroundColor: widget.backgroundColor,
       body: Container(
         color: widget.backgroundColor,
-        padding: const EdgeInsetsDirectional.fromSTEB(0.0, 5.0, 0.0, 0.0),
+        padding: const EdgeInsetsDirectional.only(top: 5.0),
         child: GestureDetector(
           onTap: () {
             FocusScope.of(context).unfocus();
@@ -106,117 +108,75 @@ class _EditProfilePageState extends State<EditProfilePage> {
               ),
               const SizedBox(
                 //spacing between profile picture and text field
-                height: 46,
+                height: 58,
               ),
-              buildTextFields("Username: ", "Enter new Username here", false, "${widget.user?.displayName}"),
-              buildTextFields("Full Name: ", "Enter new Full Name here", false, "${widget.user?.displayName}"),
-              buildTextFields("E-Mail: ", "Enter new E-Mail address here", false, "${widget.user?.email}"),
-              buildTextFields("Password", "Enter new Password here", true, ""),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //setting space between buttons cancel and save
-                children: [
-                  Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(
-                        16.0, 10.0, 0.0, 0.0),
-                    child: OutlinedButton(
-                      //styling of cancel button
-                      style: OutlinedButton.styleFrom(
-                        backgroundColor: Colors.red.shade500,
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(20.0),
-                        ),
-                        padding: const EdgeInsets.symmetric(horizontal: 50),
-                      ),
-                      onPressed: () {
-                        //TODO: Delete input function
-                      },
-                      child: const Text(
-                        "Cancel",
-                        style: TextStyle(
-                          fontSize: 14,
-                          letterSpacing: 2.2,
-                          color: Colors.white,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsetsDirectional.fromSTEB(
-                        0.0, 10.0, 16.0, 0.0),
-                    child: ElevatedButton(
-                      //styling of save button
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.green,
+              EditTextField(labelText: "Username: ", placeholder: "Enter new Username here", isPassword: false, userInput: "${widget.user?.displayName}"),
+              EditTextField(labelText: "Full Name: ", placeholder: "Enter new Full Name here", isPassword: false, userInput: "${widget.user?.displayName}"),
+              EditTextField(labelText: "E-Mail: ", placeholder: "Enter new E-Mail address here", isPassword: false, userInput: "${widget.user?.email}"),
+              const EditTextField(labelText: "Password: ", placeholder: "Enter new Password here", isPassword: true, userInput: "●●●●●"),
+              Padding(
+                padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //setting space between buttons cancel and save
+                  children: [
+                    SelectionButton(onTap: () {}, color: Colors.blueAccent, label: "Save"),
+                    SelectionButton(onTap: () {}, color: Colors.redAccent, label: "Reset"),
+                    /*Padding(
+                      padding: const EdgeInsetsDirectional.fromSTEB(
+                          16.0, 10.0, 0.0, 0.0),
+                      child: OutlinedButton(
+                        //styling of cancel button
+                        style: OutlinedButton.styleFrom(
+                          backgroundColor: Colors.red.shade500,
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(20.0),
                           ),
                           padding: const EdgeInsets.symmetric(horizontal: 50),
                         ),
                         onPressed: () {
-                          //TODO: Save input (into DB also)
+                          //TODO: Delete input function
                         },
                         child: const Text(
-                          "Save",
+                          "Cancel",
                           style: TextStyle(
                             fontSize: 14,
                             letterSpacing: 2.2,
                             color: Colors.white,
                           ),
-                        )),
-                  )
-                ],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsetsDirectional.fromSTEB(
+                          0.0, 10.0, 16.0, 0.0),
+                      child: ElevatedButton(
+                        //styling of save button
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: Colors.green,
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(20.0),
+                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 50),
+                          ),
+                          onPressed: () {
+                            //TODO: Save input (into DB also)
+                          },
+                          child: const Text(
+                            "Save",
+                            style: TextStyle(
+                              fontSize: 14,
+                              letterSpacing: 2.2,
+                              color: Colors.white,
+                            ),
+                          )),
+                    )*/
+                  ],
+                ),
               )
             ],
           ),
         ),
-      ),
-    );
-  }
-
-  Padding buildTextFields(
-      String labelText, String placeholder, bool isPassword, String userInput) {
-    return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(16.0, 0.0, 16.0, 35.0),
-      child: TextField(
-        //text fields for input
-        style: const TextStyle(
-          //style of written input
-          color: Colors.blueAccent,
-        ),
-        obscureText: isPassword ? widget.showPassword : false,
-        decoration: InputDecoration(
-          //style of label
-            suffixIcon: isPassword //show password icon
-                ? IconButton(
-              onPressed: () {
-                setState(() {
-                  widget.showPassword =
-                  !widget.showPassword; //switch between showing and not showing password
-                });
-              },
-              icon: widget.showPassword ? const Icon(Icons.visibility, color: Colors.grey) : const Icon(Icons.visibility_off, color: Colors.grey),/*const Icon(
-                      Icons.remove_red_eye,
-                      color: Colors.grey,
-                    ),*/
-            )
-                : null,
-            floatingLabelBehavior: FloatingLabelBehavior.always,
-            //input labels are always open
-            labelText: "$labelText ${userInput}",
-            labelStyle: const TextStyle(
-              color: Colors.white,
-              fontSize: 17,
-              fontWeight: FontWeight.bold,
-            ),
-            enabledBorder: const UnderlineInputBorder(
-                borderSide: BorderSide(color: Colors.white)),
-            hintText: placeholder,
-            //style of placeholder
-            hintStyle: const TextStyle(
-              fontSize: 14,
-              color: Colors.blueGrey,
-            )),
       ),
     );
   }
@@ -252,7 +212,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   icon: const Icon(
                     Icons.camera_alt,
                     size: 30,
-                    color: Colors.cyan,
+                    color: Colors.blue,
                   ),
                   onPressed: () {
                     takePhoto(ImageSource.camera);
@@ -261,7 +221,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     'Camera',
                     style: TextStyle(
                       fontSize: 20,
-                      color: Colors.cyan,
+                      color: Colors.blue,
                     ),
                   ),
                 ),
@@ -273,7 +233,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   icon: const Icon(
                     Icons.image,
                     size: 30,
-                    color: Colors.cyan,
+                    color: Colors.blue,
                   ),
                   onPressed: () {
                     takePhoto(ImageSource.gallery);
@@ -282,7 +242,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     'Gallery',
                     style: TextStyle(
                       fontSize: 20,
-                      color: Colors.cyan,
+                      color: Colors.blue,
                     ),
                   ),
                 ),
