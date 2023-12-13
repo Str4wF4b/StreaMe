@@ -42,13 +42,17 @@ class _ActorDirectorTileState extends State<ActorDirectorTile> {
                 imageUrl: widget.imageUrl,
                 height: 170,
                 placeholder: (context, url) => cons.imagePlaceholderRect,
-                errorWidget: (context, url, error) => cons.imageErrorWidgetLittle,
+                errorWidget: (context, url, error) =>
+                    cons.imageErrorWidgetLittle,
               ),
             ),
             const SizedBox(height: 5.0),
             AutoSizeText(
               widget.stream.title,
-              style: TextStyle(color: color.bodyTextColor, fontWeight: FontWeight.w500),
+              style: TextStyle(
+                  color: color.bodyTextColor,
+                  fontWeight: FontWeight.w500,
+                  fontSize: 14 * 1 / MediaQuery.of(context).textScaleFactor),
               maxLines: 2,
               textAlign: TextAlign.center,
             )

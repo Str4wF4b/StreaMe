@@ -20,6 +20,7 @@ class StreaMeTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 35,
+      //padding: const EdgeInsets.only(left: 15.0, right: 15.0), //TODO: CHANGE THIS ONLY FOR WATCHLIST TABBAR
       width: widthNeeded ? 100 : null,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30.0),
