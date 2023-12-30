@@ -3,23 +3,19 @@ import '../../src/utils/images.dart';
 
 final Images image = Images();
 
-final allSd = <Uhd>[
+final allUhd = <Uhd>[
   //Spider-Man: Across the Spider-Verse:
   Uhd(id: 0, streamId: 0, streamOn: {
     "Logo": [image.netflix],
     "Platform": ["Netflix"],
     "Link": ["https://www.netflix.com/de/"]
   }, rent: {
-    "Logo": [image.magentaTv, image.prime, image.appleTv],
-    "Provider": ["Magenta TV €3,99", "Prime €4,99", "Apple TV €4,99"],
-    "Link": [
-      "https://www.telekom.de/start",
-      "https://www.amazon.de/gp/video/detail/0N7EAU0Y85VI5OO04TYKSXL85T/ref=atv_dl_rdr?tag=justdersjd-21",
-      "https://tv.apple.com/de/movie/spider-man-across-the-spider-verse/umc.cmc.2zphwshxw2ejh2znevhod0u01?playableId=tvs.sbd.9001%3A1688506685"
-    ]
+    "Logo": [],
+    "Platform": [],
+    "Link": []
   }, buy: {
-    "Logo": [image.prime, image.appleTv],
-    "Provider": ["Prime €13,99", "Apple TV €13,99"],
+    "Logo": [image.magentaTv, image.prime, image.appleTv],
+    "Platform": ["Magenta TV €13,99", "Prime €13,99", "Apple TV €13,99"],
     "Link": [
       "https://www.telekom.de/start",
       "https://www.amazon.de/gp/video/detail/0N7EAU0Y85VI5OO04TYKSXL85T/ref=atv_dl_rdr?tag=justdersjd-21",
@@ -110,8 +106,7 @@ final allSd = <Uhd>[
   Uhd(id: 7, streamId: 7, streamOn: {
     "Logo": [image.appleTvPlus],
     "Platform": ["Apple TV+"],
-    "Link": [
-    ]
+    "Link": ["https://tv.apple.com/de/episode/pilot/umc.cmc.zb0yksqtym68hasbq8mj4jwp?playableId=tvs.sbd.4000%3AVTEDL0560101"]
   }, rent: {
     "Logo": [],
     "Platform": [],
@@ -131,22 +126,23 @@ final allSd = <Uhd>[
     "Platform": ["Apple TV €3,99", "Prime €3,99", "Magenta TV €3,99"],
     "Link": [
       "https://tv.apple.com/de/movie/maze-runner---die-auserwahlten-im-labyrinth/umc.cmc.4ljr4z86mfhtbdouv5ml5h693?playableId=tvs.sbd.9001%3A919198535",
-      "https://www.amazon.de/gp/video/detail/0HX2AL1JXHLS8ZOM4EPW5JFV5V/ref=atv_dl_rdr?tag=justdersjd-21"
+      "https://www.amazon.de/gp/video/detail/0HX2AL1JXHLS8ZOM4EPW5JFV5V/ref=atv_dl_rdr?tag=justdersjd-21",
+      "https://www.telekom.de/start"
     ]
   }, buy: {
     "Logo": [image.appleTv, image.prime],
     "Platform": ["Apple TV €9,99", "Prime €9,99", "Magenta TV €9,99"],
     "Link": [
       "https://tv.apple.com/de/movie/maze-runner---die-auserwahlten-im-labyrinth/umc.cmc.4ljr4z86mfhtbdouv5ml5h693?playableId=tvs.sbd.9001%3A919198535",
-      "https://www.amazon.de/gp/video/detail/0HX2AL1JXHLS8ZOM4EPW5JFV5V/ref=atv_dl_rdr?tag=justdersjd-21"
+      "https://www.amazon.de/gp/video/detail/0HX2AL1JXHLS8ZOM4EPW5JFV5V/ref=atv_dl_rdr?tag=justdersjd-21",
+      "https://www.telekom.de/start"
     ]
   }),
   //Dahmer - Monster: The Jeffrey Dahmer Story:
   Uhd(id: 9, streamId: 9, streamOn: {
     "Logo": [image.netflix],
     "Platform": ["Netflix"],
-    "Link": [
-    ]
+    "Link": ["https://www.netflix.com/de/title/81287562"]
   }, rent: {
     "Logo": [],
     "Platform": [],
@@ -166,7 +162,7 @@ final allSd = <Uhd>[
     "Platform": ["Prime €3,99", "Apple TV €3,99", "Magenta TV €3,99"],
     "Link": [
       "https://www.amazon.de/gp/video/detail/0O2SSA8EE8BYL2EI1DE0HG8XS4/ref=atv_dl_rdr?tag=justdersjd-21",
-      "https://tv.apple.com/de/movie/spider-man-a-new-universe/umc.cmc.4a2ypxddplsdsahwxrc5fkz4x?playableId=tvs.sbd.9001%3A1447687300"
+      "https://tv.apple.com/de/movie/spider-man-a-new-universe/umc.cmc.4a2ypxddplsdsahwxrc5fkz4x?playableId=tvs.sbd.9001%3A1447687300",
       "https://www.telekom.de/start"
     ]
   }, buy: {
@@ -174,7 +170,7 @@ final allSd = <Uhd>[
     "Platform": ["Prime €9,99", "Apple TV €9,99", "Magenta TV €9,99"],
     "Link": [
       "https://www.amazon.de/gp/video/detail/0O2SSA8EE8BYL2EI1DE0HG8XS4/ref=atv_dl_rdr?tag=justdersjd-21",
-      "https://tv.apple.com/de/movie/spider-man-a-new-universe/umc.cmc.4a2ypxddplsdsahwxrc5fkz4x?playableId=tvs.sbd.9001%3A1447687300"
+      "https://tv.apple.com/de/movie/spider-man-a-new-universe/umc.cmc.4a2ypxddplsdsahwxrc5fkz4x?playableId=tvs.sbd.9001%3A1447687300",
       "https://www.telekom.de/start"
     ]
   }),

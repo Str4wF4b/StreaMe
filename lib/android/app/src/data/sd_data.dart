@@ -11,14 +11,14 @@ final allSd = <Sd>[
     "Link": ["https://www.netflix.com/de/"]
   }, rent: {
     "Logo": [image.prime, image.appleTv],
-    "Provider": ["Prime €3,99", "Apple TV €4,99"],
+    "Platform": ["Prime €3,99", "Apple TV €4,99"],
     "Link": [
       "https://www.amazon.de/gp/video/detail/0N7EAU0Y85VI5OO04TYKSXL85T/ref=atv_dl_rdr?tag=justdersjd-21",
       "https://tv.apple.com/de/movie/spider-man-across-the-spider-verse/umc.cmc.2zphwshxw2ejh2znevhod0u01?playableId=tvs.sbd.9001%3A1688506685"
     ]
   }, buy: {
     "Logo": [image.prime, image.appleTv],
-    "Provider": ["Prime €13,99", "Apple TV €13,99"],
+    "Platform": ["Prime €13,99", "Apple TV €13,99"],
     "Link": [
       "https://www.amazon.de/gp/video/detail/0N7EAU0Y85VI5OO04TYKSXL85T/ref=atv_dl_rdr?tag=justdersjd-21",
       "https://tv.apple.com/de/movie/spider-man-across-the-spider-verse/umc.cmc.2zphwshxw2ejh2znevhod0u01?playableId=tvs.sbd.9001%3A1688506685"
@@ -165,11 +165,12 @@ final allSd = <Sd>[
     ]
   }),
   //Dahmer - Monster: The Jeffrey Dahmer Story:
-  Sd(id: 9, streamId: 9, streamOn: {
-    "Logo": [image.netflix],
-    "Platform": ["Netflix"],
-    "Link": [
-    ]
+  Sd(id: 9,
+  streamId: 9,
+  streamOn: {
+  "Logo": [image.netflix],
+  "Platform": ["Netflix"],
+  "Link": ["https://www.netflix.com/de/title/81287562"]
   }, rent: {
     "Logo": [],
     "Platform": [],
@@ -185,18 +186,20 @@ final allSd = <Sd>[
     "Platform": ["Netflix"],
     "Link": ["https://www.netflix.com/de/title/81002747"]
   }, rent: {
-    "Logo": [image.prime, image.appleTv, image.magentaTv],
-    "Platform": ["Prime €3,98", "Apple TV €3,99"],
+    "Logo": [image.prime, image.appleTv, image.skyGo],
+    "Platform": ["Prime €3,98", "Apple TV €3,99", "SkyGo €3,99"],
     "Link": [
       "https://www.amazon.de/gp/video/detail/0O2SSA8EE8BYL2EI1DE0HG8XS4/ref=atv_dl_rdr?tag=justdersjd-21",
-      "https://tv.apple.com/de/movie/spider-man-a-new-universe/umc.cmc.4a2ypxddplsdsahwxrc5fkz4x?playableId=tvs.sbd.9001%3A1447687300"
+      "https://tv.apple.com/de/movie/spider-man-a-new-universe/umc.cmc.4a2ypxddplsdsahwxrc5fkz4x?playableId=tvs.sbd.9001%3A1447687300",
+      "https://store.sky.de/product/spider-man-a-new-universe/0a599b73-6c83-4247-9a57-b4f915b6a088"
     ]
   }, buy: {
-    "Logo": [image.prime, image.appleTv, image.magentaTv],
-    "Platform": ["Prime €9,99", "Apple TV €9,99"],
+    "Logo": [image.prime, image.appleTv, image.skyGo],
+    "Platform": ["Prime €9,99", "Apple TV €9,99", "SkyGo €9,99"],
     "Link": [
       "https://www.amazon.de/gp/video/detail/0O2SSA8EE8BYL2EI1DE0HG8XS4/ref=atv_dl_rdr?tag=justdersjd-21",
-      "https://tv.apple.com/de/movie/spider-man-a-new-universe/umc.cmc.4a2ypxddplsdsahwxrc5fkz4x?playableId=tvs.sbd.9001%3A1447687300"
+      "https://tv.apple.com/de/movie/spider-man-a-new-universe/umc.cmc.4a2ypxddplsdsahwxrc5fkz4x?playableId=tvs.sbd.9001%3A1447687300",
+      "https://store.sky.de/product/spider-man-a-new-universe/0a599b73-6c83-4247-9a57-b4f915b6a088"
     ]
   }),
   //One Piece:
