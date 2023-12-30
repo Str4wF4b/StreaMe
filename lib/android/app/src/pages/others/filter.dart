@@ -3,6 +3,7 @@ import 'package:flutter/services.dart';
 import 'package:stream_me/android/app/src/data/actor_data.dart';
 import 'package:stream_me/android/app/src/pages/others/filter_results.dart';
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
+import '../../widgets/global/selection_button.dart';
 
 class FilterPage extends StatefulWidget {
   FilterPage({Key? key}) : super(key: key);
@@ -100,12 +101,12 @@ class _FilterPageState extends State<FilterPage> {
         Padding(
           padding: const EdgeInsets.only(top: 33),
           child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            Icon(Icons.tune, color: Colors.grey.shade300, size: 30),
+            Icon(Icons.tune, color: color.bodyTextColor, size: 30),
             const SizedBox(width: 10),
             Text(
               "Filters",
               style: TextStyle(
-                  color: Colors.grey.shade300,
+                  color: color.bodyTextColor,
                   fontWeight: FontWeight.bold,
                   fontSize: 30),
               textAlign: TextAlign.start,
@@ -176,53 +177,16 @@ class _FilterPageState extends State<FilterPage> {
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
-                      GestureDetector(
+                      SelectionButton(
                           onTap: () {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) => FilterResultsPage()));
                           },
-                          child: Container(
-                            padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
-                            //margin: const EdgeInsets.symmetric(horizontal: 100.0),
-                            width: 120,
-                            decoration: BoxDecoration(
-                                color: Colors.blueAccent,
-                                border: Border.all(
-                                    color: Colors.grey.shade300, width: 1.5),
-                                borderRadius: BorderRadius.circular(30.0)),
-                            child: Center(
-                              child: Text(
-                                "Search",
-                                style: TextStyle(
-                                    fontSize: 16.0,
-                                    color: Colors.grey.shade300,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                          )),
-                      GestureDetector(
-                          onTap: () {},
-                          child: Container(
-                            padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
-                            //margin: const EdgeInsets.symmetric(horizontal: 100.0),
-                            width: 120,
-                            decoration: BoxDecoration(
-                                color: Colors.redAccent,
-                                border: Border.all(
-                                    color: Colors.grey.shade300, width: 1.5),
-                                borderRadius: BorderRadius.circular(30.0)),
-                            child: Center(
-                              child: Text(
-                                "Reset",
-                                style: TextStyle(
-                                    fontSize: 16.0,
-                                    color: Colors.grey.shade300,
-                                    fontWeight: FontWeight.w500),
-                              ),
-                            ),
-                          ))
+                          color: Colors.blueAccent,
+                          label: "Search"),
+                      SelectionButton(onTap: () {}, color: Colors.redAccent, label: "Reset"),
                     ],
                   ),
                 )
@@ -285,7 +249,7 @@ class _FilterPageState extends State<FilterPage> {
                 color: Colors.grey.shade400,
                 fontSize: 18),
             border:
-            OutlineInputBorder(borderRadius: BorderRadius.circular(20.0)),
+                OutlineInputBorder(borderRadius: BorderRadius.circular(20.0)),
             enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.grey.shade400),
                 borderRadius: BorderRadius.circular(20.0)),
