@@ -1,14 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:stream_me/android/app/src/utils/color_palette.dart';
 
 class LoginTextField extends StatelessWidget {
-  final inputController; // user's input
+  final TextEditingController? inputController; // user's input
   final bool obscureText; // obscured text for password in text field
   final String hintText; // hint text in text field
   final IconData prefixIcon;
 
   //final Icon suffixIcon;
 
-  const LoginTextField({Key? key,
+  LoginTextField({Key? key,
     required this.inputController,
     required this.obscureText,
     required this.hintText,
@@ -16,6 +17,8 @@ class LoginTextField extends StatelessWidget {
     /*required this.suffixIcon*/
   })
       : super(key: key);
+
+  ColorPalette color = ColorPalette();
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +40,7 @@ class LoginTextField extends StatelessWidget {
                 borderSide: const BorderSide(color: Colors.blueAccent),
                 borderRadius: BorderRadius.circular(20.0)),
             filled: true,
-            fillColor: Colors.grey.shade300,
+            fillColor: color.bodyTextColor,
             hintText: hintText,
             hintStyle: const TextStyle(color: Colors.grey)),
       ),

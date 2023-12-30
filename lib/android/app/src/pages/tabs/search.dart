@@ -12,6 +12,10 @@ import '../../utils/constants_and_values.dart';
 import '../others/stream_details.dart';
 import '../others/filter.dart';
 
+
+// Test:
+import '../../pages/others/stream_details_dummy.dart';
+
 class SearchPage extends StatefulWidget {
   SearchPage({Key? key}) : super(key: key);
 
@@ -176,7 +180,7 @@ class _SearchPageState extends State<SearchPage> {
         onTap: () => Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => StreamDetailsPage(stream: stream),
+              builder: (context) => StreamDetailsPageDummy(stream: stream),
             )),
       );
 

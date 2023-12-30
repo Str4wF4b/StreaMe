@@ -9,6 +9,7 @@ import 'package:stream_me/android/app/src/widgets/features/actor_director_tab.da
 import '../../utils/color_palette.dart';
 import '../../utils/constants_and_values.dart';
 import '../../widgets/global/streame_tab.dart';
+import '../../widgets/global/streame_refresh.dart';
 
 class ActorDirectorDetailsPage extends StatefulWidget {
   final Actor actorDirector;
@@ -30,12 +31,12 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
 
   late final TabController _tabController =
       TabController(length: 3, vsync: this);
-  late final TabController _actingTabController =
+  /*late final TabController _actingTabController =
       TabController(length: 2, vsync: this);
   late final TabController _productionTabController =
       TabController(length: 2, vsync: this);
   late final TabController _directionTabController =
-      TabController(length: 2, vsync: this);
+      TabController(length: 2, vsync: this);*/
 
   @override
   Widget build(BuildContext context) {
@@ -43,130 +44,135 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
 
     return Scaffold(
       backgroundColor: color.backgroundColor,
-      body: CustomScrollView(
-        slivers: [
-          SliverAppBar(
-            backgroundColor: color.backgroundColor,
-            //title: FittedBox(child: Text(widget.actorDirector.displayName)),
-            //centerTitle: true,
-            elevation: 0.0,
-            pinned: true,
-            expandedHeight: 300,
-            flexibleSpace: FlexibleSpaceBar(
-              expandedTitleScale: 1.2,
-              background: CachedNetworkImage(
-                imageUrl: widget.actorDirector.image,
-                fit: BoxFit.fitHeight,
-                key: keyImage,
-                placeholder: (context, url) => cons.imagePlaceholderRect,
-                errorWidget: (context, url, error) => cons.imageErrorWidget,
+      body: StreameRefresh(
+        child: CustomScrollView(
+          slivers: [
+            SliverAppBar(
+              backgroundColor: color.backgroundColor,
+              //title: FittedBox(child: Text(widget.actorDirector.displayName)),
+              //centerTitle: true,
+              elevation: 0.0,
+              pinned: true,
+              expandedHeight: 300,
+              flexibleSpace: FlexibleSpaceBar(
+                expandedTitleScale: 1.2,
+                background: CachedNetworkImage(
+                  imageUrl: widget.actorDirector.image,
+                  fit: BoxFit.fitHeight,
+                  key: keyImage,
+                  placeholder: (context, url) => cons.imagePlaceholderRect,
+                  errorWidget: (context, url, error) => cons.imageErrorWidget,
+                ),
+                //titlePadding: const EdgeInsets.only(top: 0.0), //0.0 but necessary to put title on bottom of image
+                centerTitle: true,
+                title: FittedBox(
+                    child: Text(
+                  widget.actorDirector.displayName,
+                )),
               ),
-              //titlePadding: const EdgeInsets.only(top: 0.0), //0.0 but necessary to put title on bottom of image
-              centerTitle: true,
-              title: FittedBox(
-                  child: Text(
-                widget.actorDirector.displayName,
-              )),
             ),
-          ),
-          SliverToBoxAdapter(
-            child: Center(
-              child: Padding(
-                padding: const EdgeInsets.only(
-                    left: 15.0, right: 15.0, bottom: 10.0),
-                child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    const SizedBox(height: 40),
-                    actorDirectorInfo("Full Name:  ",
-                        "${widget.actorDirector.firstName} ${widget.actorDirector.secondName}"),
-                    const SizedBox(height: 20),
-                    actorDirectorInfo("Age:  ",
-                        "${getAge(widget.actorDirector.birthday)} (${widget.actorDirector.birthday})"),
-                    const SizedBox(height: 20),
-                    actorDirectorInfo(
-                        "Place of Birth:  ", widget.actorDirector.placeOfBirth),
-                    const SizedBox(height: 20),
-                    LayoutBuilder(builder: (context, constraints) {
-                      return /*checkForMaxLines(
-                            widget.stream.plot, context, constraints);*/
-                          ExpandText(widget.actorDirector.biography,
-                              style: TextStyle(
-                                  color: color.bodyTextColor,
-                                  fontSize: 16 *
-                                      1 /
-                                      MediaQuery.of(context).textScaleFactor),
-                              indicatorIcon: Icons.keyboard_arrow_down,
-                              indicatorIconColor: Colors.grey.shade400,
-                              indicatorPadding:
-                                  const EdgeInsets.only(bottom: 1.0),
-                              maxLines: /*MediaQuery.of(context).textScaleFactor == 1.1 ? 6 : 5*/
-                                  6,
-                              //TODO: !!
-                              expandIndicatorStyle: ExpandIndicatorStyle.icon);
-                    }),
-                    const SizedBox(height: 20),
-                    Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        const Divider(
-                          thickness: 0.2,
-                          color: Colors.grey,
-                        ),
-                        const SizedBox(height: 20),
-                        Align(
-                          alignment: Alignment.centerLeft,
-                          //child: Padding(
-                          //padding: const EdgeInsets.only(bottom: 5.0),
-                          child: TabBar(
-                            physics: const ClampingScrollPhysics(),
-                            labelColor: color.backgroundColor,
-                            unselectedLabelColor: Colors.grey,
-                            indicator: BoxDecoration(
-                              borderRadius: BorderRadius.circular(30.0),
-                              color: color.bodyTextColor,
-                            ),
-                            indicatorSize: TabBarIndicatorSize.label,
-                            indicatorPadding:
-                                const EdgeInsets.fromLTRB(0.0, 6.0, 0.0, 8.0),
-                            controller: _tabController,
-                            tabs: [
-                              addTab("Acting", 0),
-                              addTab("Production", 1),
-                              addTab("Direction", 2),
-                            ],
+            SliverToBoxAdapter(
+              child: Center(
+                child: Padding(
+                  padding: const EdgeInsets.only(
+                      left: 15.0, right: 15.0, bottom: 10.0),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      const SizedBox(height: 40),
+                      actorDirectorInfo("Full Name:  ",
+                          "${widget.actorDirector.firstName} ${widget.actorDirector.secondName}"),
+                      const SizedBox(height: 20),
+                      actorDirectorInfo("Age:  ",
+                          "${getAge(widget.actorDirector.birthday)} (${widget.actorDirector.birthday})"),
+                      const SizedBox(height: 20),
+                      actorDirectorInfo("Place of Birth:  ",
+                          widget.actorDirector.placeOfBirth),
+                      const SizedBox(height: 20),
+                      LayoutBuilder(builder: (context, constraints) {
+                        return /*checkForMaxLines(
+                              widget.stream.plot, context, constraints);*/
+                            ExpandText(widget.actorDirector.biography,
+                                style: TextStyle(
+                                    color: color.bodyTextColor,
+                                    fontSize: 16 *
+                                        1 /
+                                        MediaQuery.of(context).textScaleFactor),
+                                indicatorIcon: Icons.keyboard_arrow_down,
+                                indicatorIconColor: Colors.grey.shade400,
+                                indicatorPadding:
+                                    const EdgeInsets.only(bottom: 1.0),
+                                maxLines: /*MediaQuery.of(context).textScaleFactor == 1.1 ? 6 : 5*/
+                                    6,
+                                //TODO: !!
+                                expandIndicatorStyle:
+                                    ExpandIndicatorStyle.icon);
+                      }),
+                      const SizedBox(height: 20),
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          const Divider(
+                            thickness: 0.2,
+                            color: Colors.grey,
                           ),
-                          //),
-                        ),
-                        SizedBox(
-                          height: setTabHeight(
-                              widget.actorDirector, _tabController.index),
-                          child: AutoScaleTabBarView(
+                          const SizedBox(height: 20),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            //child: Padding(
+                            //padding: const EdgeInsets.only(bottom: 5.0),
+                            child: TabBar(
+                              physics: const ClampingScrollPhysics(),
+                              labelColor: color.backgroundColor,
+                              unselectedLabelColor: Colors.grey,
+                              indicator: BoxDecoration(
+                                borderRadius: BorderRadius.circular(30.0),
+                                color: color.bodyTextColor,
+                              ),
+                              indicatorSize: TabBarIndicatorSize.label,
+                              indicatorPadding:
+                                  const EdgeInsets.fromLTRB(0.0, 6.0, 0.0, 8.0),
                               controller: _tabController,
-                              children: [
-                                ActorDirectorTab(
-                                    actorDirector: widget.actorDirector,
-                                    tabContent: widget.actorDirector.acting),
-                                ActorDirectorTab(
-                                    actorDirector: widget.actorDirector,
-                                    tabContent:
-                                        widget.actorDirector.production),
-                                ActorDirectorTab(
-                                    actorDirector: widget.actorDirector,
-                                    tabContent: widget.actorDirector.directing),
-                              ]),
-                        ),
-                      ],
-                    )
-                  ],
+                              tabs: [
+                                addTab("Acting", 0),
+                                addTab("Production", 1),
+                                addTab("Direction", 2),
+                              ],
+                            ),
+                            //),
+                          ),
+                          SizedBox(
+                            height: setTabHeight(
+                                widget.actorDirector, _tabController.index),
+                            child: AutoScaleTabBarView(
+                                controller: _tabController,
+                                children: [
+                                  ActorDirectorTab(
+                                      actorDirector: widget.actorDirector,
+                                      tabContent: widget.actorDirector.acting),
+                                  ActorDirectorTab(
+                                      actorDirector: widget.actorDirector,
+                                      tabContent:
+                                          widget.actorDirector.production),
+                                  ActorDirectorTab(
+                                      actorDirector: widget.actorDirector,
+                                      tabContent:
+                                          widget.actorDirector.directing),
+                                ]),
+                          ),
+                        ],
+                      )
+                    ],
+                  ),
                 ),
               ),
-            ),
-          )
-        ],
+            )
+          ],
+        ),
       ),
     );
   }
+
 
   /**
    * A function that determines the size and position of a specific Widget
@@ -229,13 +235,12 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
     DateTime actorBirthdayDateTime =
         DateFormat("dd-MM-yyyy").parse(actorBirthday);
 
-
-    if (actorBirthdayDateTime.month < DateTime.now().month || (actorBirthdayDateTime.month == DateTime.now().month && actorBirthdayDateTime.month <= DateTime.now().month)) {
+    if (actorBirthdayDateTime.month < DateTime.now().month ||
+        (actorBirthdayDateTime.month == DateTime.now().month &&
+            actorBirthdayDateTime.month <= DateTime.now().month)) {
       age = DateTime.now().year - actorBirthdayDateTime.year;
-      print(actorBirthdayDateTime.day);
     } else {
       age = DateTime.now().year - actorBirthdayDateTime.year - 1;
-      print(actorBirthdayDateTime.year);
     }
 
     //TODO: Check for age for dead people
