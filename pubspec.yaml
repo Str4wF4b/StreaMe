@@ -90,6 +90,9 @@ dependencies:
   # Refresh site
   custom_refresh_indicator: ^2.2.1
 
+  # Launch URLs
+  url_launcher: ^6.2.2
+
   # Expand Widget
   #expandable_widgets: ^1.0.3+1
 
@@ -172,6 +175,10 @@ flutter:
     - assets/images/home/potc_explore.png
     - assets/images/home/spiderman_help.png
     - assets/images/home/strangerthings_watchlist.png #not used
+    - assets/images/home/deadpool_favourites_comic.png
+    - assets/images/home/goonies_watchlist_comic.png
+    - assets/images/home/potc_explore_comic.png
+    - assets/images/home/spiderman_help_comic.png
 
     # Edit Profile
     - assets/images/blank-profile-picture.png
