@@ -7,10 +7,10 @@ class Images {
 
   // Images:
   // Home Page:
-  String favourites = "assets/images/home/deadpool_favourites.png";
-  String watchlist = "assets/images/home/goonies_watchlist.png";
-  String explore = "assets/images/home/potc_explore.png";
-  String help = "assets/images/home/spiderman_help.png";
+  String favourites = "assets/images/home/deadpool_favourites_comic.png";
+  String watchlist = "assets/images/home/goonies_watchlist_comic.png";
+  String explore = "assets/images/home/potc_explore_comic.png";
+  String help = "assets/images/home/spiderman_help_comic.png";
 
   // Login:
   String google = "assets/images/login/google.png";
@@ -24,7 +24,7 @@ class Images {
   String crunchyroll = "assets/images/platforms/crunchyroll.png";
   String disneyPlus = "assets/images/platforms/disneyplus.png";
   String hulu = "assets/images/platforms/hulu.png";
-  String magentaTv = "assets/images/platforms/magentaTv.png";
+  String magentaTv = "assets/images/platforms/magentatv.png";
   String netflix = "assets/images/platforms/netflix.png";
   String prime = "assets/images/platforms/prime.png";
   String skyGo = "assets/images/platforms/skygo.png";
