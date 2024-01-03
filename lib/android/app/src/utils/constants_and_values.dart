@@ -6,7 +6,7 @@ class ConstantsAndValues {
       child: const CircularProgressIndicator()); //only for square widgets
   Widget imagePlaceholderRect = Transform.scale(
       scaleX: 0.25,
-      scaleY: 0.285,
+      scaleY: 0.16,//0.285,
       child: const CircularProgressIndicator()); //only for SliverAppBar
   Widget imagePlaceholderImage = Transform.scale(
       scale: 1,

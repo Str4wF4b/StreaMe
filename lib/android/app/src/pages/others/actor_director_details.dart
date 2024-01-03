@@ -31,16 +31,11 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
 
   late final TabController _tabController =
       TabController(length: 3, vsync: this);
-  /*late final TabController _actingTabController =
-      TabController(length: 2, vsync: this);
-  late final TabController _productionTabController =
-      TabController(length: 2, vsync: this);
-  late final TabController _directionTabController =
-      TabController(length: 2, vsync: this);*/
 
   @override
   Widget build(BuildContext context) {
     getSizeAndPosition();
+    final sliverWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
       backgroundColor: color.backgroundColor,
@@ -54,21 +49,46 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
               elevation: 0.0,
               pinned: true,
               expandedHeight: 300,
-              flexibleSpace: FlexibleSpaceBar(
-                expandedTitleScale: 1.2,
-                background: CachedNetworkImage(
-                  imageUrl: widget.actorDirector.image,
-                  fit: BoxFit.fitHeight,
-                  key: keyImage,
-                  placeholder: (context, url) => cons.imagePlaceholderRect,
-                  errorWidget: (context, url, error) => cons.imageErrorWidget,
+              flexibleSpace: Container(
+                margin: EdgeInsets.only(left: sliverWidth * 0.225, right: sliverWidth * 0.225),
+                color: Colors.transparent,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20.0),
+                  child: FlexibleSpaceBar(
+                    expandedTitleScale: 1.2,
+                    background: CachedNetworkImage(
+                      imageUrl: widget.actorDirector.image,
+                      fit: BoxFit.fitHeight,
+                      key: keyImage,
+                      placeholder: (context, url) => cons.imagePlaceholderRect,
+                      errorWidget: (context, url, error) => cons.imageErrorWidget,
+                    ),
+                    //titlePadding: const EdgeInsets.only(top: 0.0), //0.0 but necessary to put title on bottom of image
+                    centerTitle: true,
+                    title: FittedBox(child: Text(widget.actorDirector.displayName), //FittedBox(
+                        //child: Container(
+                        //  color: Colors.black.withOpacity(0.4),
+                        //  decoration: BoxDecoration(
+                        //      color: Colors.black.withOpacity(0.4),
+                        //    gradient: LinearGradient(
+                         //    begin: FractionalOffset.topCenter,
+                        //     end: FractionalOffset.bottomCenter,
+                        //      colors: [
+                        //        Colors.grey,
+                        //        Colors.black
+                        //      ]
+                        //    )
+                        //  ),
+                          //child: Padding(
+                          //  padding: const EdgeInsets.only(left: 5.0, right: 5.0),
+                          //  child: Text(
+                      //widget.actorDirector.displayName,
+                   // ),
+                          //),
+                        //)
+                    ),
+                  ),
                 ),
-                //titlePadding: const EdgeInsets.only(top: 0.0), //0.0 but necessary to put title on bottom of image
-                centerTitle: true,
-                title: FittedBox(
-                    child: Text(
-                  widget.actorDirector.displayName,
-                )),
               ),
             ),
             SliverToBoxAdapter(
@@ -219,7 +239,7 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
         tabTitle: tabTitle,
         tabIndex: tabIndex,
         tabController: _tabController,
-        widthNeeded: false,
+        isWatchlist: false,
       ));
 
   /**
