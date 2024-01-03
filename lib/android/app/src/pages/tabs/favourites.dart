@@ -172,6 +172,6 @@ class _FavouritesPageState extends State<FavouritesPage>
             tabTitle: tabTitle,
             tabIndex: tabIndex,
             tabController: _tabController,
-            widthNeeded: false,
+            isWatchlist: false,
           )));
 }
