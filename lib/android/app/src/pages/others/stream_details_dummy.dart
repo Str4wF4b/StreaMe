@@ -738,10 +738,13 @@ class _StreamDetailsPageState extends State<StreamDetailsPageDummy>
             context: context,
             builder: (context) => Dialog(
                   backgroundColor: Colors.transparent,
-                  child: CachedNetworkImage(
-                    imageUrl: widget.stream.image,
-                    placeholder: (context, url) => cons.imagePlaceholderRect,
-                    errorWidget: (context, url, error) => cons.imageErrorWidget,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(20.0),
+                    child: CachedNetworkImage(
+                      imageUrl: widget.stream.image,
+                      placeholder: (context, url) => cons.imagePlaceholderRect,
+                      errorWidget: (context, url, error) => cons.imageErrorWidget,
+                    ),
                   ),
                 ));
       },
@@ -936,7 +939,8 @@ class _StreamDetailsPageState extends State<StreamDetailsPageDummy>
 
     //Create Card with platform logo in it:
     Widget card = GestureDetector(
-      onTap: () { //function for the platform tiles that opens an alert dialog window with a link to the corresponding stream
+      onTap: () {
+        //function for the platform tiles that opens an alert dialog window with a link to the corresponding stream
         showDialog(
             context: context,
             builder: (BuildContext context) {
@@ -1037,7 +1041,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPageDummy>
                 const SizedBox(
                   height: 22,
                 ),
-               //The actual content of the Alert Dialog:
+                //The actual content of the Alert Dialog:
                 RichText(
                   text: TextSpan(
                     children: [
@@ -1048,7 +1052,8 @@ class _StreamDetailsPageState extends State<StreamDetailsPageDummy>
                       ),
                       WidgetSpan(
                         child: InkWell(
-                            onTap: () => launchUrl(Uri.parse(platformLink)), //adding the individual URL to every stream
+                            onTap: () => launchUrl(Uri.parse(platformLink)),
+                            //adding the individual URL to every stream
                             child: const Text(
                               style: TextStyle(
                                   color: Colors.blueAccent,
@@ -1074,21 +1079,22 @@ class _StreamDetailsPageState extends State<StreamDetailsPageDummy>
                       margin: const EdgeInsets.symmetric(horizontal: 108.0),
                       decoration: BoxDecoration(
                           //border: Border.all(color: Colors.white70),
+                          color: color.bodyTextColor.withOpacity(0.3),
                           border: Border.all(
-                              color: color.bodyTextColor, width: 0.5),
+                              color: color.middleBackgroundColor, width: 0.5),
                           borderRadius: BorderRadius.circular(30.0)),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(
                             Icons.close,
-                            color: color.bodyTextColor,
+                            color: color.middleBackgroundColor,
                             size: 20.0,
                           ),
                           const SizedBox(width: 5),
                           Text("Close",
                               style: TextStyle(
-                                  color: color.bodyTextColor,
+                                  color: color.middleBackgroundColor,
                                   //fontWeight: FontWeight.bold,
                                   fontSize: 14.0)),
                         ],

@@ -625,13 +625,13 @@ class _StreamDetailsPageState extends State<StreamDetailsPage> {
         showDialog(
             context: context,
             builder: (context) => Dialog(
-                  backgroundColor: Colors.transparent,
-                  child: CachedNetworkImage(
-                    imageUrl: widget.stream.image,
-                    placeholder: (context, url) => cons.imagePlaceholderRect,
-                    errorWidget: (context, url, error) => cons.imageErrorWidget,
+                    backgroundColor: Colors.transparent,
+                    child: CachedNetworkImage(
+                      imageUrl: widget.stream.image,
+                      placeholder: (context, url) => cons.imagePlaceholderRect,
+                      errorWidget: (context, url, error) => cons.imageErrorWidget,
                   ),
-                ));
+            ));
       },
       child: CachedNetworkImage(
         imageUrl: widget.stream.image,
