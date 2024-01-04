@@ -72,7 +72,7 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
                                   begin: FractionalOffset.topCenter,
                                   end: FractionalOffset.bottomCenter,
                                   colors: [
-                                    Colors.grey.withOpacity(0.0), // or grey
+                                    Colors.grey.withOpacity(0.0), // or black
                                     Colors.black87, // or black54
                                   ],
                                   stops: const [
