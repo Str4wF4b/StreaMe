@@ -56,36 +56,34 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
                   borderRadius: BorderRadius.circular(20.0),
                   child: FlexibleSpaceBar(
                     expandedTitleScale: 1.2,
-                    background: CachedNetworkImage(
-                      imageUrl: widget.actorDirector.image,
-                      fit: BoxFit.fitHeight,
-                      key: keyImage,
-                      placeholder: (context, url) => cons.imagePlaceholderRect,
-                      errorWidget: (context, url, error) => cons.imageErrorWidget,
+                    background: Stack(
+                      children: [
+                        CachedNetworkImage(
+                          imageUrl: widget.actorDirector.image,
+                          fit: BoxFit.fitHeight,
+                          key: keyImage,
+                          placeholder: (context, url) => cons.imagePlaceholderRect,
+                          errorWidget: (context, url, error) => cons.imageErrorWidget,
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                  begin: FractionalOffset.topCenter,
+                                  end: FractionalOffset.bottomCenter,
+                                  colors: [
+                                    Colors.black12.withOpacity(0.0), // or grey
+                                    Colors.black87, // or black54
+                                  ],
+                                  stops: const [
+                                    0.8, // or 0.77
+                                    1.0
+                                  ])),
+                        )
+                      ],
                     ),
                     //titlePadding: const EdgeInsets.only(top: 0.0), //0.0 but necessary to put title on bottom of image
                     centerTitle: true,
                     title: FittedBox(child: Text(widget.actorDirector.displayName), //FittedBox(
-                        //child: Container(
-                        //  color: Colors.black.withOpacity(0.4),
-                        //  decoration: BoxDecoration(
-                        //      color: Colors.black.withOpacity(0.4),
-                        //    gradient: LinearGradient(
-                         //    begin: FractionalOffset.topCenter,
-                        //     end: FractionalOffset.bottomCenter,
-                        //      colors: [
-                        //        Colors.grey,
-                        //        Colors.black
-                        //      ]
-                        //    )
-                        //  ),
-                          //child: Padding(
-                          //  padding: const EdgeInsets.only(left: 5.0, right: 5.0),
-                          //  child: Text(
-                      //widget.actorDirector.displayName,
-                   // ),
-                          //),
-                        //)
                     ),
                   ),
                 ),
