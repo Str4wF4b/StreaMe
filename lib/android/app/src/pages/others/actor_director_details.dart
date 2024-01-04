@@ -48,15 +48,16 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
               //centerTitle: true,
               elevation: 0.0,
               pinned: true,
-              expandedHeight: 300,
+              expandedHeight: 298,
               flexibleSpace: Container(
-                margin: EdgeInsets.only(left: sliverWidth * 0.225, right: sliverWidth * 0.225),
+                margin: EdgeInsets.only(left: sliverWidth * 0.223, right: sliverWidth * 0.223),
                 color: Colors.transparent,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(20.0),
                   child: FlexibleSpaceBar(
                     expandedTitleScale: 1.2,
                     background: Stack(
+                      fit: StackFit.expand,
                       children: [
                         CachedNetworkImage(
                           imageUrl: widget.actorDirector.image,
@@ -71,7 +72,7 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
                                   begin: FractionalOffset.topCenter,
                                   end: FractionalOffset.bottomCenter,
                                   colors: [
-                                    Colors.black12.withOpacity(0.0), // or grey
+                                    Colors.grey.withOpacity(0.0), // or grey
                                     Colors.black87, // or black54
                                   ],
                                   stops: const [
