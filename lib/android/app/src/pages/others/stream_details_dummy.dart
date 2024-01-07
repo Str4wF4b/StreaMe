@@ -742,7 +742,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPageDummy>
                     borderRadius: BorderRadius.circular(20.0),
                     child: CachedNetworkImage(
                       imageUrl: widget.stream.image,
-                      placeholder: (context, url) => cons.imagePlaceholderRect,
+                      placeholder: (context, url) => cons.imagePlaceholder,
                       errorWidget: (context, url, error) => cons.imageErrorWidget,
                     ),
                   ),
@@ -753,7 +753,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPageDummy>
         //width: double.infinity, height: 320, fit: BoxFit.cover
         fit: BoxFit.cover,
         height: MediaQuery.of(context).size.height,
-        placeholder: (context, url) => cons.imagePlaceholderRect,
+        placeholder: (context, url) => cons.imagePlaceholder,
         errorWidget: (context, url, error) => cons.imageErrorWidget,
       ),
     );
