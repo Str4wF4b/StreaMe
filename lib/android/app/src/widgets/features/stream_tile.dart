@@ -1,13 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:stream_me/android/app/src/model/streams_model.dart';
-import '../../pages/others/stream_details.dart';
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
 import '../../utils/constants_and_values.dart';
-
-
-// Test:
-import '../../pages/others/stream_details_dummy.dart';
+import '../../pages/others/stream_details.dart';
 
 class StreamTile extends StatefulWidget {
   final Streams stream;
@@ -48,7 +44,7 @@ class _StreamTileState extends State<StreamTile> {
         onTap: () => Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => StreamDetailsPageDummy(stream: widget.stream),
+              builder: (context) => StreamDetailsPage(stream: widget.stream),
             )),
         child: Row(
             key: keyRow,

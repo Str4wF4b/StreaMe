@@ -1,13 +1,10 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import '../../pages/others/stream_details.dart';
 import 'package:stream_me/android/app/src/model/streams_model.dart';
 import '../../utils/constants_and_values.dart';
 import '../../utils/color_palette.dart';
-
-// Test:
-import '../../pages/others/stream_details_dummy.dart';
+import '../../pages/others/stream_details.dart';
 
 class ActorDirectorTile extends StatefulWidget {
   final Streams stream;
@@ -34,7 +31,7 @@ class _ActorDirectorTileState extends State<ActorDirectorTile> {
       onTap: () => Navigator.push(
           context,
           MaterialPageRoute(
-              builder: (context) => StreamDetailsPageDummy(stream: widget.stream))),
+              builder: (context) => StreamDetailsPage(stream: widget.stream))),
       child: SizedBox(
         width: 140,
         child: Column(

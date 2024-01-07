@@ -48,7 +48,7 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
               //centerTitle: true,
               elevation: 0.0,
               pinned: true,
-              expandedHeight: 298,
+              expandedHeight: MediaQuery.of(context).size.height * 0.375,//298,
               flexibleSpace: Container(
                 margin: EdgeInsets.only(left: sliverWidth * 0.223, right: sliverWidth * 0.223),
                 color: Colors.transparent,

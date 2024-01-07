@@ -1,77 +1,57 @@
 import 'dart:io';
 import 'dart:typed_data';
-//import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:expand_widget/expand_widget.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:stream_me/android/app/src/data/actor_data.dart';
 import 'package:stream_me/android/app/src/data/streams_data.dart';
-import 'package:stream_me/android/app/src/data/sd_data.dart';
-import 'package:stream_me/android/app/src/data/hd_data.dart';
-import 'package:stream_me/android/app/src/data/uhd_data.dart';
 import 'package:stream_me/android/app/src/model/actor_model.dart';
 import 'package:stream_me/android/app/src/model/streams_model.dart';
-import 'package:stream_me/android/app/src/model/sd_model.dart';
-import 'package:stream_me/android/app/src/model/hd_model.dart';
-import 'package:stream_me/android/app/src/model/uhd_model.dart';
-import 'package:stream_me/android/app/src/pages/others/filter.dart';
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
 import 'package:stream_me/android/app/src/utils/images.dart';
-import 'package:url_launcher/url_launcher.dart';
 import '../../widgets/global/streame_refresh.dart';
 import '../../utils/constants_and_values.dart';
 import '../others/actor_director_details.dart';
 
-class StreamDetailsPageDummy extends StatefulWidget {
+class StreamDetailsOldPage extends StatefulWidget {
   final Streams stream;
 
-  const StreamDetailsPageDummy({super.key, required this.stream});
+  const StreamDetailsOldPage({super.key, required this.stream});
 
   @override
-  State<StreamDetailsPageDummy> createState() => _StreamDetailsPageState();
+  State<StreamDetailsOldPage> createState() => _StreamDetailsOldPageState();
 }
 
-class _StreamDetailsPageState extends State<StreamDetailsPageDummy>
-    with TickerProviderStateMixin {
+class _StreamDetailsOldPageState extends State<StreamDetailsOldPage> {
   final ColorPalette color = ColorPalette();
   final Images image = Images();
   final ConstantsAndValues cons = ConstantsAndValues();
 
+  List<bool> favourites = List.filled(allStreams.length,
+      false); //a list with all the favourite movies and streams
+
   final screenshotController =
       ScreenshotController(); //controller to manage screenshots
-  late final TabController _tabController =
-      TabController(length: 3, vsync: this);
+
+  bool addFavourites = false; //boolean to trigger the favourites button option
+  bool addWatchlist = false; //boolean to trigger the watchlist button option
+  double rating = 1; //initial rating
 
   final keyRating =
       GlobalKey(); //GlobalKey to determine the size and position of the rating icon
   Size? sizeRating; //The size of the rating icon
   Offset? positionRating; //The position of the rating icon
 
-  bool addFavourites = false; //boolean to trigger the favourites button option
-  bool addWatchlist = false; //boolean to trigger the watchlist button option
-  double rating = 1; //initial rating
-
-  int i = 0;
-
-  List<bool> favourites = List.filled(allStreams.length,
-      false); //a list with all the favourite movies and streams
   late List actorsDirectors = allActors;
-  late List allSdStreams = allSd;
 
   @override
   Widget build(BuildContext context) {
     getSizeAndPosition();
-    final Sd sdProvider = allSd[widget.stream.id];
-    final Hd hdProvider = allHd[widget.stream.id];
-    final Uhd uhdProvider = allUhd[widget.stream.id];
-
     return Screenshot(
       controller: screenshotController,
       child: Scaffold(
@@ -139,8 +119,8 @@ class _StreamDetailsPageState extends State<StreamDetailsPageDummy>
                                     key: keyRating,
                                   )),
                               Padding(
-                                padding: const EdgeInsets.only(
-                                    left: 40.0, top: 13.0),
+                                padding:
+                                    const EdgeInsets.only(left: 40.0, top: 13.0),
                                 child: GestureDetector(
                                   onTap: () async {
                                     await makeRating();
@@ -170,8 +150,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPageDummy>
                                     ? Icon(Icons.check_rounded,
                                         color: color.bodyTextColor, size: 34.0)
                                     : Icon(Icons.add_rounded,
-                                        color: color.bodyTextColor,
-                                        size: 34.0)),
+                                        color: color.bodyTextColor, size: 34.0)),
                             IconButton(
                                 //Favourites Button
                                 onPressed: () {
@@ -369,7 +348,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPageDummy>
                           children: [
                             Align(
                               alignment: Alignment.centerLeft,
-                              child: Text(/*checkEmptyList()*/ "Available on:",
+                              child: Text(checkEmptyList(),
                                   style: TextStyle(
                                       color: color.bodyTextColor,
                                       fontSize: 18,
@@ -380,150 +359,17 @@ class _StreamDetailsPageState extends State<StreamDetailsPageDummy>
                               child: Align(
                                 alignment: Alignment.centerLeft,
                                 child: Container(
-                                  //Container that includes the 3 Tabs SD, HD and 4k and its streaming providers
-                                  decoration: BoxDecoration(
-                                    color: color.middleBackgroundColor,
-                                    border: Border.all(
-                                        width: 1.0, color: color.bodyTextColor),
-                                    borderRadius: const BorderRadius.all(
-                                        Radius.circular(25.0)),
-                                    // shape: BoxShape.rectangle
-                                  ),
-                                  child: ClipRRect(
-                                    borderRadius: BorderRadius.circular(25.0),
-                                    child: Column(
-                                      children: [
-                                        //3 Tabs on top:
-                                        Padding(
-                                          padding:
-                                              const EdgeInsets.only(top: 1.0),
-                                          child: SizedBox(
-                                            height: 40,
-                                            child: TabBar(
-                                              controller: _tabController,
-                                              indicatorPadding:
-                                                  const EdgeInsets.only(
-                                                      left: 7.0,
-                                                      right: 7.0,
-                                                      bottom: 4.0),
-                                              tabs: const [
-                                                Tab(
-                                                  text: "SD",
-                                                ),
-                                                Tab(text: "HD"),
-                                                Tab(
-                                                  text: "4k",
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        //Content of the 3 Tabs:
-                                        Padding(
-                                          padding: const EdgeInsets.fromLTRB(
-                                              7.0, 7.0, 7.0, 20.0),
-                                          child: Container(
-                                            color: Colors.transparent,
-                                            height: MediaQuery.of(context)
-                                                    .size
-                                                    .height *
-                                                0.54,
-                                            child: TabBarView(
-                                              controller: _tabController,
-                                              children: [
-                                                //First Tab (SD Streams):
-                                                Column(
-                                                  children: [
-                                                    providerRow(
-                                                        "Stream on:",
-                                                        sdProvider
-                                                            .streamOn["Logo"],
-                                                        sdProvider.streamOn[
-                                                            "Platform"],
-                                                        sdProvider
-                                                            .streamOn["Link"]),
-                                                    const SizedBox(height: 30),
-                                                    providerRow(
-                                                        "Rent:",
-                                                        sdProvider.rent["Logo"],
-                                                        sdProvider
-                                                            .rent["Platform"],
-                                                        sdProvider
-                                                            .rent["Link"]),
-                                                    const SizedBox(height: 30),
-                                                    providerRow(
-                                                        "Buy:",
-                                                        sdProvider.buy["Logo"],
-                                                        sdProvider
-                                                            .buy["Platform"],
-                                                        sdProvider.buy["Link"])
-                                                  ],
-                                                ),
-                                                //Second Tab (HD Streams):
-                                                Column(
-                                                  children: [
-                                                    providerRow(
-                                                        "Stream on:",
-                                                        hdProvider
-                                                            .streamOn["Logo"],
-                                                        hdProvider.streamOn[
-                                                            "Platform"],
-                                                        hdProvider
-                                                            .streamOn["Link"]),
-                                                    const SizedBox(height: 30),
-                                                    providerRow(
-                                                        "Rent:",
-                                                        hdProvider.rent["Logo"],
-                                                        hdProvider
-                                                            .rent["Platform"],
-                                                        hdProvider
-                                                            .rent["Link"]),
-                                                    const SizedBox(height: 30),
-                                                    providerRow(
-                                                        "Buy:",
-                                                        hdProvider.buy["Logo"],
-                                                        hdProvider
-                                                            .buy["Platform"],
-                                                        hdProvider
-                                                            .buy["Platform"])
-                                                  ],
-                                                ),
-                                                //Third Tab (4k Streams):
-                                                Column(
-                                                  children: [
-                                                    providerRow(
-                                                        "Stream on:",
-                                                        uhdProvider
-                                                            .streamOn["Logo"],
-                                                        uhdProvider.streamOn[
-                                                            "Platform"],
-                                                        uhdProvider
-                                                            .streamOn["Link"]),
-                                                    const SizedBox(height: 30),
-                                                    providerRow(
-                                                        "Rent:",
-                                                        uhdProvider
-                                                            .rent["Logo"],
-                                                        uhdProvider
-                                                            .rent["Platform"],
-                                                        uhdProvider
-                                                            .rent["Link"]),
-                                                    const SizedBox(height: 30),
-                                                    providerRow(
-                                                        "Buy:",
-                                                        uhdProvider.buy["Logo"],
-                                                        uhdProvider
-                                                            .buy["Platform"],
-                                                        uhdProvider.buy["Link"])
-                                                  ],
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
+                                  height: 95,
+                                  color: Colors.transparent,
+                                  child: ListView.builder(
+                                      shrinkWrap: true,
+                                      scrollDirection: Axis.horizontal,
+                                      itemCount: widget.stream.provider.length,
+                                      itemBuilder: (context, index) {
+                                        final provider =
+                                            widget.stream.provider[index];
+                                        return buildCard(provider);
+                                      }),
                                 ),
                               ),
                             ),
@@ -558,13 +404,54 @@ class _StreamDetailsPageState extends State<StreamDetailsPageDummy>
   }
 
   /**
+   * A function that builds the streaming provider tiles
+   * First it checks, if there is only on provider, if so, it is returned
+   * Otherwise it returnes the other provider tile cards starting from the first different one in the list (if provider.last != provider)
+   */
+  Widget buildCard(String provider) {
+    String assetImage =
+        "assets/images/platforms/${provider.toLowerCase()}.png"; //Name in assets equals JSON-File name
+
+    //Create Card with provider logo in it:
+    Widget card = ClipRRect(
+        borderRadius: BorderRadius.circular(10.0),
+        child: Container(
+          width: 95,
+          height: 95,
+          color: Colors.transparent,
+          child: Image.asset(
+              assetImage), // return the first and only streaming provider
+        ));
+    assetImage = "";
+
+    //If more than one provider than create space between them
+    if (widget.stream.provider.length > 1) {
+      if (widget.stream.provider.last == provider) {
+        //if the current provider is the last named provider in the list, no space is needed at the end
+        return card;
+      } else {
+        //else add space because the current provider is not the last named provider in the list
+        return Padding(
+          padding: const EdgeInsets.only(right: 10.0),
+          //create space on right side of the card
+          child: card,
+        );
+      }
+
+      //If only one provider space is not needed
+    } else {
+      return card;
+    }
+  }
+
+  /**
    * A function that checks if the provider list is empty
    * If so, only a Text is returned that explains that the movie or stream cannot be streamed anywhere
    * If not, a title is returned above the listed provider tile cards
    */
   String checkEmptyList() {
     if (widget.stream.provider.isNotEmpty) {
-      return "Available on:";
+      return "Stream on:";
     } else {
       return "This ${widget.stream.type} is not streamable at the moment.";
     }
@@ -737,23 +624,20 @@ class _StreamDetailsPageState extends State<StreamDetailsPageDummy>
         showDialog(
             context: context,
             builder: (context) => Dialog(
-                  backgroundColor: Colors.transparent,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20.0),
+                    backgroundColor: Colors.transparent,
                     child: CachedNetworkImage(
                       imageUrl: widget.stream.image,
-                      placeholder: (context, url) => cons.imagePlaceholder,
+                      placeholder: (context, url) => cons.imagePlaceholderRect,
                       errorWidget: (context, url, error) => cons.imageErrorWidget,
-                    ),
                   ),
-                ));
+            ));
       },
       child: CachedNetworkImage(
         imageUrl: widget.stream.image,
         //width: double.infinity, height: 320, fit: BoxFit.cover
         fit: BoxFit.cover,
         height: MediaQuery.of(context).size.height,
-        placeholder: (context, url) => cons.imagePlaceholder,
+        placeholder: (context, url) => cons.imagePlaceholderRect,
         errorWidget: (context, url, error) => cons.imageErrorWidget,
       ),
     );
@@ -844,265 +728,68 @@ class _StreamDetailsPageState extends State<StreamDetailsPageDummy>
     return currentActor;
   }
 
-  /**
-   * A function that generates the different Rows of each SD-, HD- and 4k-Tab in the Provider-overview of the specific stream, rowLabel works as a sort of headline and defines the different platforms in it
-   * rowLabel: the different options of a stream in the specific quality (stream with subscription, rent or buy)
-   * platforms: the name of the platforms one can watch the stream, defined for each rowLabel, also indicates link to Logo pictures
-   * platformLabels: the corresponding label of the platforms (including the prices)
-   * platformLinks: the corresponding link to the platforms
-   */
-  Align providerRow(String rowLabel, List platforms, List platformLabels,
-      List platformLinks) {
-    return Align(
-      alignment: Alignment.centerLeft,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          const SizedBox(height: 5.0),
-          Container(
-            height: 20,
-            color: Colors.transparent,
-            child: Text(
-              rowLabel,
-              style: TextStyle(
-                  color: color.bodyTextColor,
-                  fontSize: 15.0,
-                  fontWeight: FontWeight.w500),
-            ),
-          ),
-          const SizedBox(height: 3.0),
-          //The container of each available stream platform for each "Stream on:", "Rent" and "Buy"
-          //It contains the platform logo (card) and the corresponding text of it below
-          checkEmptyCard(rowLabel, platforms, platformLabels, platformLinks),
-        ],
-      ),
-    );
-  }
+/**
+ * Row:
+ * - Text Provider
+ * - wenn keine Provider: Not on Streams
+ * - wenn doch:
+ *   - ClipRRects auflisten
+ *     => für jedes Element ein neues hinzufügen zu Reihe + Padding
+ */
 
-  /**
-   * The container of each available stream platform for each "Stream on:", "Rent" and "Buy"
-   * It contains the platform logo (card) and the corresponding text of it below
-   * If the list is empty, it returns a short text instead of a platform tile
-   * rowLabel: the different options of a stream in the specific quality (stream with subscription, rent or buy)
-   * platforms: the name of the platforms one can watch the stream, defined for each rowLabel, also indicates link to Logo pictures
-   * platformLabels: the corresponding label of the platforms (including the prices)
-   * platformLinks: the corresponding link to the platforms
-   */
-  Widget checkEmptyCard(String rowLabel, List platforms, List platformLabels,
-      List platformLinks) {
-    if (platforms.isEmpty) {
-      //Empty platform List, i.e. Stream is not available
-      return Container(
-        height: 95,
-        color: Colors.transparent,
-        child: const Padding(
-          padding: EdgeInsets.only(left: 25.0, top: 28.0),
-          child: Text(
-            "Not available",
-            style: TextStyle(color: Colors.grey),
-          ),
-        ),
-      );
-    } else {
-      //List has content, i.e. a platform tile is shown
-      return Container(
-        height: 95,
-        color: Colors.transparent,
-        child: ListView.builder(
-            shrinkWrap: true,
-            scrollDirection: Axis.horizontal,
-            itemCount: platforms.length,
-            itemBuilder: (context, index) {
-              final platform = platforms[index];
-              final platformLabel = platformLabels[index];
-              final platformLink = platformLinks[index];
-              return buildCard(
-                  rowLabel, platform, platformLabel, platforms, platformLink);
-            }),
-      );
+/*  Row buildCards() {
+    List<String> providers = widget.stream.provider;
+    Widget card = ClipRRect();
+    Text providerText = Text("Stream providers:",
+        style: TextStyle(color: Colors.grey.shade400, fontSize: 18));
+    List<Widget> allCards = [];
+    //One streaming provider:
+    if (providers.length == 1) {
+      // if providers has only one streaming provider
+      Widget card = ClipRRect(
+          borderRadius: BorderRadius.circular(10.0),
+          child: Container(
+            width: 120,
+            height: 120,
+            color: Colors.grey.shade400,
+            child: Image.asset(
+                "assets/images/platforms/${providers.first.toLowerCase()}"), // return the first and only streaming provider
+          ));
+      return Row(children: [
+        providerText,
+        const SizedBox(height: 10.0),
+        card
+      ]); // return the Row with the card
     }
-  }
 
-  /**
-   * A function that builds the streaming platform tiles
-   * First it checks, if there is only on provider, if so, it is returned
-   * Otherwise it returnes the other provider tile cards starting from the first different one in the list (if provider.last != provider)
-   * rowLabel: the different options of a stream in the specific quality (stream with subscription, rent or buy)
-   * platform: indicates the link to Logo pictures, also the name of the platforms one can watch the stream, defined for the corresponding rowLabel
-   * platformLabel: the corresponding label of the platforms in List "platforms" (including the prices)
-   * platforms: the name of the platforms one can watch the stream, defined for each rowLabel, also indicates link to Logo pictures
-   * platformLink: the corresponding link to the platform
-   */
-  Widget buildCard(String rowLabel, String platform, String platformLabel,
-      List platforms, String platformLink) {
-    String assetImage = platform; //The link of the platform logo
+    //More than one streaming provider:
+    else if (providers.length > 1) {
+      providers.forEach((element) {
+        card = ClipRRect(
+            borderRadius: BorderRadius.circular(10.0),
+            child: Padding(
+              padding: const EdgeInsets.only(right: 15.0),
+              child: Container(
+                width: 120,
+                height: 120,
+                color: Colors.grey.shade400,
+                child: Image.asset(
+                    "assets/images/platforms/${element.toLowerCase()}"),
+              ),
+            ));
+        allCards.add(card);
+      });
 
-    //Create Card with platform logo in it:
-    Widget card = GestureDetector(
-      onTap: () {
-        //function for the platform tiles that opens an alert dialog window with a link to the corresponding stream
-        showDialog(
-            context: context,
-            builder: (BuildContext context) {
-              return tapPlatformCard(
-                  rowLabel, platform, platformLabel, platformLink);
-            });
-      },
-      child: Column(
-        children: [
-          Expanded(
-            child: ClipRRect(
-                borderRadius: BorderRadius.circular(10.0),
-                child: Container(
-                  width: 80, //95,
-                  height: 80, //95,
-                  color: Colors.transparent,
-                  child: Image.asset(
-                      assetImage), // return the first and only streaming provider
-                )),
-          ),
-          const SizedBox(height: 1.0),
-          Text(
-            platformLabel,
-            style: TextStyle(
-                color: color.bodyTextColor,
-                fontSize: 11.0,
-                fontWeight: FontWeight.w500),
-            textAlign: TextAlign.center,
-            maxLines: 1,
-            overflow: TextOverflow.fade,
-          )
-        ],
-      ),
-    );
-    assetImage = "";
+      return Row(children: [
+        providerText,
+        const SizedBox(height: 10.0),
+      ]);
 
-    //If more than one provider than create space between them
-    if (platforms.length > 1) {
-      if (platforms.last == platform) {
-        //if the current provider is the last named provider in the list, no space is needed at the end
-        return card;
-      } else {
-        //else add space because the current provider is not the last named provider in the list
-        return Padding(
-          padding: const EdgeInsets.only(right: 10.0),
-          //create space on right side of the card
-          child: card,
-        );
-      }
-
-      //If only one provider, space is not needed
+      //No streaming provider:
     } else {
-      return card;
+      Text noProvider = Text("Not streamable (yet)",
+          style: TextStyle(color: Colors.grey.shade400, fontSize: 18));
+      return Row(children: [providerText, noProvider]); // return the Row
     }
-  }
-
-  /**
-   * The content for the onTap function of the platform tiles that opens an alert dialog window with a link to the corresponding stream
-   * rowLabel: the different options of a stream in the specific quality (stream with subscription, rent or buy)
-   * platform: indicates the link to Logo pictures, also the name of the platforms one can watch the stream, defined for the corresponding rowLabel
-   * platforms: the name of the platforms one can watch the stream, defined for each rowLabel, also indicates link to Logo pictures
-   * platformLink: the corresponding link to the platform
-   */
-  Padding tapPlatformCard(String rowLabel, String platform,
-          String platformLabel, String platformLink) =>
-      Padding(
-        padding: const EdgeInsets.only(left: 15.0, right: 15.0),
-        child: AlertDialog(
-          //Background style of the Alert Dialog:
-          backgroundColor: color.middleBackgroundColor.withOpacity(0.93),
-          insetPadding: EdgeInsets.zero,
-          shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(20.0)),
-              side: BorderSide(color: Colors.blueAccent, width: 1.0)),
-          content: Container(
-            width: MediaQuery.of(context).size.width * 0.9,
-            decoration: BoxDecoration(
-              image: DecorationImage(
-                  image: AssetImage(platform),
-                  fit: BoxFit.fitHeight,
-                  colorFilter: ColorFilter.mode(
-                      Colors.black.withOpacity(0.05), BlendMode.dstATop)),
-            ),
-            //Column that includes a headline, a text to the stream URL and a close Button that closes the Dialog
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                //The Dialog headline (Stream, Rent or Buy)
-                Text(
-                  "${rowLabel.contains(" ") ? "Stream" : rowLabel.substring(0, rowLabel.indexOf(":"))} on " //Stream / Rent / Buy
-                  "${platformLabel.contains(" ") && rowLabel != "Stream on:" ? platformLabel.substring(0, platformLabel.indexOf("€") - 1) : platformLabel}",
-                  style: TextStyle(
-                      fontSize: 18.0,
-                      fontWeight: FontWeight.bold,
-                      color: color.bodyTextColor),
-                  textAlign: TextAlign.center,
-                ),
-                const SizedBox(
-                  height: 22,
-                ),
-                //The actual content of the Alert Dialog:
-                RichText(
-                  text: TextSpan(
-                    children: [
-                      TextSpan(
-                        text: "Try it out. Click ",
-                        style:
-                            TextStyle(color: color.bodyTextColor, fontSize: 16),
-                      ),
-                      WidgetSpan(
-                        child: InkWell(
-                            onTap: () => launchUrl(Uri.parse(platformLink)),
-                            //adding the individual URL to every stream
-                            child: const Text(
-                              style: TextStyle(
-                                  color: Colors.blueAccent,
-                                  fontSize: 14,
-                                  decoration: TextDecoration.underline),
-                              "here",
-                            )),
-                      ),
-                      TextSpan(
-                        style:
-                            TextStyle(color: color.bodyTextColor, fontSize: 16),
-                        text: " to watch ${widget.stream.title}.",
-                      )
-                    ],
-                  ),
-                ),
-                const SizedBox(height: 35),
-                //The Button to close the Dialog window:
-                GestureDetector(
-                    onTap: () => Navigator.pop(context),
-                    child: Container(
-                      padding: const EdgeInsets.all(8.0),
-                      margin: const EdgeInsets.symmetric(horizontal: 108.0),
-                      decoration: BoxDecoration(
-                          //border: Border.all(color: Colors.white70),
-                          color: color.bodyTextColor.withOpacity(0.3),
-                          border: Border.all(
-                              color: color.middleBackgroundColor, width: 0.5),
-                          borderRadius: BorderRadius.circular(30.0)),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          Icon(
-                            Icons.close,
-                            color: color.middleBackgroundColor,
-                            size: 20.0,
-                          ),
-                          const SizedBox(width: 5),
-                          Text("Close",
-                              style: TextStyle(
-                                  color: color.middleBackgroundColor,
-                                  //fontWeight: FontWeight.bold,
-                                  fontSize: 14.0)),
-                        ],
-                      ),
-                    )),
-              ],
-            ),
-          ),
-        ),
-      );
+  }*/
 }
