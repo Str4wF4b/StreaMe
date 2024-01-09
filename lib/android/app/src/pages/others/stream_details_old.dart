@@ -627,7 +627,7 @@ class _StreamDetailsOldPageState extends State<StreamDetailsOldPage> {
                     backgroundColor: Colors.transparent,
                     child: CachedNetworkImage(
                       imageUrl: widget.stream.image,
-                      placeholder: (context, url) => cons.imagePlaceholderRect,
+                      placeholder: (context, url) => cons.streamImagePlaceholder,
                       errorWidget: (context, url, error) => cons.imageErrorWidget,
                   ),
             ));
@@ -637,7 +637,7 @@ class _StreamDetailsOldPageState extends State<StreamDetailsOldPage> {
         //width: double.infinity, height: 320, fit: BoxFit.cover
         fit: BoxFit.cover,
         height: MediaQuery.of(context).size.height,
-        placeholder: (context, url) => cons.imagePlaceholderRect,
+        placeholder: (context, url) => cons.streamDetailsPlaceholder,
         errorWidget: (context, url, error) => cons.imageErrorWidget,
       ),
     );
