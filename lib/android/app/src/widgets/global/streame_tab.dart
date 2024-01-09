@@ -5,14 +5,14 @@ class StreaMeTab extends StatelessWidget {
   final String tabTitle;
   final int tabIndex;
   final TabController tabController;
-  final bool widthNeeded;
+  final bool isWatchlist;
 
   StreaMeTab(
       {super.key,
       required this.tabTitle,
       required this.tabIndex,
       required this.tabController,
-      required this.widthNeeded});
+      required this.isWatchlist});
 
   final ColorPalette color = ColorPalette();
 
@@ -20,8 +20,8 @@ class StreaMeTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 35,
-      //padding: const EdgeInsets.only(left: 15.0, right: 15.0), //TODO: CHANGE THIS ONLY FOR WATCHLIST TABBAR
-      width: widthNeeded ? 100 : null,
+      padding: isWatchlist ? const EdgeInsets.only(left: 15.0, right: 15.0) : null, //TODO: CHANGE THIS ONLY FOR WATCHLIST TABBAR
+      //width: widthNeeded ? 100 : null,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30.0),
           border: Border.all(

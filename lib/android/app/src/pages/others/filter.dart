@@ -41,39 +41,8 @@ class FilterPage extends StatefulWidget {
 class _FilterPageState extends State<FilterPage> {
   ColorPalette color = ColorPalette();
   final List<String> actors = [];
-
-  /* = [
-    "Hailee Steinfeld",
-    "Shameik Moore",
-    "Oscar Isaac",
-    "Keir Gilchrist",
-    "Brigette Lundy-Paine",
-    "Jennifer Jason Leigh",
-    "Michael Rapaport",
-    "Kento Yamazaki",
-    "Tao Tsuchiya",
-    "Nijiro Murakami",
-    "Morgan Freeman",
-    "Brad Pitt",
-    "Gwyneth Paltrow",
-    "Natsuki Hanae",
-    "Akari Kito",
-    "Daniel Craig",
-    "Ana de Armas",
-    "Christopher Plummer",
-    "Chris Evans",
-    "Patrick Wilson",
-    "Vera Farmiga",
-    "Dylan O'Brien",
-    "Kaya Scodelario",
-    "Thomas Brodie-Sangster",
-    "Will Poulter",
-    "Jason Sudeikis",
-    "Brett Goldstein",
-    "Juno Temple",
-    "Madison Wolfe",
-    "Frances O'Connor"
-  ];*/
+  final List<String> year = List<String>.generate(
+      225, (index) => "${index + 1800}"); //Years 1800 to 2024
 
   @override
   void initState() {
@@ -82,6 +51,8 @@ class _FilterPageState extends State<FilterPage> {
     for (var actor in allActors) {
       actors.add(actor.displayName);
     }
+
+    year.sort((b, a) => a.compareTo(b)); //sort years descending
 
     actors.sort((a, b) => a.toLowerCase().compareTo(
         b.toLowerCase())); //sort actors list before loading filter widget
@@ -122,17 +93,19 @@ class _FilterPageState extends State<FilterPage> {
               children: [
                 // Actual filters:
                 const SizedBox(height: 100.0),
+                //Streaming Platform, e.g Netflix, Prime:
                 makeFilter(
                     widget.value, widget.provider, "Streaming Platforms"),
-                //Streaming Platform, e.g Netflix, Prime
+                //Type, i.e. Movie or Series:
                 const SizedBox(height: 25.0),
                 makeFilter(widget.value, widget.type, "Type"),
-                //Type, i.e. Movie or Series
+                //Genre, e.g. Action, Drama:
                 const SizedBox(height: 25.0),
                 makeFilter(widget.value, widget.genre, "Genre"),
-                //Genre, e.g. Action, Drama
+                //Year, from 1800 to 2024
                 const SizedBox(height: 25.0),
-                Center(
+                makeFilter(widget.value, year, "Year"),
+                /*Center(
                   //Year Textfield
                   child: Container(
                     width: 330,
@@ -154,6 +127,8 @@ class _FilterPageState extends State<FilterPage> {
                             color: Colors.grey.shade400,
                             fontSize: 18),
                         hintText: "Search for year",
+                        contentPadding: EdgeInsets.fromLTRB(12.0, 22.0, 12.0, 22.0),
+                        isDense: true,
                         hintStyle: TextStyle(
                             color: Colors.grey.shade400,
                             fontWeight: FontWeight.normal),
@@ -167,11 +142,11 @@ class _FilterPageState extends State<FilterPage> {
                       ),
                     ),
                   ),
-                ),
+                ),*/
                 const SizedBox(height: 25.0),
                 makeFilter(widget.value, actors, "Actor"),
                 //search an Actor in the whole Database
-                const SizedBox(height: 30),
+                const SizedBox(height: 45),
                 Padding(
                   padding: const EdgeInsets.only(left: 60.0, right: 60.0),
                   child: Row(
@@ -186,7 +161,10 @@ class _FilterPageState extends State<FilterPage> {
                           },
                           color: Colors.blueAccent,
                           label: "Search"),
-                      SelectionButton(onTap: () {}, color: Colors.redAccent, label: "Reset"),
+                      SelectionButton(
+                          onTap: () {},
+                          color: Colors.redAccent,
+                          label: "Reset"),
                     ],
                   ),
                 )
@@ -217,7 +195,7 @@ class _FilterPageState extends State<FilterPage> {
 
   String? checkValue(String? value) {
     if (value == "None") {
-      return null;
+      return "";
     }
   }
 
@@ -244,15 +222,16 @@ class _FilterPageState extends State<FilterPage> {
           //Decoration of the label and border of the dropdown button
           decoration: InputDecoration(
             labelText: label,
+            contentPadding: const EdgeInsets.fromLTRB(20.0, 20.0, 12.0, 20.0),
             labelStyle: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.grey.shade400,
                 fontSize: 18),
             border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(20.0)),
+                OutlineInputBorder(borderRadius: BorderRadius.circular(30.0)),
             enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.grey.shade400),
-                borderRadius: BorderRadius.circular(20.0)),
+                borderRadius: BorderRadius.circular(30.0)),
             filled: true,
             fillColor: Colors.black38,
           ),

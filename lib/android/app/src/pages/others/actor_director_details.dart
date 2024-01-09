@@ -31,16 +31,11 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
 
   late final TabController _tabController =
       TabController(length: 3, vsync: this);
-  /*late final TabController _actingTabController =
-      TabController(length: 2, vsync: this);
-  late final TabController _productionTabController =
-      TabController(length: 2, vsync: this);
-  late final TabController _directionTabController =
-      TabController(length: 2, vsync: this);*/
 
   @override
   Widget build(BuildContext context) {
     getSizeAndPosition();
+    final sliverWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
       backgroundColor: color.backgroundColor,
@@ -53,22 +48,46 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
               //centerTitle: true,
               elevation: 0.0,
               pinned: true,
-              expandedHeight: 300,
-              flexibleSpace: FlexibleSpaceBar(
-                expandedTitleScale: 1.2,
-                background: CachedNetworkImage(
-                  imageUrl: widget.actorDirector.image,
-                  fit: BoxFit.fitHeight,
-                  key: keyImage,
-                  placeholder: (context, url) => cons.imagePlaceholderRect,
-                  errorWidget: (context, url, error) => cons.imageErrorWidget,
+              expandedHeight: MediaQuery.of(context).size.height * 0.375,//298,
+              flexibleSpace: Container(
+                margin: EdgeInsets.only(left: sliverWidth * 0.223, right: sliverWidth * 0.223),
+                color: Colors.transparent,
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(20.0),
+                  child: FlexibleSpaceBar(
+                    expandedTitleScale: 1.2,
+                    background: Stack(
+                      fit: StackFit.expand,
+                      children: [
+                        CachedNetworkImage(
+                          imageUrl: widget.actorDirector.image,
+                          fit: BoxFit.fitHeight,
+                          key: keyImage,
+                          placeholder: (context, url) => cons.actorDirectorPlaceholder,
+                          errorWidget: (context, url, error) => cons.imageErrorWidget,
+                        ),
+                        Container(
+                          decoration: BoxDecoration(
+                              gradient: LinearGradient(
+                                  begin: FractionalOffset.topCenter,
+                                  end: FractionalOffset.bottomCenter,
+                                  colors: [
+                                    Colors.grey.withOpacity(0.0), // or black
+                                    Colors.black87, // or black54
+                                  ],
+                                  stops: const [
+                                    0.8, // or 0.77
+                                    1.0
+                                  ])),
+                        )
+                      ],
+                    ),
+                    //titlePadding: const EdgeInsets.only(top: 0.0), //0.0 but necessary to put title on bottom of image
+                    centerTitle: true,
+                    title: FittedBox(child: Text(widget.actorDirector.displayName), //FittedBox(
+                    ),
+                  ),
                 ),
-                //titlePadding: const EdgeInsets.only(top: 0.0), //0.0 but necessary to put title on bottom of image
-                centerTitle: true,
-                title: FittedBox(
-                    child: Text(
-                  widget.actorDirector.displayName,
-                )),
               ),
             ),
             SliverToBoxAdapter(
@@ -219,7 +238,7 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
         tabTitle: tabTitle,
         tabIndex: tabIndex,
         tabController: _tabController,
-        widthNeeded: false,
+        isWatchlist: false,
       ));
 
   /**

@@ -27,8 +27,10 @@ class _WatchlistPageState extends State<WatchlistPage>
   List series = allStreams
       .where((element) => (element.type.toString() == "Series"))
       .toList();
-  List alreadyWatched = allStreams.where((element) => element.id < 7 && element.id > 2).toList();
-  List watch = allStreams.where((element) => element.id < 3 || element.id > 6).toList();
+  List alreadyWatched =
+      allStreams.where((element) => element.id < 7 && element.id > 2).toList();
+  List watch =
+      allStreams.where((element) => element.id < 3 || element.id > 6).toList();
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +94,7 @@ class _WatchlistPageState extends State<WatchlistPage>
                   tabTitle: tabTitle,
                   tabIndex: tabIndex,
                   tabController: _tabController,
-                  widthNeeded: true,
+                  isWatchlist: true,
                 ))),
       );
 

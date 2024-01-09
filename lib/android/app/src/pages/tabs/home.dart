@@ -31,8 +31,10 @@ class _HomePageState extends State<HomePage> {
 
   @override
   Widget build(BuildContext context) {
-    streams.sort((a, b) => a.title.toString().toLowerCase().compareTo(
-        b.title.toString().toLowerCase())); //temporarily
+    streams.sort((a, b) => a.title
+        .toString()
+        .toLowerCase()
+        .compareTo(b.title.toString().toLowerCase())); //temporarily
 
     return Container(
       color: color.middleBackgroundColor,
@@ -144,7 +146,8 @@ class _HomePageState extends State<HomePage> {
       String title, int index, String image) {
     return GestureDetector(
       onTap: () {
-        if (index != 5) { //prevent to navigate to non existing 6th (index = 5) navigation bar item Help
+        if (index != 5) {
+          //prevent to navigate to non existing 6th (index = 5) navigation bar item Help
           Get.to(
               () => AppOverlay(
                   //TODO: Just change Body, cause when opening new AppOverlay it pushes it over the last AppOverlay (duplicate Overlays and the second one does not answer)
@@ -154,7 +157,8 @@ class _HomePageState extends State<HomePage> {
               transition: Transition.zoom,
               duration: const Duration(milliseconds: 400));
         } else {
-          Get.to(() => const HelpPage()); //6th (index = 6) navigation bar item Help should only simply open a screen
+          Get.to(() =>
+              const HelpPage()); //6th (index = 6) navigation bar item Help should only simply open a screen
         }
       },
       child: AbsorbPointer(

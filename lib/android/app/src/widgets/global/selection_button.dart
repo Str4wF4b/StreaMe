@@ -21,14 +21,14 @@ class SelectionButton extends StatelessWidget {
           width: 120,
           decoration: BoxDecoration(
               color: color,
-              border: Border.all(color: colorPalette.bodyTextColor, width: 1.5),
+              border: Border.all(color: Colors.white, width: 1.5),
               borderRadius: BorderRadius.circular(30.0)),
           child: Center(
             child: Text(
               label,
-              style: TextStyle(
+              style: const TextStyle(
                   fontSize: 16.0,
-                  color: colorPalette.bodyTextColor,
+                  color: Colors.white,
                   fontWeight: FontWeight.w500),
             ),
           ),

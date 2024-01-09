@@ -225,6 +225,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.2.1"
+  drop_down_list:
+    dependency: "direct main"
+    description:
+      name: drop_down_list
+      sha256: "6ce1be8338bafc7c9b0cf917bdb5b26e00377279e4db15f616be4462fd3ac7bb"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.6"
   expand_widget:
     dependency: "direct main"
     description:

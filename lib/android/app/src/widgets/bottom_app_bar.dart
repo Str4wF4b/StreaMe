@@ -4,7 +4,7 @@ import 'package:stream_me/android/app/src/widgets/navigation_icons.dart';
 import 'package:stream_me/android/app/src/pages/tabs/favourites.dart';
 import 'package:stream_me/android/app/src/pages/tabs/search.dart';
 
-import '../pages/others/filter.dart';
+import '../pages/others/filter_try.dart';
 
 class StreameBottomAppBar extends StatefulWidget {
   int selectedIndex;
