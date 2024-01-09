@@ -9,7 +9,6 @@ import 'package:stream_me/android/app/src/widgets/list_items.dart';
 import '../../pages/others/edit_profile_page.dart';
 import '../navigation_icons.dart';
 import '../../auth/auth_main.dart';
-import '../../pages/others/filter_try.dart';
 import '../../pages/others/help.dart';
 import '../../pages/tabs/home.dart';
 import '../../pages/tabs/search.dart';
