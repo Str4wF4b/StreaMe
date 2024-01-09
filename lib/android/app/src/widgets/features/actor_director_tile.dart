@@ -41,7 +41,7 @@ class _ActorDirectorTileState extends State<ActorDirectorTile> {
               child: CachedNetworkImage(
                 imageUrl: widget.imageUrl,
                 height: 170,
-                placeholder: (context, url) => cons.imagePlaceholderRect,
+                placeholder: (context, url) => cons.streamImagePlaceholder,
                 errorWidget: (context, url, error) =>
                     cons.imageErrorWidgetLittle,
               ),

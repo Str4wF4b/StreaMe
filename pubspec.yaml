@@ -93,6 +93,9 @@ dependencies:
   # Launch URLs
   url_launcher: ^6.2.2
 
+  # Filter dropdown
+  drop_down_list: ^0.0.6
+
   # Expand Widget
   #expandable_widgets: ^1.0.3+1
 

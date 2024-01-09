@@ -35,7 +35,7 @@ class _SwipeCardState extends State<SwipeCard> {
             child: CachedNetworkImage(
               imageUrl: widget.stream.image,
               fit: BoxFit.contain,
-              placeholder: (context, url) => cons.imagePlaceholderImage,
+              placeholder: (context, url) => cons.explorePlaceholder,
               errorWidget: (context, url, error) => cons.imageErrorWidget,
             ),
           ),

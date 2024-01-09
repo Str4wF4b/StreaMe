@@ -1,12 +1,15 @@
+import 'package:drop_down_list/drop_down_list.dart';
+import 'package:drop_down_list/model/selected_list_item.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:stream_me/android/app/src/data/actor_data.dart';
 import 'package:stream_me/android/app/src/pages/others/filter_results.dart';
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
+import 'package:stream_me/android/app/src/widgets/features/filter_text-field.dart';
 import '../../widgets/global/selection_button.dart';
 
-class FilterPage extends StatefulWidget {
-  FilterPage({Key? key}) : super(key: key);
+class FilterPageTry extends StatefulWidget {
+  FilterPageTry({Key? key}) : super(key: key);
 
   final List<String> provider = [
     "Amazon Prime",
@@ -35,14 +38,55 @@ class FilterPage extends StatefulWidget {
   ];
 
   @override
-  State<FilterPage> createState() => _FilterPageState();
+  State<FilterPageTry> createState() => _FilterPageTryState();
 }
 
-class _FilterPageState extends State<FilterPage> {
+class _FilterPageTryState extends State<FilterPageTry> {
   ColorPalette color = ColorPalette();
   final List<String> actors = [];
-  final List<String> year = List<String>.generate(
-      225, (index) => "${index + 1800}"); //Years 1800 to 2024
+  final List<SelectedListItem> _listOfCities = [
+    SelectedListItem(
+      name: "Tokyo",
+      value: "TYO",
+      isSelected: false,
+    ),
+    SelectedListItem(
+      name: "New York",
+      value: "NY",
+      isSelected: false,
+    ),
+    SelectedListItem(
+      name: "London",
+      value: "LDN",
+      isSelected: false,
+    ),
+    SelectedListItem(name: "Paris"),
+    SelectedListItem(name: "Madrid"),
+    SelectedListItem(name: "Dubai"),
+    SelectedListItem(name: "Rome"),
+    SelectedListItem(name: "Barcelona"),
+    SelectedListItem(name: "Cologne"),
+    SelectedListItem(name: "MonteCarlo"),
+    SelectedListItem(name: "Puebla"),
+    SelectedListItem(name: "Florence"),
+  ];
+
+  /// This is register text field controllers.
+  final TextEditingController _fullNameTextEditingController = TextEditingController();
+  final TextEditingController _emailTextEditingController = TextEditingController();
+  final TextEditingController _phoneNumberTextEditingController = TextEditingController();
+  final TextEditingController _cityTextEditingController = TextEditingController();
+  final TextEditingController _passwordTextEditingController = TextEditingController();
+
+  @override
+  void dispose() {
+    super.dispose();
+    _fullNameTextEditingController.dispose();
+    _emailTextEditingController.dispose();
+    _phoneNumberTextEditingController.dispose();
+    _cityTextEditingController.dispose();
+    _passwordTextEditingController.dispose();
+  }
 
   @override
   void initState() {
@@ -51,8 +95,6 @@ class _FilterPageState extends State<FilterPage> {
     for (var actor in allActors) {
       actors.add(actor.displayName);
     }
-
-    year.sort((b, a) => a.compareTo(b)); //sort years descending
 
     actors.sort((a, b) => a.toLowerCase().compareTo(
         b.toLowerCase())); //sort actors list before loading filter widget
@@ -89,87 +131,40 @@ class _FilterPageState extends State<FilterPage> {
           //margin on top and bottom of the scrollable field
           child: SingleChildScrollView(
             // scrolling up and down through filters
-            child: Column(
-              children: [
-                // Actual filters:
-                const SizedBox(height: 100.0),
-                //Streaming Platform, e.g Netflix, Prime:
-                makeFilter(
-                    widget.value, widget.provider, "Streaming Platforms"),
-                //Type, i.e. Movie or Series:
-                const SizedBox(height: 25.0),
-                makeFilter(widget.value, widget.type, "Type"),
-                //Genre, e.g. Action, Drama:
-                const SizedBox(height: 25.0),
-                makeFilter(widget.value, widget.genre, "Genre"),
-                //Year, from 1800 to 2024
-                const SizedBox(height: 25.0),
-                makeFilter(widget.value, year, "Year"),
-                /*Center(
-                  //Year Textfield
-                  child: Container(
-                    width: 330,
-                    padding: const EdgeInsets.only(left: 25.0, right: 25.0),
-                    child: TextFormField(
-                      style: TextStyle(
-                          fontWeight: FontWeight.bold,
-                          fontSize: 17,
-                          color: Colors.grey.shade100),
-                      keyboardType: TextInputType.number,
-                      inputFormatters: <TextInputFormatter>[
-                        FilteringTextInputFormatter.digitsOnly
-                      ],
-                      //allow only numbers in year-textfield
-                      decoration: InputDecoration(
-                        labelText: "Year",
-                        labelStyle: TextStyle(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.grey.shade400,
-                            fontSize: 18),
-                        hintText: "Search for year",
-                        contentPadding: EdgeInsets.fromLTRB(12.0, 22.0, 12.0, 22.0),
-                        isDense: true,
-                        hintStyle: TextStyle(
-                            color: Colors.grey.shade400,
-                            fontWeight: FontWeight.normal),
-                        border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20.0)),
-                        enabledBorder: OutlineInputBorder(
-                            borderSide: BorderSide(color: Colors.grey.shade400),
-                            borderRadius: BorderRadius.circular(20.0)),
-                        filled: true,
-                        fillColor: Colors.black38,
-                      ),
-                    ),
-                  ),
-                ),*/
-                const SizedBox(height: 25.0),
-                makeFilter(widget.value, actors, "Actor"),
-                //search an Actor in the whole Database
-                const SizedBox(height: 45),
-                Padding(
-                  padding: const EdgeInsets.only(left: 60.0, right: 60.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SelectionButton(
-                          onTap: () {
-                            Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                    builder: (context) => FilterResultsPage()));
-                          },
-                          color: Colors.blueAccent,
-                          label: "Search"),
-                      SelectionButton(
-                          onTap: () {},
-                          color: Colors.redAccent,
-                          label: "Reset"),
-                    ],
-                  ),
-                )
-              ],
+            child: Column(children: [FilterTextField(
+              textEditingController: _fullNameTextEditingController,
+              title: "FullName",
+              hint: "EnterYourName",
+              isCitySelected: false
             ),
+            FilterTextField(
+              textEditingController: _emailTextEditingController,
+              title: "Email",
+              hint: "EnterYourEmail",
+              isCitySelected: false
+            ),
+            FilterTextField(
+              textEditingController: _phoneNumberTextEditingController,
+              title: "PhoneNumber",
+              hint: "EnterYourPhoneNumber",
+              isCitySelected: false,
+            ),
+            FilterTextField(
+              textEditingController: _cityTextEditingController,
+              title: "City",
+              hint: "ChooseYourCity",
+              isCitySelected: true,
+              cities: _listOfCities,
+            ),
+            FilterTextField(
+              textEditingController: _passwordTextEditingController,
+              title: "Password",
+              hint: "AddYourPassword",
+              isCitySelected: false,
+            ),
+            const SizedBox(
+              height: 15.0,
+            ),])
           ),
         ),
         // Close Button:
@@ -193,9 +188,10 @@ class _FilterPageState extends State<FilterPage> {
     );
   }
 
+
   String? checkValue(String? value) {
     if (value == "None") {
-      return "";
+      return null;
     }
   }
 
@@ -222,16 +218,15 @@ class _FilterPageState extends State<FilterPage> {
           //Decoration of the label and border of the dropdown button
           decoration: InputDecoration(
             labelText: label,
-            contentPadding: const EdgeInsets.fromLTRB(20.0, 20.0, 12.0, 20.0),
             labelStyle: TextStyle(
                 fontWeight: FontWeight.bold,
                 color: Colors.grey.shade400,
                 fontSize: 18),
             border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(30.0)),
+                OutlineInputBorder(borderRadius: BorderRadius.circular(20.0)),
             enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.grey.shade400),
-                borderRadius: BorderRadius.circular(30.0)),
+                borderRadius: BorderRadius.circular(20.0)),
             filled: true,
             fillColor: Colors.black38,
           ),

@@ -59,7 +59,7 @@ class _StreamTileState extends State<StreamTile> {
                     fit: BoxFit.cover,
                     width: 100,
                     height: 100,
-                    placeholder: (context, url) => cons.imagePlaceholder,
+                    placeholder: (context, url) => cons.streamImagePlaceholder,
                     errorWidget: (context, url, error) => cons.imageErrorWidget,
                   ),
                 ),

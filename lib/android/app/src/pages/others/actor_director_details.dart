@@ -63,7 +63,7 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
                           imageUrl: widget.actorDirector.image,
                           fit: BoxFit.fitHeight,
                           key: keyImage,
-                          placeholder: (context, url) => cons.imagePlaceholderRect,
+                          placeholder: (context, url) => cons.actorDirectorPlaceholder,
                           errorWidget: (context, url, error) => cons.imageErrorWidget,
                         ),
                         Container(
