@@ -7,7 +7,7 @@ import 'package:stream_me/android/app/src/utils/styles.dart';
 import 'package:stream_me/android/app/src/widgets/features/swipe_card.dart';
 
 class ExplorePage extends StatefulWidget {
-  const ExplorePage({Key? key}) : super(key: key);
+  const ExplorePage({super.key});
 
   @override
   State<ExplorePage> createState() => _ExplorePageState();
@@ -66,22 +66,22 @@ class _ExplorePageState extends State<ExplorePage> {
                   SizedBox(
                     height: MediaQuery.of(context).size.height,
                     child: AppinioSwiper(
-                      cardsBuilder: (context, index) {
+                      cardBuilder: (BuildContext context, int index) {
                         currentStream = randomStreamList.elementAt(index);
                         return SwipeCard(
                           stream: randomStreamList.elementAt(index),
                         );
                       },
-                      cardsCount: allStreams.length,
-                      swipeOptions: const AppinioSwipeOptions.only(
-                          left: true, right: true, top: true),
+                      cardCount: allStreams.length,
+                      swipeOptions: const SwipeOptions.only(
+                          left: true, right: true, up: true),
                       controller: _swipeCardController,
                       maxAngle: 80,
                       loop: true,
                       //restart again if list is empty
-                      onSwipe: _swipe,
-                      unswipe: _unswipe,
-                      unlimitedUnswipe: true,
+                      onSwipeEnd: _swipe,
+                      onUnSwipe: _unswipe,
+                      allowUnlimitedUnSwipe: true,
                     ),
                   ),
                 ],
@@ -155,11 +155,9 @@ class _ExplorePageState extends State<ExplorePage> {
     );
   }
 
-  /**
-   * A function that generates a snackbar if clicked on the heart icon.
-   * If the heart is filled, the "added to Favourites" snack bar is shown,
-   * if not, the "removed from Favourites" snack bar is shown
-   */
+  /// A function that generates a snackbar if clicked on the heart icon.
+  /// If the heart is filled, the "added to Favourites" snack bar is shown,
+  /// if not, the "removed from Favourites" snack bar is shown
   SnackBar favSnackBar(String stream) => SnackBar(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
       behavior: SnackBarBehavior.floating,
@@ -169,17 +167,15 @@ class _ExplorePageState extends State<ExplorePage> {
       duration: const Duration(milliseconds: 1500),
       content: Text(
         addFavourites
-            ? "$stream removed from Favourites"
-            : "$stream added to Favourites",
+            ? '$stream removed from Favourites'
+            : '$stream added to Favourites',
         style: TextStyle(color: Colors.grey.shade300),
         textAlign: TextAlign.center,
       ));
 
-  /**
-   * A function that generates a snackbar if clicked on the plus, respectively check icon.
-   * If the icon changes to a check icon, the "added to Watchlist" snack bar is shown,
-   * if the icon changes to a plus icon, the "removed from Watchlist" snack bar is shown
-   */
+  /// A function that generates a snackbar if clicked on the plus, respectively check icon.
+  /// If the icon changes to a check icon, the "added to Watchlist" snack bar is shown,
+  /// if the icon changes to a plus icon, the "removed from Watchlist" snack bar is shown
   SnackBar listSnackBar(String stream) => SnackBar(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
       behavior: SnackBarBehavior.floating,
@@ -195,9 +191,6 @@ class _ExplorePageState extends State<ExplorePage> {
         textAlign: TextAlign.center,
       ));
 
-  /**
-   * A function
-   */
   MaterialStateProperty<Color> getColor(Color color, Color pressedColor) {
     getColor(Set<MaterialState> states) {
       if (states.contains(MaterialState.pressed)) {
@@ -210,23 +203,29 @@ class _ExplorePageState extends State<ExplorePage> {
     return MaterialStateProperty.resolveWith(getColor);
   }
 
-  void _swipe(int index, AppinioSwiperDirection direction) {
-    AppinioSwiperDirection right = AppinioSwiperDirection.right;
-    AppinioSwiperDirection top = AppinioSwiperDirection.top;
-
-    if (direction == right) {
-      print(direction);
-      ScaffoldMessenger.of(context)
-        ..removeCurrentSnackBar()
-        ..showSnackBar(favSnackBar(currentStream.type));
-      //TODO: Save movie/series to favourites
-    }
-    if (direction == top) {
-      print(direction);
-      ScaffoldMessenger.of(context)
-        ..removeCurrentSnackBar()
-        ..showSnackBar(listSnackBar(currentStream.type));
-      //TODO: Save movie/series to watchlist
+  void _swipe(int previousIndex, int targetIndex, SwiperActivity activity) {
+    switch (activity) {
+      case Swipe():
+        print("Swiped: ${activity.direction}");
+        if (activity.direction == AxisDirection.right) {
+          ScaffoldMessenger.of(context)
+            ..removeCurrentSnackBar()
+            ..showSnackBar(favSnackBar(currentStream.type));
+          //TODO: Save movie/series to favourites
+        }
+        if (activity.direction == AxisDirection.up) {
+          ScaffoldMessenger.of(context)
+            ..removeCurrentSnackBar()
+            ..showSnackBar(listSnackBar(currentStream.type));
+          //TODO: Save movie/series to watchlist
+        }
+        break;
+      case Unswipe():
+        // TODO: Handle this case.
+      case CancelSwipe():
+        // TODO: Handle this case.
+      case DrivenActivity():
+        // TODO: Handle this case.
     }
   }
 
@@ -237,10 +236,10 @@ class _ExplorePageState extends State<ExplorePage> {
     //if undo button: same as right
   }
 
-  void _unswipe(bool unswiped) {
+  void _unswipe(SwiperActivity? swiperActivity) {
     //if pressed Undo-Button then unswipe, else do nothing
-    if (unswiped) {
-      _swipeCardController.unswipe();
-    }
+    //if (unswiped) {
+    _swipeCardController.unswipe();
+    //}
   }
 }

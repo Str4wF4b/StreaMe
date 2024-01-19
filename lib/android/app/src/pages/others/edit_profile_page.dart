@@ -5,24 +5,22 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:stream_me/android/app/src/utils/images.dart';
 import 'package:stream_me/android/app/src/widgets/global/selection_button.dart';
-import '../../widgets/features/edit_text-field.dart';
+import '../../widgets/features/edit_text_field.dart';
 
 class EditProfilePage extends StatefulWidget {
   final Color backgroundColor;
 
-  EditProfilePage({Key? key, required this.backgroundColor})
-      : super(key: key);
+  EditProfilePage({super.key, required this.backgroundColor});
 
   @override
   State<EditProfilePage> createState() => _EditProfilePageState();
 
-  bool showPassword = true;
-  PickedFile? _imageFile;
   final ImagePicker _picker = ImagePicker();
   final user = FirebaseAuth.instance.currentUser;
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
+  XFile? _imageFile;
   Images image = Images();
 
   @override
@@ -255,18 +253,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   void takePhoto(ImageSource source) async {
-    final pickedFile = await widget._picker.getImage(
+    final pickedFile = await widget._picker.pickImage(
         source:
         source); //TODO: maybe change function getImage to pickImage if it works
     setState(() {
-      widget._imageFile = pickedFile;
+      _imageFile = pickedFile;
     });
   }
 
   ImageProvider<Object> selectImage() {
-    return widget._imageFile == null
+    return _imageFile == null
         ? AssetImage(image.blank)
-        : FileImage(File(widget._imageFile!.path)) as ImageProvider;
+        : FileImage(File(_imageFile!.path)) as ImageProvider;
   }
 
 /*  Future<bool?> showCancelDialog() => showDialog<bool>(

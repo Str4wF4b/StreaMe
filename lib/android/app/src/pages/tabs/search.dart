@@ -1,9 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:stream_me/android/app/src/data/streams_data.dart';
 import 'package:stream_me/android/app/src/model/streams_model.dart';
 import '../../pages/others/filter.dart';
@@ -15,11 +12,10 @@ import '../../utils/constants_and_values.dart';
 import '../../pages/others/stream_details.dart';
 
 class SearchPage extends StatefulWidget {
-  SearchPage({Key? key}) : super(key: key);
+  SearchPage({super.key});
 
   final searchController = TextEditingController();
   final user = FirebaseAuth.instance.currentUser;
-  late List<Streams> streams = allStreams;
 
   //TODO: If showFilter = true, show Container on the actual one within Stack
 
@@ -28,6 +24,7 @@ class SearchPage extends StatefulWidget {
 }
 
 class _SearchPageState extends State<SearchPage> {
+  late List<Streams> streams = allStreams;
   final ColorPalette color = ColorPalette();
   final ConstantsAndValues cons = ConstantsAndValues();
 
@@ -134,9 +131,9 @@ class _SearchPageState extends State<SearchPage> {
                 child: Padding(
               padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 0.0),
               child: ListView.builder(
-                itemCount: widget.streams.length,
+                itemCount: streams.length,
                 itemBuilder: (context, index) {
-                  final stream = widget.streams[index];
+                  final stream = streams[index];
                   //widget.streams.sort((a, b) => a.toString().toLowerCase().compareTo(b.toString().toLowerCase()));
                   return buildStream(stream);
                 },
@@ -157,7 +154,7 @@ class _SearchPageState extends State<SearchPage> {
       return streamTitle.contains(input);
     }).toList();
 
-    setState(() => widget.streams = suggestions);
+    setState(() => streams = suggestions);
   }
 
   /// Function that returns the clicked stream site with information about the movie or series

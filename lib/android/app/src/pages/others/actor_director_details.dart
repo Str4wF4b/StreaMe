@@ -113,10 +113,10 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
                               widget.stream.plot, context, constraints);*/
                             ExpandText(widget.actorDirector.biography,
                                 style: TextStyle(
-                                    color: color.bodyTextColor,
-                                    fontSize: 16 *
-                                        1 /
-                                        MediaQuery.of(context).textScaleFactor),
+                                  color: color.bodyTextColor,
+                                  fontSize: MediaQuery.textScalerOf(context).scale(16)
+                                ),
+
                                 indicatorIcon: Icons.keyboard_arrow_down,
                                 indicatorIconColor: Colors.grey.shade400,
                                 indicatorPadding:
@@ -193,9 +193,7 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
   }
 
 
-  /**
-   * A function that determines the size and position of a specific Widget
-   */
+  /// A function that determines the size and position of a specific Widget
   void getSizeAndPosition() =>
       WidgetsBinding.instance.addPostFrameCallback((_) {
         final RenderBox boxImage =
@@ -206,9 +204,7 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
         });
       });
 
-  /**
-   * A function that makes makes a simple row of Actor or Director information
-   */
+  /// A function that makes makes a simple row of Actor or Director information
   AutoSizeText actorDirectorInfo(String label, String input) =>
       AutoSizeText.rich(
         TextSpan(
@@ -230,9 +226,7 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
         textAlign: TextAlign.center,
       );
 
-  /**
-   * a function that adds the look of a tab
-   */
+  /// a function that adds the look of a tab
   Widget addTab(String tabTitle, int tabIndex) => Tab(
           child: StreaMeTab(
         tabTitle: tabTitle,
@@ -241,18 +235,16 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
         isWatchlist: false,
       ));
 
-  /**
-   * a function that
-   */
+  /// a function that
   int getAge(String actorAge) {
     int age = 0;
 
     String actorDay = actorAge.substring(0, 2);
     String actorMonth = actorAge.substring(3, 5);
     String actorYear = actorAge.substring(6);
-    String actorBirthday = "$actorDay-$actorMonth-$actorYear";
+    String actorBirthday = '$actorDay-$actorMonth-$actorYear';
     DateTime actorBirthdayDateTime =
-        DateFormat("dd-MM-yyyy").parse(actorBirthday);
+        DateFormat('dd-MM-yyyy').parse(actorBirthday);
 
     if (actorBirthdayDateTime.month < DateTime.now().month ||
         (actorBirthdayDateTime.month == DateTime.now().month &&
@@ -267,39 +259,36 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
     return age;
   }
 
-  /**
-   * a function that individually sets the height of a tab by calling the movies and series list for each tab
-   */
+  /// a function that individually sets the height of a tab by calling the movies and series list for each tab
   double setTabHeight(Actor actorDirector, int tab) {
     double tabHeight = 0;
+    List? movies;
+    List? series;
     if (tab == 0) {
-      List? movies = actorDirector.acting["Movies"];
-      List? series = actorDirector.acting["Series"];
-      tabHeight = getTabHeight(movies!, series!);
+      movies = actorDirector.acting['Movies'];
+      series = actorDirector.acting['Series'];
+
     }
     if (tab == 1) {
-      List? movies = actorDirector.production["Movies"];
-      List? series = actorDirector.production["Series"];
-      tabHeight = getTabHeight(movies!, series!);
+      movies = actorDirector.production['Movies'];
+      series = actorDirector.production['Series'];
     }
     if (tab == 2) {
-      List? movies = actorDirector.directing["Movies"];
-      List? series = actorDirector.directing["Series"];
-      tabHeight = getTabHeight(movies!, series!);
+      movies = actorDirector.directing['Movies'];
+      series = actorDirector.directing['Series'];
     }
+    tabHeight = getTabHeight(movies ?? [], series ?? []);
     return tabHeight;
   }
 
-  /**
-   * a function that decides whether the height of a tab is 530, 350 or 160 depending on empty movies and series lists
-   */
+  /// a function that decides whether the height of a tab is 530, 350 or 160 depending on empty movies and series lists
   double getTabHeight(List movies, List series) {
-    if (movies!.isNotEmpty && series!.isNotEmpty) {
+    if (movies.isNotEmpty && series.isNotEmpty) {
       //max height if movies and series list has input
       return 530;
-    } else if (movies!.isNotEmpty &&
-            series!.isEmpty || //mid height if one of the lists is empty
-        series!.isNotEmpty && movies!.isEmpty) {
+    } else if (movies.isNotEmpty &&
+            series.isEmpty || //mid height if one of the lists is empty
+        series.isNotEmpty && movies.isEmpty) {
       return 350;
     } else {
       //min height if both lists are empty

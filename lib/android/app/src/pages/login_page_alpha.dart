@@ -1,14 +1,11 @@
-import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
-import '../auth/auth_popups.dart';
 import 'tabs/home.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter_login/theme.dart';
 
 class LoginPageAlpha extends StatefulWidget {
-  const LoginPageAlpha({Key? key}) : super(key: key);
+  const LoginPageAlpha({super.key});
 
   final String title = "Login";
   final Color backgroundColor = const Color.fromRGBO(38, 35, 35, 1.0);
@@ -21,7 +18,7 @@ class LoginPageAlpha extends StatefulWidget {
 
 class LoginPageAlphaState extends State<LoginPageAlpha> {
 
-  final AuthPopups _loginCon = AuthPopups();
+  // final AuthPopups _loginCon = AuthPopups();
 
 // TODO: Move functionality to controller (separate the code into MVC pattern)
 // TODO: Connect with Firebase/Firestore DB (https://github.com/NearHuscarl/flutter_login/issues/162#issuecomment-869908814)
@@ -69,6 +66,7 @@ class LoginPageAlphaState extends State<LoginPageAlpha> {
         debugPrint('Login info');
         debugPrint('Name: ${loginData.name}');
         debugPrint('Password: ${loginData.password}');
+        return null;
         //return _loginUser(loginData);
       },
       onSignup: (signupData) {
@@ -86,10 +84,11 @@ class LoginPageAlphaState extends State<LoginPageAlpha> {
                 ' - ${element.term.id}: ${element.accepted == true ? 'accepted' : 'rejected'}');
           }
         }
+        return null;
         //return _signupUser(signupData);
       },
       onSubmitAnimationCompleted: () => Navigator.of(context).pushReplacement(
-          MaterialPageRoute(builder: (context) => HomePage())),
+          MaterialPageRoute(builder: (context) => const HomePage())),
       /*onSubmitAnimationCompleted: () {
         Navigator.of(context).pushReplacement(FadePageRoute(
           builder: (context) => const DashboardScreen(),
@@ -98,6 +97,7 @@ class LoginPageAlphaState extends State<LoginPageAlpha> {
       onRecoverPassword: (name) {
         debugPrint('Recover password info');
         debugPrint('Name: $name');
+        return null;
         //return _recoverPassword(name);
         // Show new password dialog
       },

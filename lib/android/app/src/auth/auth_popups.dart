@@ -2,9 +2,7 @@ import 'package:flutter/material.dart';
 
 class AuthPopups {
 
-  /**
-   * A function that returns a popup if the email or password is wrong when logging in
-   */
+  /// A function that returns a popup if the email or password is wrong when logging in
   void wrongInputPopup(String input, BuildContext context, bool isLogin) {
     showDialog(
       context: context,
@@ -49,9 +47,7 @@ class AuthPopups {
     );
   }
 
-  /**
-   * A function that simply checks if the user wants to login or register and returns the corresponding title in the popup
-   */
+  /// A function that simply checks if the user wants to login or register and returns the corresponding title in the popup
   String checkLoginOrRegisterTitle(bool isLogin) {
     if (isLogin) {
       return "Login not possible.";
@@ -60,9 +56,7 @@ class AuthPopups {
     }
   }
 
-  /**
-   * A function that simply checks if the user wants to login or register and returns the corresponding content in the popup
-   */
+  /// A function that simply checks if the user wants to login or register and returns the corresponding content in the popup
   String checkLoginOrRegisterContent(bool isLogin, String input) {
     if (isLogin) {
       return "The $input is not correct. Please try again.";

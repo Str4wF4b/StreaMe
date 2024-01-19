@@ -38,11 +38,11 @@ class _ActorDirectorTabState extends State<ActorDirectorTab> {
           const SizedBox(height: 5.0),
           tabText("Movies", movies!),
           const SizedBox(height: 10.0),
-          tabContent(movies!, allMovies),
+          tabContent(movies, allMovies),
           const SizedBox(height: 20.0),
           tabText("Series", series!),
           const SizedBox(height: 10.0),
-          tabContent(series!, allSeries)
+          tabContent(series, allSeries)
         ],
       ),
     );
@@ -53,13 +53,13 @@ class _ActorDirectorTabState extends State<ActorDirectorTab> {
     child: SizedBox(
       height: filtered.isNotEmpty ? 210 : 0,
       child: ListView.builder(
-          itemCount: filtered?.length,
+          itemCount: filtered.length,
           scrollDirection: Axis.horizontal,
           shrinkWrap: true,
           itemBuilder: (context, index) {
-            String currentTitle = filtered?.elementAt(index);
+            String currentTitle = filtered.elementAt(index);
 
-            if (filtered!.isNotEmpty) {
+            if (filtered.isNotEmpty) {
               Streams currentStream = fullList
                   .where((stream) => stream.title.contains(currentTitle))
                   .single;

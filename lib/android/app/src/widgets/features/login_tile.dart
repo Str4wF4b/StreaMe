@@ -28,9 +28,7 @@ class LoginTile extends StatelessWidget {
     );
   }
 
-  /**
-   * Function to quick-check if an icon or an image is inside the login tile
-   */
+  /// Function to quick-check if an icon or an image is inside the login tile
   Widget checkImageOrIcon() {
     if (isIcon) {
       // if icon in tile

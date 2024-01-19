@@ -8,7 +8,7 @@ import '../../pages/others/stream_details.dart';
 class SwipeCard extends StatefulWidget {
   final Streams stream;
 
-  const SwipeCard({Key? key, required this.stream}) : super(key: key);
+  const SwipeCard({super.key, required this.stream});
 
   @override
   State<SwipeCard> createState() => _SwipeCardState();

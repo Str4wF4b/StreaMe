@@ -5,8 +5,8 @@ import 'package:stream_me/android/app/src/utils/color_palette.dart';
 import 'package:stream_me/android/app/src/utils/images.dart';
 
 import '../widgets/features/login_divider.dart';
-import '../widgets/features/login_sign-buttons.dart';
-import '../widgets/features/login_text-field.dart';
+import '../widgets/features/login_sign_buttons.dart';
+import '../widgets/features/login_text_field.dart';
 import '../widgets/features/login_tile.dart';
 import 'auth_popups.dart';
 
@@ -163,14 +163,14 @@ class _RegisterPageState extends State<RegisterPage> {
             email: widget.emailController.text,
             password: widget.passwordController.text);
         // pop loading circle
-        Navigator.pop(context);
-      } on FirebaseAuthException catch (e) {
+        if (mounted) Navigator.pop(context);
+      } on FirebaseAuthException {
         // pop loading circle
-        Navigator.pop(context);
+        if (mounted) Navigator.pop(context);
       }
     } else {
       Navigator.pop(context);
-      widget.popup.wrongInputPopup("", context, false);
+      widget.popup.wrongInputPopup('', context, false);
       //return;
     }
   }

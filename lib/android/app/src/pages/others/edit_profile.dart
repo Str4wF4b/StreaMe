@@ -5,8 +5,7 @@ import '../../pages/others/edit_profile_page.dart';
 class EditProfile extends StatefulWidget {
   final Color backgroundColor;
 
-  const EditProfile({Key? key, required this.backgroundColor})
-      : super(key: key);
+  const EditProfile({super.key, required this.backgroundColor});
 
   @override
   State<EditProfile> createState() => _EditProfileState();

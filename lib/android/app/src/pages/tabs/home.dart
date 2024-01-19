@@ -1,7 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_core/src/get_main.dart';
 import 'package:stream_me/android/app/src/data/streams_data.dart';
 import 'package:stream_me/android/app/src/widgets/global/app_overlay.dart';
 import 'package:stream_me/android/app/src/pages/others/help.dart';
@@ -14,16 +12,14 @@ import 'package:stream_me/android/app/src/utils/images.dart';
 import '../../auth/auth_main.dart';
 
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({super.key});
 
   @override
   State<HomePage> createState() => _HomePageState();
 }
 
-/**
- * Body of the home page of the app.
- * The stack widget connects a container with a Logout button inside and a container with icon buttons
- */
+/// Body of the home page of the app.
+/// The stack widget connects a container with a Logout button inside and a container with icon buttons
 class _HomePageState extends State<HomePage> {
   late List streams = allStreams; //temporarily
   ColorPalette color = ColorPalette();
@@ -66,7 +62,7 @@ class _HomePageState extends State<HomePage> {
                               height: 17,
                             ),
                             addHomeCards(
-                                ExplorePage(),
+                                const ExplorePage(),
                                 Icons.travel_explore_outlined,
                                 "Explore",
                                 3, //5
@@ -139,26 +135,32 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  /**
-   * Function that adds buttons on home page for navigation
-   */
+  /// Function that adds buttons on home page for navigation
   GestureDetector addHomeCards(StatefulWidget routeWidget, IconData icon,
       String title, int index, String image) {
     return GestureDetector(
       onTap: () {
         if (index != 5) {
           //prevent to navigate to non existing 6th (index = 5) navigation bar item Help
-          Get.to(
-              () => AppOverlay(
-                  //TODO: Just change Body, cause when opening new AppOverlay it pushes it over the last AppOverlay (duplicate Overlays and the second one does not answer)
-                  title: title,
-                  body: routeWidget,
-                  currentPageIndex: index),
-              transition: Transition.zoom,
-              duration: const Duration(milliseconds: 400));
+          Navigator.push(
+              context,
+              PageRouteBuilder(
+                  pageBuilder: (context, animation1, animation2) {
+                    return AppOverlay(
+                        title: title,
+                        body: routeWidget,
+                        currentPageIndex: index);
+                  },
+                  transitionDuration: const Duration(milliseconds: 400),
+                  transitionsBuilder:
+                      (context, animation1, animation2, child) =>
+                          FadeTransition(opacity: animation1, child: child))
+          );
         } else {
-          Get.to(() =>
-              const HelpPage()); //6th (index = 6) navigation bar item Help should only simply open a screen
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const HelpPage()),
+          );
         }
       },
       child: AbsorbPointer(
@@ -221,9 +223,7 @@ class _HomePageState extends State<HomePage> {
       ),*/
   }
 
-  /**
-   * Function that adds button's text on home page
-   */
+  /// Function that adds button's text on home page
   Padding addHomeCardText(String title, IconData icon) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(17.0, 8.0, 17.0, 0.0),

@@ -1,4 +1,3 @@
-import 'dart:convert';
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -7,8 +6,8 @@ import 'package:stream_me/android/app/src/utils/images.dart';
 import 'package:stream_me/android/app/src/widgets/features/login_divider.dart';
 import 'auth_popups.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import '../widgets/features/login_sign-buttons.dart';
-import '../widgets/features/login_text-field.dart';
+import '../widgets/features/login_sign_buttons.dart';
+import '../widgets/features/login_text_field.dart';
 import '../widgets/features/login_tile.dart';
 import '../services/functions/auth_service.dart';
 import 'forgot_password.dart';
@@ -162,18 +161,18 @@ class LoginPageState extends State<LoginPage> {
           email: widget.emailController.text,
           password: widget.passwordController.text);
       // pop loading circle
-      Navigator.pop(context);
+      if (mounted) Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
       // pop loading circle
-      Navigator.pop(context);
+      if (mounted) Navigator.pop(context);
 
       // if email is wrong:
       if (e.code == "user-not-found") {
-        widget.popup.wrongInputPopup("Email", context, true);
+        if (mounted) widget.popup.wrongInputPopup("Email", context, true);
         //widget.emailController.text = "Wrong Email.";
         // if password is wrong:
       } else if (e.code == "wrong-password") {
-        widget.popup.wrongInputPopup("Password", context, true);
+        if (mounted) widget.popup.wrongInputPopup("Password", context, true);
       } else if (e.code == "user-not-found" && e.code == "wrong-password") {
         //wrongEmailPopup();
       }

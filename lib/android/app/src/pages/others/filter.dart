@@ -1,12 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:stream_me/android/app/src/data/actor_data.dart';
 import 'package:stream_me/android/app/src/pages/others/filter_results.dart';
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
 import '../../widgets/global/selection_button.dart';
 
 class FilterPage extends StatefulWidget {
-  FilterPage({Key? key}) : super(key: key);
+  FilterPage({super.key});
 
   final List<String> provider = [
     "Amazon Prime",
@@ -18,7 +17,6 @@ class FilterPage extends StatefulWidget {
     "SkyGo",
     "None"
   ];
-  String? value;
   final List<String> type = ["Movie", "Series"];
   final List<String> genre = [
     "Action",
@@ -43,6 +41,7 @@ class _FilterPageState extends State<FilterPage> {
   final List<String> actors = [];
   final List<String> year = List<String>.generate(
       225, (index) => "${index + 1800}"); //Years 1800 to 2024
+  String? _selectedValue;
 
   @override
   void initState() {
@@ -94,17 +93,16 @@ class _FilterPageState extends State<FilterPage> {
                 // Actual filters:
                 const SizedBox(height: 100.0),
                 //Streaming Platform, e.g Netflix, Prime:
-                makeFilter(
-                    widget.value, widget.provider, "Streaming Platforms"),
+                makeFilter(_selectedValue, widget.provider, "Streaming Platforms"),
                 //Type, i.e. Movie or Series:
                 const SizedBox(height: 25.0),
-                makeFilter(widget.value, widget.type, "Type"),
+                makeFilter(_selectedValue, widget.type, "Type"),
                 //Genre, e.g. Action, Drama:
                 const SizedBox(height: 25.0),
-                makeFilter(widget.value, widget.genre, "Genre"),
+                makeFilter(_selectedValue, widget.genre, "Genre"),
                 //Year, from 1800 to 2024
                 const SizedBox(height: 25.0),
-                makeFilter(widget.value, year, "Year"),
+                makeFilter(_selectedValue, year, "Year"),
                 /*Center(
                   //Year Textfield
                   child: Container(
@@ -144,7 +142,7 @@ class _FilterPageState extends State<FilterPage> {
                   ),
                 ),*/
                 const SizedBox(height: 25.0),
-                makeFilter(widget.value, actors, "Actor"),
+                makeFilter(_selectedValue, actors, "Actor"),
                 //search an Actor in the whole Database
                 const SizedBox(height: 45),
                 Padding(
@@ -157,7 +155,7 @@ class _FilterPageState extends State<FilterPage> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => FilterResultsPage()));
+                                    builder: (context) => const FilterResultsPage()));
                           },
                           color: Colors.blueAccent,
                           label: "Search"),
@@ -193,12 +191,6 @@ class _FilterPageState extends State<FilterPage> {
     );
   }
 
-  String? checkValue(String? value) {
-    if (value == "None") {
-      return "";
-    }
-  }
-
   Center makeFilter(String? selectedValue, List<String> list, String label) {
     return Center(
       child: Container(
@@ -215,7 +207,7 @@ class _FilterPageState extends State<FilterPage> {
           //selectedItemBuilder: ,
           onChanged: (value) {
             setState(() {
-              selectedValue = value;
+              _selectedValue = value;
             });
           },
           isExpanded: true,

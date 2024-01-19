@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 class FilterResultsPage extends StatelessWidget {
-  const FilterResultsPage({Key? key}) : super(key: key);
+  const FilterResultsPage({super.key});
 
   @override
   Widget build(BuildContext context) {

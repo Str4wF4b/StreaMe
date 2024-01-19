@@ -7,7 +7,7 @@ import '../../widgets/features/stream_tile.dart';
 import '../../widgets/global/streame_tab.dart';
 
 class FavouritesPage extends StatefulWidget {
-  const FavouritesPage({Key? key}) : super(key: key);
+  const FavouritesPage({super.key});
 
   @override
   State<FavouritesPage> createState() => _FavouritesPageState();
@@ -160,9 +160,7 @@ class _FavouritesPageState extends State<FavouritesPage>
     );
   }
 
-  /**
-   * aa
-   */
+  /// todo
   Widget addTab(String tabTitle, int tabIndex) => Tab(
       child: GestureDetector(
           onTap: () => setState(() {
