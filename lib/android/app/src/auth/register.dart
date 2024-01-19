@@ -28,7 +28,6 @@ class _RegisterPageState extends State<RegisterPage> {
   ColorPalette color = ColorPalette();
   Images image = Images();
 
-
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -80,8 +79,8 @@ class _RegisterPageState extends State<RegisterPage> {
                       inputController: widget.passwordController,
                       obscureText: true,
                       hintText: "Password",
-                      prefixIcon: Icons
-                          .lock /*, const Icon(Icons.remove_red_eye)*/),
+                      prefixIcon:
+                          Icons.lock /*, const Icon(Icons.remove_red_eye)*/),
                   const SizedBox(height: 10),
                   LoginTextField(
                       // confirm password textfield

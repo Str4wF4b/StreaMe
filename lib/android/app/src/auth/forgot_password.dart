@@ -55,7 +55,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                     const SizedBox(height: 90),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                      child: Text("Enter your Email here and reset your password",
+                      child: Text(
+                          "Enter your Email here and reset your password",
                           style: TextStyle(
                               color: Colors.grey.shade300,
                               fontWeight: FontWeight.bold,
@@ -64,11 +65,10 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                     ),
                     const SizedBox(height: 15),
                     LoginTextField(
-                      inputController: widget._emailController,
-                      obscureText: false,
-                      hintText: "Sending password link to this Email",
-                      prefixIcon: Icons.mail_outline
-                    ),
+                        inputController: widget._emailController,
+                        obscureText: false,
+                        hintText: "Sending password link to this Email",
+                        prefixIcon: Icons.mail_outline),
                     const SizedBox(
                       height: 40,
                     ),
@@ -128,7 +128,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   }
 
   /// A function that returns a popup if a password reset link is sent to the entered email
-  void wrongInputPopup(BuildContext context, bool correctMail, TextEditingController emailController) {
+  void wrongInputPopup(BuildContext context, bool correctMail,
+      TextEditingController emailController) {
     showDialog(
       context: context,
       builder: (context) {
@@ -155,7 +156,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           actions: [
             Center(
               child: TextButton(
-                onPressed: () => Navigator.pop(context, checkMessage(correctMail, emailController)),
+                onPressed: () => Navigator.pop(
+                    context, checkMessage(correctMail, emailController)),
                 style: TextButton.styleFrom(
                     shape: RoundedRectangleBorder(
                         side: const BorderSide(color: Colors.blueAccent),
@@ -182,7 +184,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
   }
 
   /// A function that simply checks if the entered mail is correct or not and returns the corresponding content in the popup
-  String checkMailContent(bool correctMail, TextEditingController emailController) {
+  String checkMailContent(
+      bool correctMail, TextEditingController emailController) {
     if (correctMail) {
       return "A Password reset link has been sent to ${emailController.text}.";
     } else {

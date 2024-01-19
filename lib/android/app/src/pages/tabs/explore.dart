@@ -221,11 +221,11 @@ class _ExplorePageState extends State<ExplorePage> {
         }
         break;
       case Unswipe():
-        // TODO: Handle this case.
+      // TODO: Handle this case.
       case CancelSwipe():
-        // TODO: Handle this case.
+      // TODO: Handle this case.
       case DrivenActivity():
-        // TODO: Handle this case.
+      // TODO: Handle this case.
     }
   }
 

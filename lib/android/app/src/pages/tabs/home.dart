@@ -154,8 +154,7 @@ class _HomePageState extends State<HomePage> {
                   transitionDuration: const Duration(milliseconds: 400),
                   transitionsBuilder:
                       (context, animation1, animation2, child) =>
-                          FadeTransition(opacity: animation1, child: child))
-          );
+                          FadeTransition(opacity: animation1, child: child)));
         } else {
           Navigator.push(
             context,

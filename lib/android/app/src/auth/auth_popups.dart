@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 
 class AuthPopups {
-
   /// A function that returns a popup if the email or password is wrong when logging in
   void wrongInputPopup(String input, BuildContext context, bool isLogin) {
     showDialog(

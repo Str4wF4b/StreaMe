@@ -1,4 +1,3 @@
-
 import 'package:flutter/material.dart';
 import 'package:flutter_login/flutter_login.dart';
 import 'tabs/home.dart';
@@ -17,7 +16,6 @@ class LoginPageAlpha extends StatefulWidget {
 }
 
 class LoginPageAlphaState extends State<LoginPageAlpha> {
-
   // final AuthPopups _loginCon = AuthPopups();
 
 // TODO: Move functionality to controller (separate the code into MVC pattern)
@@ -27,7 +25,8 @@ class LoginPageAlphaState extends State<LoginPageAlpha> {
   Widget build(BuildContext context) {
     return FlutterLogin(
       logo: const AssetImage("assets/icons/streame.png"),
-      theme: LoginTheme( // the theme of the login window
+      theme: LoginTheme(
+        // the theme of the login window
         primaryColor: widget.backgroundColor,
         pageColorLight: Colors.deepOrangeAccent,
         buttonTheme: LoginButtonTheme(
@@ -37,7 +36,6 @@ class LoginPageAlphaState extends State<LoginPageAlpha> {
           color: Colors.transparent,
           elevation: 0,
           shadowColor: Colors.transparent,
-
         ),
         titleStyle: const TextStyle(
           color: Colors.white,

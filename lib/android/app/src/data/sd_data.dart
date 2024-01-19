@@ -134,7 +134,9 @@ final allSd = <Sd>[
   Sd(id: 7, streamId: 7, streamOn: {
     "Logo": [image.appleTvPlus],
     "Platform": ["Apple TV+"],
-    "Link": ["https://tv.apple.com/de/episode/pilot/umc.cmc.zb0yksqtym68hasbq8mj4jwp?playableId=tvs.sbd.4000%3AVTEDL0560101"]
+    "Link": [
+      "https://tv.apple.com/de/episode/pilot/umc.cmc.zb0yksqtym68hasbq8mj4jwp?playableId=tvs.sbd.4000%3AVTEDL0560101"
+    ]
   }, rent: {
     "Logo": [],
     "Platform": [],
@@ -148,7 +150,9 @@ final allSd = <Sd>[
   Sd(id: 8, streamId: 8, streamOn: {
     "Logo": [image.disneyPlus],
     "Platform": ["Disney+"],
-    "Link": ["https://www.disneyplus.com/de-de/movies/maze-runner-die-auserwahlten-im-labyrinth/5eMMEyNl6tWG?irclickid=VfP3CZxx0xyPTg%3AV9Mwcc0e-UkH008VJkRwcRM0&irgwc=1&cid=DSS-Affiliate-Impact-Content-JustWatch+GmbH-705874&tgclid=04010022-ac11-4e05-bd00-1576657a2c0c&dclid=CNX6ipW3jYMDFWCS_QcdUvUM2w"]
+    "Link": [
+      "https://www.disneyplus.com/de-de/movies/maze-runner-die-auserwahlten-im-labyrinth/5eMMEyNl6tWG?irclickid=VfP3CZxx0xyPTg%3AV9Mwcc0e-UkH008VJkRwcRM0&irgwc=1&cid=DSS-Affiliate-Impact-Content-JustWatch+GmbH-705874&tgclid=04010022-ac11-4e05-bd00-1576657a2c0c&dclid=CNX6ipW3jYMDFWCS_QcdUvUM2w"
+    ]
   }, rent: {
     "Logo": [image.appleTv, image.prime],
     "Platform": ["Apple TV €3,99", "Prime €3,99"],
@@ -165,12 +169,10 @@ final allSd = <Sd>[
     ]
   }),
   //Dahmer - Monster: The Jeffrey Dahmer Story:
-  Sd(id: 9,
-  streamId: 9,
-  streamOn: {
-  "Logo": [image.netflix],
-  "Platform": ["Netflix"],
-  "Link": ["https://www.netflix.com/de/title/81287562"]
+  Sd(id: 9, streamId: 9, streamOn: {
+    "Logo": [image.netflix],
+    "Platform": ["Netflix"],
+    "Link": ["https://www.netflix.com/de/title/81287562"]
   }, rent: {
     "Logo": [],
     "Platform": [],
@@ -206,7 +208,9 @@ final allSd = <Sd>[
   Sd(id: 11, streamId: 11, streamOn: {
     "Logo": [image.crunchyroll],
     "Platform": ["Crunchyroll"],
-    "Link": ["https://www.crunchyroll.com/de/watch/GR3VWXP96/im-luffy-the-man-whos-gonna-be-king-of-the-pirates?irclickid=zbkwR01E1xyNUiqVqVVaMziqUkH0xxQxkRwcRM0&irgwc=1"]
+    "Link": [
+      "https://www.crunchyroll.com/de/watch/GR3VWXP96/im-luffy-the-man-whos-gonna-be-king-of-the-pirates?irclickid=zbkwR01E1xyNUiqVqVVaMziqUkH0xxQxkRwcRM0&irgwc=1"
+    ]
   }, rent: {
     "Logo": [],
     "Platform": [],

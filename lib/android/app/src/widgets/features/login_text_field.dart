@@ -9,14 +9,14 @@ class LoginTextField extends StatelessWidget {
 
   //final Icon suffixIcon;
 
-  const LoginTextField({super.key,
+  const LoginTextField({
+    super.key,
     required this.inputController,
     required this.obscureText,
     required this.hintText,
     required this.prefixIcon,
     /*required this.suffixIcon*/
   });
-
 
   @override
   Widget build(BuildContext context) {
@@ -66,4 +66,4 @@ class LoginTextField extends StatelessWidget {
           Colors.transparent); // disable other not needed suffixIcon
     }
    */
-  }
+}

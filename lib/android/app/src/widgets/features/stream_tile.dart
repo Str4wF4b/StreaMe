@@ -254,7 +254,6 @@ class _StreamTileState extends State<StreamTile> {
 
   void getRowSizeAndPosition() =>
       WidgetsBinding.instance.addPostFrameCallback((_) {
-
         setState(() {
           //position = box.localToGlobal(Offset.zero); //coordinate system
           //size = box.size;

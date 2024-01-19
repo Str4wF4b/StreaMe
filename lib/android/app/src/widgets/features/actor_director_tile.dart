@@ -50,9 +50,9 @@ class _ActorDirectorTileState extends State<ActorDirectorTile> {
             AutoSizeText(
               widget.stream.title,
               style: TextStyle(
-                  color: color.bodyTextColor,
-                  fontWeight: FontWeight.w500,
-                  fontSize: MediaQuery.textScalerOf(context).scale(14),
+                color: color.bodyTextColor,
+                fontWeight: FontWeight.w500,
+                fontSize: MediaQuery.textScalerOf(context).scale(14),
               ),
               maxLines: 2,
               textAlign: TextAlign.center,

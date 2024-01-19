@@ -6,7 +6,10 @@ class SelectionButton extends StatelessWidget {
   final String label;
 
   const SelectionButton(
-      {super.key, required this.onTap, required this.color, required this.label});
+      {super.key,
+      required this.onTap,
+      required this.color,
+      required this.label});
 
   @override
   Widget build(BuildContext context) {

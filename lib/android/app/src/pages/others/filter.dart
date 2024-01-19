@@ -93,7 +93,8 @@ class _FilterPageState extends State<FilterPage> {
                 // Actual filters:
                 const SizedBox(height: 100.0),
                 //Streaming Platform, e.g Netflix, Prime:
-                makeFilter(_selectedValue, widget.provider, "Streaming Platforms"),
+                makeFilter(
+                    _selectedValue, widget.provider, "Streaming Platforms"),
                 //Type, i.e. Movie or Series:
                 const SizedBox(height: 25.0),
                 makeFilter(_selectedValue, widget.type, "Type"),
@@ -155,7 +156,8 @@ class _FilterPageState extends State<FilterPage> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => const FilterResultsPage()));
+                                    builder: (context) =>
+                                        const FilterResultsPage()));
                           },
                           color: Colors.blueAccent,
                           label: "Search"),

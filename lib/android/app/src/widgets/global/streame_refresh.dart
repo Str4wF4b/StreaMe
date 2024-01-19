@@ -28,7 +28,6 @@ class _StreameRefreshState extends State<StreameRefresh> {
             size: 30,
           );
         },
-        child: widget.child
-    );
+        child: widget.child);
   }
 }

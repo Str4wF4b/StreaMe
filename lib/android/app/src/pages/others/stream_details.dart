@@ -274,8 +274,9 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                                 widget.stream.plot, context, constraints);*/
                                 ExpandText(widget.stream.plot,
                                     style: TextStyle(
-                                        color: color.bodyTextColor,
-                                        fontSize: MediaQuery.textScalerOf(context).scale(16),
+                                      color: color.bodyTextColor,
+                                      fontSize: MediaQuery.textScalerOf(context)
+                                          .scale(16),
                                     ),
                                     indicatorIcon: Icons.keyboard_arrow_down,
                                     indicatorIconColor: Colors.grey.shade400,
@@ -722,8 +723,10 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                     borderRadius: BorderRadius.circular(20.0),
                     child: CachedNetworkImage(
                       imageUrl: widget.stream.image,
-                      placeholder: (context, url) => cons.streamImagePlaceholder,
-                      errorWidget: (context, url, error) => cons.imageErrorWidget,
+                      placeholder: (context, url) =>
+                          cons.streamImagePlaceholder,
+                      errorWidget: (context, url, error) =>
+                          cons.imageErrorWidget,
                     ),
                   ),
                 ));

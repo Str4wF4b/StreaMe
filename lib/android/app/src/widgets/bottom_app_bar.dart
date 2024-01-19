@@ -34,11 +34,11 @@ class _StreameBottomAppBarState extends State<StreameBottomAppBar> {
                   selected: widget.selectedIndex == 1,
                   onPressed: () {
                     //Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => SearchPage()));
-                    setState(() {
-                    });
+                    setState(() {});
                     print(widget.selectedIndex);
                     //Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => SearchPage()));
-                    print("------------------------------------------------- ${widget.selectedIndex}");
+                    print(
+                        "------------------------------------------------- ${widget.selectedIndex}");
                   }),
               NavigationIcons(
                   iconText: "Favourites",

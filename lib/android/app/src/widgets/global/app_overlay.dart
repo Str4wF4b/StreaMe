@@ -66,7 +66,8 @@ class _AppOverlayState extends State<AppOverlay> {
     return Scaffold(
         backgroundColor: color.backgroundColor,
         appBar: StreameAppBar(
-            title: widget.titles[widget.currentPageIndex] /*widget.titles[widget.selectedIndex]*/),
+            title: widget.titles[widget
+                .currentPageIndex] /*widget.titles[widget.selectedIndex]*/),
         //app bar on top of every page
 /*        endDrawer: Drawer(
           backgroundColor: color.backgroundColor,
@@ -137,7 +138,8 @@ class _AppOverlayState extends State<AppOverlay> {
               Padding(
                 padding: const EdgeInsets.only(top: 2.0),
                 child: NavigationDestination(
-                    icon: const Icon(Icons.favorite_outline, color: Colors.grey),
+                    icon:
+                        const Icon(Icons.favorite_outline, color: Colors.grey),
                     selectedIcon: Icon(
                       Icons.favorite,
                       color: color.backgroundColor,

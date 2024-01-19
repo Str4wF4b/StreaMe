@@ -7,7 +7,6 @@ import '../../pages/others/filter.dart';
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
 import '../../utils/constants_and_values.dart';
 
-
 // Test:
 import '../../pages/others/stream_details.dart';
 
@@ -79,8 +78,8 @@ class _SearchPageState extends State<SearchPage> {
                     prefixIcon: const Icon(Icons.search, size: 22),
                     suffixIcon: widget.searchController.text.isNotEmpty
                         ? GestureDetector(
-                            child:
-                                const Icon(Icons.close, color: Colors.blueGrey, size: 22),
+                            child: const Icon(Icons.close,
+                                color: Colors.blueGrey, size: 22),
                             onTap: () {
                               widget.searchController.clear();
                               FocusScope.of(context).requestFocus(
@@ -104,7 +103,8 @@ class _SearchPageState extends State<SearchPage> {
               Positioned(
                 //padding: const EdgeInsets.only(left: 354, top: 37),
                 left: MediaQuery.of(context).size.width - 40,
-                bottom: MediaQuery.of(context).size.height - 769, //766 when isDense = false
+                bottom: MediaQuery.of(context).size.height -
+                    769, //766 when isDense = false
                 child: InkWell(
                   onTap: () {
                     showDialog(

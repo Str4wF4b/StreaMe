@@ -20,13 +20,17 @@ class NavigationIcons extends StatelessWidget {
       children: [
         IconButton(
           onPressed: onPressed,
-          icon: Icon(icon, color: selected ? Colors.white : Colors.grey.shade500),
+          icon:
+              Icon(icon, color: selected ? Colors.white : Colors.grey.shade500),
         ),
-        Text(iconText, style: TextStyle(
-          color: selected ? Colors.white : Colors.grey.shade500,
-          fontSize: 12,
-          height: 0.1,
-        ),)
+        Text(
+          iconText,
+          style: TextStyle(
+            color: selected ? Colors.white : Colors.grey.shade500,
+            fontSize: 12,
+            height: 0.1,
+          ),
+        )
       ],
     );
   }

@@ -48,9 +48,10 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
               //centerTitle: true,
               elevation: 0.0,
               pinned: true,
-              expandedHeight: MediaQuery.of(context).size.height * 0.375,//298,
+              expandedHeight: MediaQuery.of(context).size.height * 0.375, //298,
               flexibleSpace: Container(
-                margin: EdgeInsets.only(left: sliverWidth * 0.223, right: sliverWidth * 0.223),
+                margin: EdgeInsets.only(
+                    left: sliverWidth * 0.223, right: sliverWidth * 0.223),
                 color: Colors.transparent,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(20.0),
@@ -63,8 +64,10 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
                           imageUrl: widget.actorDirector.image,
                           fit: BoxFit.fitHeight,
                           key: keyImage,
-                          placeholder: (context, url) => cons.actorDirectorPlaceholder,
-                          errorWidget: (context, url, error) => cons.imageErrorWidget,
+                          placeholder: (context, url) =>
+                              cons.actorDirectorPlaceholder,
+                          errorWidget: (context, url, error) =>
+                              cons.imageErrorWidget,
                         ),
                         Container(
                           decoration: BoxDecoration(
@@ -72,19 +75,21 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
                                   begin: FractionalOffset.topCenter,
                                   end: FractionalOffset.bottomCenter,
                                   colors: [
-                                    Colors.grey.withOpacity(0.0), // or black
-                                    Colors.black87, // or black54
-                                  ],
+                                Colors.grey.withOpacity(0.0), // or black
+                                Colors.black87, // or black54
+                              ],
                                   stops: const [
-                                    0.8, // or 0.77
-                                    1.0
-                                  ])),
+                                0.8, // or 0.77
+                                1.0
+                              ])),
                         )
                       ],
                     ),
                     //titlePadding: const EdgeInsets.only(top: 0.0), //0.0 but necessary to put title on bottom of image
                     centerTitle: true,
-                    title: FittedBox(child: Text(widget.actorDirector.displayName), //FittedBox(
+                    title: FittedBox(
+                      child:
+                          Text(widget.actorDirector.displayName), //FittedBox(
                     ),
                   ),
                 ),
@@ -113,10 +118,9 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
                               widget.stream.plot, context, constraints);*/
                             ExpandText(widget.actorDirector.biography,
                                 style: TextStyle(
-                                  color: color.bodyTextColor,
-                                  fontSize: MediaQuery.textScalerOf(context).scale(16)
-                                ),
-
+                                    color: color.bodyTextColor,
+                                    fontSize: MediaQuery.textScalerOf(context)
+                                        .scale(16)),
                                 indicatorIcon: Icons.keyboard_arrow_down,
                                 indicatorIconColor: Colors.grey.shade400,
                                 indicatorPadding:
@@ -192,7 +196,6 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
     );
   }
 
-
   /// A function that determines the size and position of a specific Widget
   void getSizeAndPosition() =>
       WidgetsBinding.instance.addPostFrameCallback((_) {
@@ -267,7 +270,6 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
     if (tab == 0) {
       movies = actorDirector.acting['Movies'];
       series = actorDirector.acting['Series'];
-
     }
     if (tab == 1) {
       movies = actorDirector.production['Movies'];
