@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
 import 'package:stream_me/android/app/src/utils/images.dart';
 
-import '../widgets/features/login_text-field.dart';
-import '../widgets/features/login_sign-buttons.dart';
+import '../widgets/features/login_text_field.dart';
+import '../widgets/features/login_sign_buttons.dart';
 
 class ForgotPasswordPage extends StatefulWidget {
-  ForgotPasswordPage({Key? key}) : super(key: key);
+  ForgotPasswordPage({super.key});
 
   @override
   State<ForgotPasswordPage> createState() => _ForgotPasswordPageState();
@@ -55,7 +55,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                     const SizedBox(height: 90),
                     Padding(
                       padding: const EdgeInsets.symmetric(horizontal: 30.0),
-                      child: Text("Enter your Email here and reset your password",
+                      child: Text(
+                          "Enter your Email here and reset your password",
                           style: TextStyle(
                               color: Colors.grey.shade300,
                               fontWeight: FontWeight.bold,
@@ -64,11 +65,10 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                     ),
                     const SizedBox(height: 15),
                     LoginTextField(
-                      inputController: widget._emailController,
-                      obscureText: false,
-                      hintText: "Sending password link to this Email",
-                      prefixIcon: Icons.mail_outline
-                    ),
+                        inputController: widget._emailController,
+                        obscureText: false,
+                        hintText: "Sending password link to this Email",
+                        prefixIcon: Icons.mail_outline),
                     const SizedBox(
                       height: 40,
                     ),
@@ -115,24 +115,21 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     );
   }
 
-  /**
-   * A function sending an email to the entered email address if clicked on the "Reset Password"
-   */
+  /// A function sending an email to the entered email address if clicked on the "Reset Password"
   Future resetPassword() async {
     try {
       await FirebaseAuth.instance
           .sendPasswordResetEmail(email: widget._emailController.text.trim());
-      wrongInputPopup(context, true, widget._emailController);
+      if (mounted) wrongInputPopup(context, true, widget._emailController);
       //widget._emailController.text = ""; //making TextField empty
-    } on FirebaseAuthException catch (e) {
-      wrongInputPopup(context, false, widget._emailController);
+    } on FirebaseAuthException {
+      if (mounted) wrongInputPopup(context, false, widget._emailController);
     }
   }
 
-  /**
-   * A function that returns a popup if a password reset link is sent to the entered email
-   */
-  void wrongInputPopup(BuildContext context, bool correctMail, TextEditingController emailController) {
+  /// A function that returns a popup if a password reset link is sent to the entered email
+  void wrongInputPopup(BuildContext context, bool correctMail,
+      TextEditingController emailController) {
     showDialog(
       context: context,
       builder: (context) {
@@ -159,7 +156,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           actions: [
             Center(
               child: TextButton(
-                onPressed: () => Navigator.pop(context, checkMessage(correctMail, emailController)),
+                onPressed: () => Navigator.pop(
+                    context, checkMessage(correctMail, emailController)),
                 style: TextButton.styleFrom(
                     shape: RoundedRectangleBorder(
                         side: const BorderSide(color: Colors.blueAccent),
@@ -176,9 +174,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     );
   }
 
-  /**
-   * A function that simply checks if the entered mail is correct or not and returns the corresponding title in the popup
-   */
+  /// A function that simply checks if the entered mail is correct or not and returns the corresponding title in the popup
   String checkMail(bool correctMail) {
     if (correctMail) {
       return "Password resetted.";
@@ -187,10 +183,9 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     }
   }
 
-  /**
-   * A function that simply checks if the entered mail is correct or not and returns the corresponding content in the popup
-   */
-  String checkMailContent(bool correctMail, TextEditingController emailController) {
+  /// A function that simply checks if the entered mail is correct or not and returns the corresponding content in the popup
+  String checkMailContent(
+      bool correctMail, TextEditingController emailController) {
     if (correctMail) {
       return "A Password reset link has been sent to ${emailController.text}.";
     } else {
@@ -198,9 +193,7 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
     }
   }
 
-  /**
-   * A function that simply checks if the entered mail is correct or not, resets the input of the TextField and returns the corresponding button in the popup
-   */
+  /// A function that simply checks if the entered mail is correct or not, resets the input of the TextField and returns the corresponding button in the popup
   String checkMessage(bool correctMail, TextEditingController emailController) {
     if (correctMail) {
       emailController.text = "";

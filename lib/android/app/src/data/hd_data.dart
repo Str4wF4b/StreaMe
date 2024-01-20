@@ -167,7 +167,9 @@ final allHd = <Hd>[
   Hd(id: 7, streamId: 7, streamOn: {
     "Logo": [image.appleTvPlus],
     "Platform": ["Apple TV+"],
-    "Link": ["https://tv.apple.com/de/episode/pilot/umc.cmc.zb0yksqtym68hasbq8mj4jwp?playableId=tvs.sbd.4000%3AVTEDL0560101"]
+    "Link": [
+      "https://tv.apple.com/de/episode/pilot/umc.cmc.zb0yksqtym68hasbq8mj4jwp?playableId=tvs.sbd.4000%3AVTEDL0560101"
+    ]
   }, rent: {
     "Logo": [],
     "Platform": [],

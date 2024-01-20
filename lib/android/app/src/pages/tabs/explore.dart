@@ -26,7 +26,7 @@ class _ExplorePageState extends State<ExplorePage> {
   bool addWatchlist = false;
 
   final AppinioSwiperController _swipeCardController =
-      AppinioSwiperController();
+  AppinioSwiperController();
 
   //final bool _unswipe = false;
 
@@ -54,104 +54,104 @@ class _ExplorePageState extends State<ExplorePage> {
       backgroundColor: color.backgroundColor,
       body: SafeArea(
           child: Container(
-        alignment: Alignment.center,
-        color: color.middleBackgroundColor,
-        //height: MediaQuery.of(context).size.height,
-        padding: const EdgeInsets.only(left: 18.0, right: 15.0, top: 5.0),
-        child: Column(
-          children: [
-            Expanded(
-              child: Stack(
-                children: [
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height,
-                    child: AppinioSwiper(
-                      cardsBuilder: (context, index) {
-                        currentStream = randomStreamList.elementAt(index);
-                        return SwipeCard(
-                          stream: randomStreamList.elementAt(index),
-                        );
-                      },
-                      cardsCount: allStreams.length,
-                      swipeOptions: const AppinioSwipeOptions.only(
-                          left: true, right: true, top: true),
-                      controller: _swipeCardController,
-                      maxAngle: 80,
-                      loop: true,
-                      //restart again if list is empty
-                      onSwipe: _swipe,
-                      unswipe: _unswipe,
-                      unlimitedUnswipe: true,
-                    ),
+            alignment: Alignment.center,
+            color: color.middleBackgroundColor,
+            //height: MediaQuery.of(context).size.height,
+            padding: const EdgeInsets.only(left: 18.0, right: 15.0, top: 5.0),
+            child: Column(
+              children: [
+                Expanded(
+                  child: Stack(
+                    children: [
+                      SizedBox(
+                        height: MediaQuery.of(context).size.height,
+                        child: AppinioSwiper(
+                          cardsBuilder: (context, index) {
+                            currentStream = randomStreamList.elementAt(index);
+                            return SwipeCard(
+                              stream: randomStreamList.elementAt(index),
+                            );
+                          },
+                          cardsCount: allStreams.length,
+                          swipeOptions: const AppinioSwipeOptions.only(
+                              left: true, right: true, top: true),
+                          controller: _swipeCardController,
+                          maxAngle: 80,
+                          loop: true,
+                          //restart again if list is empty
+                          onSwipe: _swipe,
+                          unswipe: _unswipe,
+                          unlimitedUnswipe: true,
+                        ),
+                      ),
+                    ],
                   ),
-                ],
-              ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                      bottom: screenHeight * 0.073, left: 38.0, right: 41.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () {
+                          ScaffoldMessenger.of(context)
+                            ..removeCurrentSnackBar()
+                            ..showSnackBar(listSnackBar(currentStream.type));
+                          setState(() {
+                            addWatchlist = !addWatchlist;
+                            //TODO: Save film to watchlist
+                          });
+                        },
+                        style: style.exploreButtonStyle,
+                        child: Icon(
+                          addWatchlist ? Icons.check_rounded : Icons.add_rounded,
+                          size: 39,
+                          color: color.bodyTextColor,
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          ScaffoldMessenger.of(context)
+                            ..removeCurrentSnackBar()
+                            ..showSnackBar(favSnackBar(currentStream.type));
+                          setState(() {
+                            addFavourites = !addFavourites;
+                            //TODO: Save film to favourites
+                          });
+                        },
+                        style: style.exploreButtonStyle,
+                        child: Icon(
+                          addFavourites ? Icons.favorite : Icons.favorite_outline,
+                          size: 39,
+                          color: color.bodyTextColor,
+                        ),
+                      ),
+                      ElevatedButton(
+                        onPressed: () {
+                          _swipeCardController.unswipe();
+                        },
+                        style: ButtonStyle(
+                            shape: MaterialStateProperty.all<CircleBorder>(
+                                const CircleBorder()),
+                            padding: MaterialStateProperty.all<EdgeInsets>(
+                                const EdgeInsets.all(16.0)),
+                            backgroundColor: MaterialStateProperty.all<Color>(
+                                Colors.grey.shade900),
+                            overlayColor: getColor(
+                                Colors.grey.shade900, Colors.deepOrangeAccent)),
+                        child: Icon(
+                          Icons.undo_outlined,
+                          size: 39,
+                          color: color.bodyTextColor,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
             ),
-            Padding(
-              padding: EdgeInsets.only(
-                  bottom: screenHeight * 0.073, left: 38.0, right: 41.0),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  ElevatedButton(
-                    onPressed: () {
-                      ScaffoldMessenger.of(context)
-                        ..removeCurrentSnackBar()
-                        ..showSnackBar(listSnackBar(currentStream.type));
-                      setState(() {
-                        addWatchlist = !addWatchlist;
-                        //TODO: Save film to watchlist
-                      });
-                    },
-                    style: style.exploreButtonStyle,
-                    child: Icon(
-                      addWatchlist ? Icons.check_rounded : Icons.add_rounded,
-                      size: 39,
-                      color: color.bodyTextColor,
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      ScaffoldMessenger.of(context)
-                        ..removeCurrentSnackBar()
-                        ..showSnackBar(favSnackBar(currentStream.type));
-                      setState(() {
-                        addFavourites = !addFavourites;
-                        //TODO: Save film to favourites
-                      });
-                    },
-                    style: style.exploreButtonStyle,
-                    child: Icon(
-                      addFavourites ? Icons.favorite : Icons.favorite_outline,
-                      size: 39,
-                      color: color.bodyTextColor,
-                    ),
-                  ),
-                  ElevatedButton(
-                    onPressed: () {
-                      _swipeCardController.unswipe();
-                    },
-                    style: ButtonStyle(
-                        shape: MaterialStateProperty.all<CircleBorder>(
-                            const CircleBorder()),
-                        padding: MaterialStateProperty.all<EdgeInsets>(
-                            const EdgeInsets.all(16.0)),
-                        backgroundColor: MaterialStateProperty.all<Color>(
-                            Colors.grey.shade900),
-                        overlayColor: getColor(
-                            Colors.grey.shade900, Colors.deepOrangeAccent)),
-                    child: Icon(
-                      Icons.undo_outlined,
-                      size: 39,
-                      color: color.bodyTextColor,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      )),
+          )),
     );
   }
 
@@ -164,7 +164,7 @@ class _ExplorePageState extends State<ExplorePage> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
       behavior: SnackBarBehavior.floating,
       margin:
-          const EdgeInsets.only(left: 28.0, right: 28.0, bottom: 6.0 + 60.0),
+      const EdgeInsets.only(left: 28.0, right: 28.0, bottom: 6.0 + 60.0),
       //BottomAppBar has height 60.0
       duration: const Duration(milliseconds: 1500),
       content: Text(
@@ -184,7 +184,7 @@ class _ExplorePageState extends State<ExplorePage> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
       behavior: SnackBarBehavior.floating,
       margin:
-          const EdgeInsets.only(left: 28.0, right: 28.0, bottom: 6.0 + 60.0),
+      const EdgeInsets.only(left: 28.0, right: 28.0, bottom: 6.0 + 60.0),
       //BottomAppBar has height 60.0
       duration: const Duration(milliseconds: 1500),
       content: Text(

@@ -48,9 +48,10 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
               //centerTitle: true,
               elevation: 0.0,
               pinned: true,
-              expandedHeight: MediaQuery.of(context).size.height * 0.375,//298,
+              expandedHeight: MediaQuery.of(context).size.height * 0.375, //298,
               flexibleSpace: Container(
-                margin: EdgeInsets.only(left: sliverWidth * 0.223, right: sliverWidth * 0.223),
+                margin: EdgeInsets.only(
+                    left: sliverWidth * 0.223, right: sliverWidth * 0.223),
                 color: Colors.transparent,
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(20.0),
@@ -63,8 +64,10 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
                           imageUrl: widget.actorDirector.image,
                           fit: BoxFit.fitHeight,
                           key: keyImage,
-                          placeholder: (context, url) => cons.actorDirectorPlaceholder,
-                          errorWidget: (context, url, error) => cons.imageErrorWidget,
+                          placeholder: (context, url) =>
+                              cons.actorDirectorPlaceholder,
+                          errorWidget: (context, url, error) =>
+                              cons.imageErrorWidget,
                         ),
                         Container(
                           decoration: BoxDecoration(
@@ -72,19 +75,21 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
                                   begin: FractionalOffset.topCenter,
                                   end: FractionalOffset.bottomCenter,
                                   colors: [
-                                    Colors.grey.withOpacity(0.0), // or black
-                                    Colors.black87, // or black54
-                                  ],
+                                Colors.grey.withOpacity(0.0), // or black
+                                Colors.black87, // or black54
+                              ],
                                   stops: const [
-                                    0.8, // or 0.77
-                                    1.0
-                                  ])),
+                                0.8, // or 0.77
+                                1.0
+                              ])),
                         )
                       ],
                     ),
                     //titlePadding: const EdgeInsets.only(top: 0.0), //0.0 but necessary to put title on bottom of image
                     centerTitle: true,
-                    title: FittedBox(child: Text(widget.actorDirector.displayName), //FittedBox(
+                    title: FittedBox(
+                      child:
+                          Text(widget.actorDirector.displayName), //FittedBox(
                     ),
                   ),
                 ),
@@ -192,10 +197,7 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
     );
   }
 
-
-  /**
-   * A function that determines the size and position of a specific Widget
-   */
+  /// A function that determines the size and position of a specific Widget
   void getSizeAndPosition() =>
       WidgetsBinding.instance.addPostFrameCallback((_) {
         final RenderBox boxImage =
@@ -206,9 +208,7 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
         });
       });
 
-  /**
-   * A function that makes makes a simple row of Actor or Director information
-   */
+  /// A function that makes makes a simple row of Actor or Director information
   AutoSizeText actorDirectorInfo(String label, String input) =>
       AutoSizeText.rich(
         TextSpan(
@@ -230,9 +230,7 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
         textAlign: TextAlign.center,
       );
 
-  /**
-   * a function that adds the look of a tab
-   */
+  /// a function that adds the look of a tab
   Widget addTab(String tabTitle, int tabIndex) => Tab(
           child: StreaMeTab(
         tabTitle: tabTitle,
@@ -241,18 +239,16 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
         isWatchlist: false,
       ));
 
-  /**
-   * a function that
-   */
+  /// a function that
   int getAge(String actorAge) {
     int age = 0;
 
     String actorDay = actorAge.substring(0, 2);
     String actorMonth = actorAge.substring(3, 5);
     String actorYear = actorAge.substring(6);
-    String actorBirthday = "$actorDay-$actorMonth-$actorYear";
+    String actorBirthday = '$actorDay-$actorMonth-$actorYear';
     DateTime actorBirthdayDateTime =
-        DateFormat("dd-MM-yyyy").parse(actorBirthday);
+        DateFormat('dd-MM-yyyy').parse(actorBirthday);
 
     if (actorBirthdayDateTime.month < DateTime.now().month ||
         (actorBirthdayDateTime.month == DateTime.now().month &&
@@ -267,39 +263,35 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
     return age;
   }
 
-  /**
-   * a function that individually sets the height of a tab by calling the movies and series list for each tab
-   */
+  /// a function that individually sets the height of a tab by calling the movies and series list for each tab
   double setTabHeight(Actor actorDirector, int tab) {
     double tabHeight = 0;
+    List? movies;
+    List? series;
     if (tab == 0) {
-      List? movies = actorDirector.acting["Movies"];
-      List? series = actorDirector.acting["Series"];
-      tabHeight = getTabHeight(movies!, series!);
+      movies = actorDirector.acting['Movies'];
+      series = actorDirector.acting['Series'];
     }
     if (tab == 1) {
-      List? movies = actorDirector.production["Movies"];
-      List? series = actorDirector.production["Series"];
-      tabHeight = getTabHeight(movies!, series!);
+      movies = actorDirector.production['Movies'];
+      series = actorDirector.production['Series'];
     }
     if (tab == 2) {
-      List? movies = actorDirector.directing["Movies"];
-      List? series = actorDirector.directing["Series"];
-      tabHeight = getTabHeight(movies!, series!);
+      movies = actorDirector.directing['Movies'];
+      series = actorDirector.directing['Series'];
     }
+    tabHeight = getTabHeight(movies ?? [], series ?? []);
     return tabHeight;
   }
 
-  /**
-   * a function that decides whether the height of a tab is 530, 350 or 160 depending on empty movies and series lists
-   */
+  /// a function that decides whether the height of a tab is 530, 350 or 160 depending on empty movies and series lists
   double getTabHeight(List movies, List series) {
-    if (movies!.isNotEmpty && series!.isNotEmpty) {
+    if (movies.isNotEmpty && series.isNotEmpty) {
       //max height if movies and series list has input
       return 530;
-    } else if (movies!.isNotEmpty &&
-            series!.isEmpty || //mid height if one of the lists is empty
-        series!.isNotEmpty && movies!.isEmpty) {
+    } else if (movies.isNotEmpty &&
+            series.isEmpty || //mid height if one of the lists is empty
+        series.isNotEmpty && movies.isEmpty) {
       return 350;
     } else {
       //min height if both lists are empty
