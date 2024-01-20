@@ -9,7 +9,6 @@ import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:stream_me/android/app/src/data/actor_data.dart';
-import 'package:stream_me/android/app/src/data/streams_data.dart';
 import 'package:stream_me/android/app/src/data/sd_data.dart';
 import 'package:stream_me/android/app/src/data/hd_data.dart';
 import 'package:stream_me/android/app/src/data/uhd_data.dart';

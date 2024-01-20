@@ -1,6 +1,5 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:stream_me/android/app/src/data/actor_data.dart';
 import 'package:stream_me/android/app/src/pages/others/filter_results.dart';
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
@@ -162,7 +161,7 @@ class _FilterPageState extends State<FilterPage> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        const FilterResultsPage(
+                                        FilterResultsPage(
                                         keyPlatforms: _keyPlatforms,
                                         keyType: _keyType,
                                         keyGenre: _keyGenre,
@@ -235,7 +234,7 @@ class _FilterPageState extends State<FilterPage> {
               decoration: BoxDecoration(
                   color: color.middleBackgroundColor,
                   borderRadius: BorderRadius.circular(20.0)),
-              maxHeight: 202 * MediaQuery.of(context).textScaleFactor),
+              maxHeight: MediaQuery.textScalerOf(context).scale(202)),
           onChanged: (value) {
             setState(() {
               //_selectedValue = value;
