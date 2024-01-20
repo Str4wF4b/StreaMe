@@ -17,6 +17,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
 <<<<<<< HEAD
+<<<<<<< HEAD
     version: "1.3.16"
   analyzer:
     dependency: transitive
@@ -26,6 +27,9 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "5.13.0"
+=======
+    version: "1.3.6"
+>>>>>>> parent of 32f656a (geht immer noch nicht. Habe alles geupdated.)
 =======
     version: "1.3.6"
 >>>>>>> parent of 32f656a (geht immer noch nicht. Habe alles geupdated.)
@@ -218,10 +222,17 @@ packages:
     description:
       name: cross_file
 <<<<<<< HEAD
+<<<<<<< HEAD
       sha256: "2f9d2cbccb76127ba28528cb3ae2c2326a122446a83de5a056aaa3880d3882c5"
       url: "https://pub.dev"
     source: hosted
     version: "0.3.3+7"
+=======
+      sha256: "0b0036e8cccbfbe0555fd83c1d31a6f30b77a96b598b35a5d36dd41f718695e9"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.3.3+4"
+>>>>>>> parent of 32f656a (geht immer noch nicht. Habe alles geupdated.)
 =======
       sha256: "0b0036e8cccbfbe0555fd83c1d31a6f30b77a96b598b35a5d36dd41f718695e9"
       url: "https://pub.dev"
@@ -253,8 +264,11 @@ packages:
     source: hosted
     version: "2.2.1"
 <<<<<<< HEAD
+<<<<<<< HEAD
   dropdown_button2:
 =======
+=======
+>>>>>>> parent of 32f656a (geht immer noch nicht. Habe alles geupdated.)
   drop_down_list:
 >>>>>>> parent of 32f656a (geht immer noch nicht. Habe alles geupdated.)
     dependency: "direct main"
@@ -263,6 +277,7 @@ packages:
       sha256: b0fe8d49a030315e9eef6c7ac84ca964250155a6224d491c1365061bc974a9e1
       url: "https://pub.dev"
     source: hosted
+<<<<<<< HEAD
 <<<<<<< HEAD
     version: "2.3.9"
   equatable:
@@ -273,6 +288,9 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.5"
+=======
+    version: "0.0.6"
+>>>>>>> parent of 32f656a (geht immer noch nicht. Habe alles geupdated.)
 =======
     version: "0.0.6"
 >>>>>>> parent of 32f656a (geht immer noch nicht. Habe alles geupdated.)
@@ -356,7 +374,11 @@ packages:
       url: "https://pub.dev"
     source: hosted
 <<<<<<< HEAD
+<<<<<<< HEAD
     version: "2.10.0"
+=======
+    version: "2.8.0"
+>>>>>>> parent of 32f656a (geht immer noch nicht. Habe alles geupdated.)
 =======
     version: "2.8.0"
 >>>>>>> parent of 32f656a (geht immer noch nicht. Habe alles geupdated.)
@@ -394,30 +416,42 @@ packages:
     description:
       name: flutter_lints
 <<<<<<< HEAD
+<<<<<<< HEAD
       sha256: a25a15ebbdfc33ab1cd26c63a6ee519df92338a9c10f122adda92938253bef04
       url: "https://pub.dev"
     source: hosted
     version: "2.0.3"
 =======
+=======
+>>>>>>> parent of 32f656a (geht immer noch nicht. Habe alles geupdated.)
       sha256: aeb0b80a8b3709709c9cc496cdc027c5b3216796bc0af0ce1007eaf24464fd4c
       url: "https://pub.dev"
     source: hosted
     version: "2.0.1"
+<<<<<<< HEAD
+>>>>>>> parent of 32f656a (geht immer noch nicht. Habe alles geupdated.)
+=======
 >>>>>>> parent of 32f656a (geht immer noch nicht. Habe alles geupdated.)
   flutter_login:
     dependency: "direct main"
     description:
       name: flutter_login
 <<<<<<< HEAD
+<<<<<<< HEAD
       sha256: "97f27a52bd68038090bd79f22600ad9ae86158f1d55c47e3d0cef66b299579f3"
       url: "https://pub.dev"
     source: hosted
     version: "4.2.1"
 =======
+=======
+>>>>>>> parent of 32f656a (geht immer noch nicht. Habe alles geupdated.)
       sha256: "0f4119be8a54db47fce4a3ae626d750e951c79915543521cd6ea0b6465335121"
       url: "https://pub.dev"
     source: hosted
     version: "4.1.1"
+<<<<<<< HEAD
+>>>>>>> parent of 32f656a (geht immer noch nicht. Habe alles geupdated.)
+=======
 >>>>>>> parent of 32f656a (geht immer noch nicht. Habe alles geupdated.)
   flutter_plugin_android_lifecycle:
     dependency: transitive
@@ -461,6 +495,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
 <<<<<<< HEAD
+<<<<<<< HEAD
     version: "4.6.6"
   glob:
     dependency: transitive
@@ -473,30 +508,46 @@ packages:
 =======
     version: "4.6.5"
 >>>>>>> parent of 32f656a (geht immer noch nicht. Habe alles geupdated.)
+=======
+    version: "4.6.5"
+>>>>>>> parent of 32f656a (geht immer noch nicht. Habe alles geupdated.)
   google_identity_services_web:
     dependency: transitive
     description:
       name: google_identity_services_web
+<<<<<<< HEAD
 <<<<<<< HEAD
       sha256: "000b7a31e1fa17ee04b6c0553a2b2ea18f9f9352e4dcc0c9fcc785cf10f2484e"
       url: "https://pub.dev"
     source: hosted
     version: "0.2.2"
 =======
+=======
+>>>>>>> parent of 32f656a (geht immer noch nicht. Habe alles geupdated.)
       sha256: "7940fdc3b1035db4d65d387c1bdd6f9574deaa6777411569c05ecc25672efacd"
       url: "https://pub.dev"
     source: hosted
     version: "0.2.1"
+<<<<<<< HEAD
+>>>>>>> parent of 32f656a (geht immer noch nicht. Habe alles geupdated.)
+=======
 >>>>>>> parent of 32f656a (geht immer noch nicht. Habe alles geupdated.)
   google_sign_in:
     dependency: "direct main"
     description:
       name: google_sign_in
 <<<<<<< HEAD
+<<<<<<< HEAD
       sha256: "8f8b94880f2753ccb796744259da529674e49b9af2e372abf6978c590c0ebfef"
       url: "https://pub.dev"
     source: hosted
     version: "6.1.6"
+=======
+      sha256: "776a4c988dc179c3b8e9201de0ad61bf350a4e75d378ff9d94c76880378c7bca"
+      url: "https://pub.dev"
+    source: hosted
+    version: "6.1.0"
+>>>>>>> parent of 32f656a (geht immer noch nicht. Habe alles geupdated.)
 =======
       sha256: "776a4c988dc179c3b8e9201de0ad61bf350a4e75d378ff9d94c76880378c7bca"
       url: "https://pub.dev"
@@ -516,15 +567,21 @@ packages:
     description:
       name: google_sign_in_ios
 <<<<<<< HEAD
+<<<<<<< HEAD
       sha256: "81495441405c138e3c638f5097bebaa0db644567b3976e08944cfb8926ff2e6d"
       url: "https://pub.dev"
     source: hosted
     version: "5.6.5"
 =======
+=======
+>>>>>>> parent of 32f656a (geht immer noch nicht. Habe alles geupdated.)
       sha256: "6ec0e13a4c5c646471b9f6a25ceb3ae76d339889d4c0f79b729bf0714215a63e"
       url: "https://pub.dev"
     source: hosted
     version: "5.6.2"
+<<<<<<< HEAD
+>>>>>>> parent of 32f656a (geht immer noch nicht. Habe alles geupdated.)
+=======
 >>>>>>> parent of 32f656a (geht immer noch nicht. Habe alles geupdated.)
   google_sign_in_platform_interface:
     dependency: transitive
@@ -539,25 +596,38 @@ packages:
     description:
       name: google_sign_in_web
 <<<<<<< HEAD
+<<<<<<< HEAD
       sha256: "794f5494a945d6dd2654c52f979594ecd2558e5c82ce8272295ba371c93015e6"
       url: "https://pub.dev"
     source: hosted
     version: "0.12.2+1"
 =======
+=======
+>>>>>>> parent of 32f656a (geht immer noch nicht. Habe alles geupdated.)
       sha256: "7e0ec507f4752383a6daa67d0cc775253cfc3b1d87907e7004e2c1b99c0a723f"
       url: "https://pub.dev"
     source: hosted
     version: "0.12.0"
+<<<<<<< HEAD
+>>>>>>> parent of 32f656a (geht immer noch nicht. Habe alles geupdated.)
+=======
 >>>>>>> parent of 32f656a (geht immer noch nicht. Habe alles geupdated.)
   http:
     dependency: transitive
     description:
       name: http
 <<<<<<< HEAD
+<<<<<<< HEAD
       sha256: "759d1a329847dd0f39226c688d3e06a6b8679668e350e2891a6474f8b4bb8525"
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
+=======
+      sha256: "6aa2946395183537c8b880962d935877325d6a09a2867c3970c05c0fed6ac482"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.13.5"
+>>>>>>> parent of 32f656a (geht immer noch nicht. Habe alles geupdated.)
 =======
       sha256: "6aa2946395183537c8b880962d935877325d6a09a2867c3970c05c0fed6ac482"
       url: "https://pub.dev"
@@ -585,10 +655,17 @@ packages:
     description:
       name: image_picker
 <<<<<<< HEAD
+<<<<<<< HEAD
       sha256: b6951e25b795d053a6ba03af5f710069c99349de9341af95155d52665cb4607c
       url: "https://pub.dev"
     source: hosted
     version: "0.8.9"
+=======
+      sha256: "3da954c3b8906d82ecb50fd5e2b5401758f06d5678904eed6cbc06172283a263"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.8.7+4"
+>>>>>>> parent of 32f656a (geht immer noch nicht. Habe alles geupdated.)
 =======
       sha256: "3da954c3b8906d82ecb50fd5e2b5401758f06d5678904eed6cbc06172283a263"
       url: "https://pub.dev"
@@ -608,10 +685,17 @@ packages:
     description:
       name: image_picker_for_web
 <<<<<<< HEAD
+<<<<<<< HEAD
       sha256: "869fe8a64771b7afbc99fc433a5f7be2fea4d1cb3d7c11a48b6b579eb9c797f0"
       url: "https://pub.dev"
     source: hosted
     version: "2.2.0"
+=======
+      sha256: "98f50d6b9f294c8ba35e25cc0d13b04bfddd25dbc8d32fa9d566a6572f2c081c"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.1.12"
+>>>>>>> parent of 32f656a (geht immer noch nicht. Habe alles geupdated.)
 =======
       sha256: "98f50d6b9f294c8ba35e25cc0d13b04bfddd25dbc8d32fa9d566a6572f2c081c"
       url: "https://pub.dev"
@@ -643,6 +727,7 @@ packages:
     source: hosted
     version: "0.18.1"
 <<<<<<< HEAD
+<<<<<<< HEAD
   intl_phone_number_input:
     dependency: transitive
     description:
@@ -651,6 +736,8 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.7.3+1"
+=======
+>>>>>>> parent of 32f656a (geht immer noch nicht. Habe alles geupdated.)
 =======
 >>>>>>> parent of 32f656a (geht immer noch nicht. Habe alles geupdated.)
   js:
@@ -698,10 +785,17 @@ packages:
     description:
       name: lints
 <<<<<<< HEAD
+<<<<<<< HEAD
       sha256: "0a217c6c989d21039f1498c3ed9f3ed71b354e69873f13a8dfc3c9fe76f1b452"
       url: "https://pub.dev"
     source: hosted
     version: "2.1.1"
+=======
+      sha256: "5e4a9cd06d447758280a8ac2405101e0e2094d2a1dbdd3756aec3fe7775ba593"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.1"
+>>>>>>> parent of 32f656a (geht immer noch nicht. Habe alles geupdated.)
 =======
       sha256: "5e4a9cd06d447758280a8ac2405101e0e2094d2a1dbdd3756aec3fe7775ba593"
       url: "https://pub.dev"
@@ -764,6 +858,7 @@ packages:
       url: "https://pub.dev"
     source: hosted
 <<<<<<< HEAD
+<<<<<<< HEAD
     version: "2.0.0"
   package_config:
     dependency: transitive
@@ -773,6 +868,9 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.0"
+=======
+    version: "1.0.2"
+>>>>>>> parent of 32f656a (geht immer noch nicht. Habe alles geupdated.)
 =======
     version: "1.0.2"
 >>>>>>> parent of 32f656a (geht immer noch nicht. Habe alles geupdated.)
@@ -841,6 +939,7 @@ packages:
     source: hosted
     version: "5.4.0"
 <<<<<<< HEAD
+<<<<<<< HEAD
   phone_numbers_parser:
     dependency: transitive
     description:
@@ -857,6 +956,8 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "11.0.1"
+=======
+>>>>>>> parent of 32f656a (geht immer noch nicht. Habe alles geupdated.)
 =======
 >>>>>>> parent of 32f656a (geht immer noch nicht. Habe alles geupdated.)
   platform:
@@ -880,6 +981,7 @@ packages:
     description:
       name: pointycastle
       sha256: "7c1e5f0d23c9016c5bbd8b1473d0d3fb3fc851b876046039509e18e0c7485f2c"
+<<<<<<< HEAD
       url: "https://pub.dev"
     source: hosted
     version: "3.7.3"
@@ -890,6 +992,18 @@ packages:
       sha256: "53fd8db9cec1d37b0574e12f07520d582019cb6c44abf5479a01505099a34a09"
       url: "https://pub.dev"
     source: hosted
+=======
+      url: "https://pub.dev"
+    source: hosted
+    version: "3.7.3"
+  process:
+    dependency: transitive
+    description:
+      name: process
+      sha256: "53fd8db9cec1d37b0574e12f07520d582019cb6c44abf5479a01505099a34a09"
+      url: "https://pub.dev"
+    source: hosted
+>>>>>>> parent of 32f656a (geht immer noch nicht. Habe alles geupdated.)
     version: "4.2.4"
   provider:
     dependency: transitive
@@ -898,6 +1012,7 @@ packages:
       sha256: cdbe7530b12ecd9eb455bdaa2fcb8d4dad22e80b8afb4798b41479d5ce26847f
       url: "https://pub.dev"
     source: hosted
+<<<<<<< HEAD
 <<<<<<< HEAD
     version: "6.1.1"
   pub_semver:
@@ -908,6 +1023,9 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.4"
+=======
+    version: "6.0.5"
+>>>>>>> parent of 32f656a (geht immer noch nicht. Habe alles geupdated.)
 =======
     version: "6.0.5"
 >>>>>>> parent of 32f656a (geht immer noch nicht. Habe alles geupdated.)
@@ -1121,15 +1239,21 @@ packages:
     description:
       name: uuid
 <<<<<<< HEAD
+<<<<<<< HEAD
       sha256: "22c94e5ad1e75f9934b766b53c742572ee2677c56bc871d850a57dad0f82127f"
       url: "https://pub.dev"
     source: hosted
     version: "4.2.2"
 =======
+=======
+>>>>>>> parent of 32f656a (geht immer noch nicht. Habe alles geupdated.)
       sha256: "648e103079f7c64a36dc7d39369cabb358d377078a051d6ae2ad3aa539519313"
       url: "https://pub.dev"
     source: hosted
     version: "3.0.7"
+<<<<<<< HEAD
+>>>>>>> parent of 32f656a (geht immer noch nicht. Habe alles geupdated.)
+=======
 >>>>>>> parent of 32f656a (geht immer noch nicht. Habe alles geupdated.)
   vector_math:
     dependency: transitive
@@ -1160,10 +1284,17 @@ packages:
     description:
       name: win32
 <<<<<<< HEAD
+<<<<<<< HEAD
       sha256: b0f37db61ba2f2e9b7a78a1caece0052564d1bc70668156cf3a29d676fe4e574
       url: "https://pub.dev"
     source: hosted
     version: "5.1.1"
+=======
+      sha256: dfdf0136e0aa7a1b474ea133e67cb0154a0acd2599c4f3ada3b49d38d38793ee
+      url: "https://pub.dev"
+    source: hosted
+    version: "5.0.5"
+>>>>>>> parent of 32f656a (geht immer noch nicht. Habe alles geupdated.)
 =======
       sha256: dfdf0136e0aa7a1b474ea133e67cb0154a0acd2599c4f3ada3b49d38d38793ee
       url: "https://pub.dev"
