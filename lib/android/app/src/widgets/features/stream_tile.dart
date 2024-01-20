@@ -229,7 +229,7 @@ class _StreamTileState extends State<StreamTile> {
   SnackBar removedSnackBar(String title) => SnackBar(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
       behavior: SnackBarBehavior.floating,
-      margin: const EdgeInsets.only(left: 28.0, right: 28.0, bottom: 66.0),
+      margin: const EdgeInsets.only(left: 28.0, right: 28.0, bottom: 66.0), //was 66
       duration: const Duration(milliseconds: 2500),
       content: Row(
         mainAxisAlignment: MainAxisAlignment.center,

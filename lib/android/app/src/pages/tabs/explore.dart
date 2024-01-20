@@ -164,7 +164,7 @@ class _ExplorePageState extends State<ExplorePage> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
       behavior: SnackBarBehavior.floating,
       margin:
-      const EdgeInsets.only(left: 28.0, right: 28.0, bottom: 6.0 + 60.0),
+      const EdgeInsets.only(left: 28.0, right: 28.0, bottom: 6.0/* + 60.0*/),
       //BottomAppBar has height 60.0
       duration: const Duration(milliseconds: 1500),
       content: Text(
@@ -184,7 +184,7 @@ class _ExplorePageState extends State<ExplorePage> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
       behavior: SnackBarBehavior.floating,
       margin:
-      const EdgeInsets.only(left: 28.0, right: 28.0, bottom: 6.0 + 60.0),
+      const EdgeInsets.only(left: 28.0, right: 28.0, bottom: 6.0/* + 60.0*/),
       //BottomAppBar has height 60.0
       duration: const Duration(milliseconds: 1500),
       content: Text(
