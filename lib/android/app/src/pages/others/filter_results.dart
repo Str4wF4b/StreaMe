@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/rendering.dart';
-import 'package:get/get.dart';
 import '../../utils/color_palette.dart';
-import '../../widgets/features/actor_director_tab.dart';
 
 class FilterResultsPage extends StatefulWidget {
   final GlobalKey<FormFieldState> keyPlatforms;
@@ -12,13 +9,12 @@ class FilterResultsPage extends StatefulWidget {
   final GlobalKey<FormFieldState> keyActor;
 
   const FilterResultsPage(
-      {Key? key,
+      {super.key,
       required this.keyPlatforms,
       required this.keyType,
       required this.keyGenre,
       required this.keyYear,
-      required this.keyActor})
-      : super(key: key);
+      required this.keyActor});
 
   @override
   State<FilterResultsPage> createState() => _FilterResultsPageState();
@@ -96,10 +92,8 @@ class _FilterResultsPageState extends State<FilterResultsPage> {
     );
   }
 
-  /**
-   * A function that generates a field with the entered Filter if its value is not null and a button to delete the filter
-   * key: The GlobalKey that indicates the actual filter
-   */
+  /// A function that generates a field with the entered Filter if its value is not null and a button to delete the filter
+  /// key: The GlobalKey that indicates the actual filter
   Container filterActive(GlobalKey<FormFieldState> key) {
     //If the value of the GlobalKey is null, i.e. no filter is active, just return an empty Container
     if (key.currentState?.value == null) {

@@ -1,14 +1,12 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:get/get.dart';
 import 'package:stream_me/android/app/src/data/actor_data.dart';
 import 'package:stream_me/android/app/src/pages/others/filter_results.dart';
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
 import '../../widgets/global/selection_button.dart';
 
 class FilterPage extends StatefulWidget {
-  FilterPage({Key? key}) : super(key: key);
+  FilterPage({super.key});
 
   final List<String> provider = [
     "Amazon Prime",
@@ -20,7 +18,6 @@ class FilterPage extends StatefulWidget {
     "SkyGo",
     "None"
   ];
-  String? value;
   final List<String> type = ["Movie", "Series"];
   final List<String> genre = [
     "Action",
@@ -50,6 +47,7 @@ class _FilterPageState extends State<FilterPage> {
   final GlobalKey<FormFieldState> _keyGenre = GlobalKey();
   final GlobalKey<FormFieldState> _keyYear = GlobalKey();
   final GlobalKey<FormFieldState> _keyActor = GlobalKey();
+  String? _selectedValue;
 
   @override
   void initState() {
@@ -99,17 +97,17 @@ class _FilterPageState extends State<FilterPage> {
                 // Actual filters:
                 const SizedBox(height: 100.0),
                 //Streaming Platform, e.g Netflix, Prime:
-                makeFilter(widget.value, widget.provider, "Streaming Platforms",
+                makeFilter(_selectedValue, widget.provider, "Streaming Platforms",
                     _keyPlatforms),
                 //Type, i.e. Movie or Series:
                 const SizedBox(height: 25.0),
-                makeFilter(widget.value, widget.type, "Type", _keyType),
+                makeFilter(_selectedValue, widget.type, "Type", _keyType),
                 //Genre, e.g. Action, Drama:
                 const SizedBox(height: 25.0),
-                makeFilter(widget.value, widget.genre, "Genre", _keyGenre),
+                makeFilter(_selectedValue, widget.genre, "Genre", _keyGenre),
                 //Year, from 1895 to 2024
                 const SizedBox(height: 25.0),
-                makeFilter(widget.value, year, "Year", _keyYear),
+                makeFilter(_selectedValue, year, "Year", _keyYear),
                 /*Center(
                   //Year Textfield
                   child: Container(
@@ -149,7 +147,7 @@ class _FilterPageState extends State<FilterPage> {
                   ),
                 ),*/
                 const SizedBox(height: 25.0),
-                makeFilter(widget.value, actors, "Actor", _keyActor),
+                makeFilter(_selectedValue, actors, "Actor", _keyActor),
                 //search an Actor in the whole Database
                 const SizedBox(height: 45),
                 Padding(
@@ -162,7 +160,8 @@ class _FilterPageState extends State<FilterPage> {
                             Navigator.push(
                                 context,
                                 MaterialPageRoute(
-                                    builder: (context) => FilterResultsPage(
+                                    builder: (context) =>
+                                        FilterResultsPage(
                                         keyPlatforms: _keyPlatforms,
                                         keyType: _keyType,
                                         keyGenre: _keyGenre,
@@ -235,10 +234,10 @@ class _FilterPageState extends State<FilterPage> {
               decoration: BoxDecoration(
                   color: color.middleBackgroundColor,
                   borderRadius: BorderRadius.circular(20.0)),
-              maxHeight: 202 * MediaQuery.of(context).textScaleFactor),
+              maxHeight: MediaQuery.textScalerOf(context).scale(202)),
           onChanged: (value) {
             setState(() {
-              selectedValue = value.toString();
+              //_selectedValue = value;
             });
           },
           //Decoration of the label and border of the dropdown button

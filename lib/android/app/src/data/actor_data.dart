@@ -220,7 +220,7 @@ final allActors = <Actor>[
       birthday: "11.12.1996",
       placeOfBirth: "Tarzana, Los Angeles, California, USA",
       biography:
-          "Hailee Steinfeld (born December 11, 1996) is an American actress and singer. Known for her acting versatility and musical prowess, she is the recipient of various accolades, including a Peabody Award, a Critics' Choice Movie Award, a Billboard Music Award, and nominations for an Academy Award, a British Academy Film Award, a Golden Globe Award, three Critics' Choice Movie Awards and a Screen Actors Guild Award. \nShe had her breakthrough with the western drama film True Grit (2010), which earned her Academy Award and Screen Actors Guild Award nominations for Best Supporting Actress, and a BAFTA Award nomination for Best Actress. Steinfeld then rose to mainstream prominence for her lead roles in Ender's Game (2013), Romeo & Juliet (2013), Begin Again (2013), and 3 Days to Kill (2014). She received critical acclaim for her roles in the Pitch Perfect film series (2015–2017) and the coming-of-age comedy-drama film The Edge of Seventeen (2016), the latter of which earned her a Golden Globe Award and Critics' Choice Movie Award nomination. \nSteinfeld has since provided the voice of Gwen Stacy / Spider-Woman in the animated film Spider-Man: Into the Spider-Verse (2018) and Vi in Netflix's animated TV series Arcane (2021–present), based on the League of Legends video game franchise. She also starred as Charlie Watson in the Transformers film Bumblebee (2018) and Emily Dickinson in the Apple TV+ comedy-drama series Dickinson (2019–2021). She played Kate Bishop / Hawkeye, appearing in the 2021 Disney+ series Hawkeye, set in the Marvel Cinematic Universe. \nSteinfeld gained recognition in music after performing \"Flashlight\" in Pitch Perfect 2 (2015). She signed with Republic Records soon after and released her debut single, \"Love Myself\", followed by her debut extended play Haiz (2015). She went on to release a series of successful singles, including \"Starving\", \"Most Girls\" and \Let Me Go\". In 2020, she released her second extended play, Half Written Story.",
+          "Hailee Steinfeld (born December 11, 1996) is an American actress and singer. Known for her acting versatility and musical prowess, she is the recipient of various accolades, including a Peabody Award, a Critics' Choice Movie Award, a Billboard Music Award, and nominations for an Academy Award, a British Academy Film Award, a Golden Globe Award, three Critics' Choice Movie Awards and a Screen Actors Guild Award. \nShe had her breakthrough with the western drama film True Grit (2010), which earned her Academy Award and Screen Actors Guild Award nominations for Best Supporting Actress, and a BAFTA Award nomination for Best Actress. Steinfeld then rose to mainstream prominence for her lead roles in Ender's Game (2013), Romeo & Juliet (2013), Begin Again (2013), and 3 Days to Kill (2014). She received critical acclaim for her roles in the Pitch Perfect film series (2015–2017) and the coming-of-age comedy-drama film The Edge of Seventeen (2016), the latter of which earned her a Golden Globe Award and Critics' Choice Movie Award nomination. \nSteinfeld has since provided the voice of Gwen Stacy / Spider-Woman in the animated film Spider-Man: Into the Spider-Verse (2018) and Vi in Netflix's animated TV series Arcane (2021–present), based on the League of Legends video game franchise. She also starred as Charlie Watson in the Transformers film Bumblebee (2018) and Emily Dickinson in the Apple TV+ comedy-drama series Dickinson (2019–2021). She played Kate Bishop / Hawkeye, appearing in the 2021 Disney+ series Hawkeye, set in the Marvel Cinematic Universe. \nSteinfeld gained recognition in music after performing \"Flashlight\" in Pitch Perfect 2 (2015). She signed with Republic Records soon after and released her debut single, \"Love Myself\", followed by her debut extended play Haiz (2015). She went on to release a series of successful singles, including \"Starving\", \"Most Girls\" and Let Me Go\". In 2020, she released her second extended play, Half Written Story.",
       acting: {
         "Movies": [
           "Spider-Man: Into the Spider-Verse",
@@ -609,11 +609,16 @@ final allActors = <Actor>[
       age: 68,
       birthday: "15.01.1955",
       placeOfBirth: "Tokyo, Japan",
-      biography: "Mayumi Tanaka was born on January 15, 1955 in Tokyo, Japan. She is an actress, known for Dragon Ball Z (1989), Dragon Ball Z Kai (2009) and Dragon Ball Z (1996).",
-      acting: {"Movies": [], "Series": ["One Piece"]},
+      biography:
+          "Mayumi Tanaka was born on January 15, 1955 in Tokyo, Japan. She is an actress, known for Dragon Ball Z (1989), Dragon Ball Z Kai (2009) and Dragon Ball Z (1996).",
+      acting: {
+        "Movies": [],
+        "Series": ["One Piece"]
+      },
       production: {"Movies": [], "Series": []},
       directing: {"Movies": [], "Series": []},
-      image: "https://www.themoviedb.org/t/p/w300_and_h450_bestv2/dWh2Y3bQkSjPv3c7kyy5P6M3PLS.jpg"),
+      image:
+          "https://www.themoviedb.org/t/p/w300_and_h450_bestv2/dWh2Y3bQkSjPv3c7kyy5P6M3PLS.jpg"),
   const Actor(
       id: 33,
       displayName: "Kazuya Nakai",
@@ -622,11 +627,16 @@ final allActors = <Actor>[
       age: 55,
       birthday: "25.11.1967",
       placeOfBirth: "Hyogo, Japan",
-      biography: "Kazuya Nakai (中井 和哉, Nakai Kazuya, born November 25, 1967) is a Japanese voice actor and narrator who was born in Kobe, Japan. \nHe plays Roronoa Zoro in One Piece, Toshiro Hijikata from Gintama, Date Masamune from Sengoku Basara, Xiahou Dun and Dian Wei from Dynasty Warriors and Warriors Orochi series, Shinjiro Aragaki from the Persona series, Mugen from Samurai Champloo, Mondo Owada from the Danganronpa series, Ultraman Max in Ultraman Max and Jin Sakai in the Japanese dub of the video game Ghost of Tsushima. \nHe won a Best Supporting Actor award at the 5th Seiyu Awards in 2011 for his roles in One Piece and Gin Tama.",
-      acting: {"Movies": [], "Series": ["One Piece"]},
+      biography:
+          "Kazuya Nakai (中井 和哉, Nakai Kazuya, born November 25, 1967) is a Japanese voice actor and narrator who was born in Kobe, Japan. \nHe plays Roronoa Zoro in One Piece, Toshiro Hijikata from Gintama, Date Masamune from Sengoku Basara, Xiahou Dun and Dian Wei from Dynasty Warriors and Warriors Orochi series, Shinjiro Aragaki from the Persona series, Mugen from Samurai Champloo, Mondo Owada from the Danganronpa series, Ultraman Max in Ultraman Max and Jin Sakai in the Japanese dub of the video game Ghost of Tsushima. \nHe won a Best Supporting Actor award at the 5th Seiyu Awards in 2011 for his roles in One Piece and Gin Tama.",
+      acting: {
+        "Movies": [],
+        "Series": ["One Piece"]
+      },
       production: {"Movies": [], "Series": []},
       directing: {"Movies": [], "Series": []},
-      image: "https://www.themoviedb.org/t/p/w300_and_h450_bestv2/78PKViY7brjF3AJI8h3tXyUyYT7.jpg"),
+      image:
+          "https://www.themoviedb.org/t/p/w300_and_h450_bestv2/78PKViY7brjF3AJI8h3tXyUyYT7.jpg"),
   const Actor(
       id: 34,
       displayName: "Hiroaki Hirata",
@@ -635,11 +645,16 @@ final allActors = <Actor>[
       age: 59,
       birthday: "07.08.1963",
       placeOfBirth: "Tokyo, Japan",
-      biography: "Hiroaki Hirata (平田 広明, Hirata Hiroaki, born August 7, 1963) is a Japanese actor, voice actor and narrator. He is the founder of Hirata Production Japan. \nHe is best known for voicing Vinsmoke Sanji in One Piece. His other known roles include Sha Gojyo in Saiyuki, Kotetsu T. Kaburagi in Tiger & Bunny, Klein in Sword Art Online, Vergil in the Devil May Cry series, Mutta Nanba in Space Brothers, Leomon in Digimon Adventure, George Kodama in Kaze no Yojimbo and Mr. Kondo in After the Rain. He is also the official Japanese dub-over artist for Johnny Depp, Matt Damon, Noah Wyle and Matt LeBlanc. In addition, he dubbed many roles of Jude Law, Ewan McGregor, and Josh Hartnett.",
-      acting: {"Movies": [], "Series": ["One Piece"]},
+      biography:
+          "Hiroaki Hirata (平田 広明, Hirata Hiroaki, born August 7, 1963) is a Japanese actor, voice actor and narrator. He is the founder of Hirata Production Japan. \nHe is best known for voicing Vinsmoke Sanji in One Piece. His other known roles include Sha Gojyo in Saiyuki, Kotetsu T. Kaburagi in Tiger & Bunny, Klein in Sword Art Online, Vergil in the Devil May Cry series, Mutta Nanba in Space Brothers, Leomon in Digimon Adventure, George Kodama in Kaze no Yojimbo and Mr. Kondo in After the Rain. He is also the official Japanese dub-over artist for Johnny Depp, Matt Damon, Noah Wyle and Matt LeBlanc. In addition, he dubbed many roles of Jude Law, Ewan McGregor, and Josh Hartnett.",
+      acting: {
+        "Movies": [],
+        "Series": ["One Piece"]
+      },
       production: {"Movies": [], "Series": []},
       directing: {"Movies": [], "Series": []},
-      image: "https://www.themoviedb.org/t/p/w300_and_h450_bestv2/mMWEdlssJm3TVuXW4Wb7pQeX20Z.jpg"),
+      image:
+          "https://www.themoviedb.org/t/p/w300_and_h450_bestv2/mMWEdlssJm3TVuXW4Wb7pQeX20Z.jpg"),
   const Actor(
       id: 35,
       displayName: "Kappei Yamaguchi",
@@ -648,11 +663,16 @@ final allActors = <Actor>[
       age: 58,
       birthday: "23.05.1965",
       placeOfBirth: "Fukuoka, Fukuoka Prefecture, Japan",
-      biography: "Mitsuo Yamaguchi (山口 光雄, Yamaguchi Mitsuo), better known by his stage name of Kappei Yamaguchi (山口 勝平, Yamaguchi Kappei) is a Japanese voice actor and actor from Fukuoka, affiliated with Gokū and 21st Century Fox. He is best known for the roles of Ranma Saotome (Ranma), Jackson Neil (Miracle Girls), Tombo (Kiki's Delivery Service), Yattaro (Kyattou Ninden Teyandee), InuYasha (InuYasha), Ryuichi Sakuma (Gravitation), L (Death Note), Usopp (One Piece), Hideyoshi (Law of Ueki), and Kaito Kid and Shinichi Kudo (Case Closed). His current starring roles include that of Raimon \"Monta\" Taro, the Deimon Devil Bats' ace receiver in Eyeshield 21. \nYamaguchi has appeared in eroge as Kyōya Ushihisa (牛久 京也, Ushihisa Kyōya).  He made his first public appearance in North America at Otakon 2008;  and was also a guest at Sakura-Con 2009.  Yamaguchi's third appearance to date has been at Animazement in 2010. \nHe is married and has a daughter, Akane Yamaguchi (山口 茜), and a son, Ryunosuke Yamaguchi (山口 竜之介), who also are voice actors.",
-      acting: {"Movies": [], "Series": ["One Piece"]},
+      biography:
+          "Mitsuo Yamaguchi (山口 光雄, Yamaguchi Mitsuo), better known by his stage name of Kappei Yamaguchi (山口 勝平, Yamaguchi Kappei) is a Japanese voice actor and actor from Fukuoka, affiliated with Gokū and 21st Century Fox. He is best known for the roles of Ranma Saotome (Ranma), Jackson Neil (Miracle Girls), Tombo (Kiki's Delivery Service), Yattaro (Kyattou Ninden Teyandee), InuYasha (InuYasha), Ryuichi Sakuma (Gravitation), L (Death Note), Usopp (One Piece), Hideyoshi (Law of Ueki), and Kaito Kid and Shinichi Kudo (Case Closed). His current starring roles include that of Raimon \"Monta\" Taro, the Deimon Devil Bats' ace receiver in Eyeshield 21. \nYamaguchi has appeared in eroge as Kyōya Ushihisa (牛久 京也, Ushihisa Kyōya).  He made his first public appearance in North America at Otakon 2008;  and was also a guest at Sakura-Con 2009.  Yamaguchi's third appearance to date has been at Animazement in 2010. \nHe is married and has a daughter, Akane Yamaguchi (山口 茜), and a son, Ryunosuke Yamaguchi (山口 竜之介), who also are voice actors.",
+      acting: {
+        "Movies": [],
+        "Series": ["One Piece"]
+      },
       production: {"Movies": [], "Series": []},
       directing: {"Movies": [], "Series": []},
-      image: "https://www.themoviedb.org/t/p/w300_and_h450_bestv2/sbeWiK7FuUvPqF4yG6XR5CkPAqF.jpg"),
+      image:
+          "https://www.themoviedb.org/t/p/w300_and_h450_bestv2/sbeWiK7FuUvPqF4yG6XR5CkPAqF.jpg"),
   /*const Actor(
       id: 999,
       displayName: "",

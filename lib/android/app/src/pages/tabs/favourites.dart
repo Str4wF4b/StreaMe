@@ -7,7 +7,7 @@ import '../../widgets/features/stream_tile.dart';
 import '../../widgets/global/streame_tab.dart';
 
 class FavouritesPage extends StatefulWidget {
-  const FavouritesPage({Key? key}) : super(key: key);
+  const FavouritesPage({super.key});
 
   @override
   State<FavouritesPage> createState() => _FavouritesPageState();
@@ -53,12 +53,12 @@ class _FavouritesPageState extends State<FavouritesPage>
                     controller: _tabController,
                     tabs: [
                       Padding(
-                          padding: const EdgeInsets.fromLTRB(
-                              25.0, 5.0, 25.0, 3.0),
+                          padding:
+                              const EdgeInsets.fromLTRB(25.0, 5.0, 25.0, 3.0),
                           child: addTab("Movies", 0)),
                       Padding(
-                          padding: const EdgeInsets.fromLTRB(
-                              25.0, 5.0, 25.0, 3.0),
+                          padding:
+                              const EdgeInsets.fromLTRB(25.0, 5.0, 25.0, 3.0),
                           child: addTab("Series", 1))
                     ],
                   ),
@@ -68,8 +68,7 @@ class _FavouritesPageState extends State<FavouritesPage>
                   controller: _tabController,
                   children: [
                     Padding(
-                      padding:
-                          const EdgeInsets.fromLTRB(10.0, 2.0, 10.0, 5.0),
+                      padding: const EdgeInsets.fromLTRB(10.0, 2.0, 10.0, 5.0),
                       child: moviesFavourites(),
                     ),
                     Padding(
@@ -160,9 +159,7 @@ class _FavouritesPageState extends State<FavouritesPage>
     );
   }
 
-  /**
-   * aa
-   */
+  /// todo
   Widget addTab(String tabTitle, int tabIndex) => Tab(
       child: GestureDetector(
           onTap: () => setState(() {

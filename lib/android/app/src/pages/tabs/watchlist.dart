@@ -7,7 +7,7 @@ import 'package:stream_me/android/app/src/widgets/features/stream_tile.dart';
 import '../../widgets/global/streame_tab.dart';
 
 class WatchlistPage extends StatefulWidget {
-  const WatchlistPage({Key? key}) : super(key: key);
+  const WatchlistPage({super.key});
 
   @override
   State<WatchlistPage> createState() => _WatchlistPageState();
@@ -80,9 +80,7 @@ class _WatchlistPageState extends State<WatchlistPage>
     );
   }
 
-  /**
-   * aa
-   */
+  /// todo
   Widget addTab(String tabTitle, int tabIndex) => Padding(
         padding: const EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 3.0),
         child: Tab(

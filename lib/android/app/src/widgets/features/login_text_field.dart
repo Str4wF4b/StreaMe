@@ -9,19 +9,18 @@ class LoginTextField extends StatelessWidget {
 
   //final Icon suffixIcon;
 
-  LoginTextField({Key? key,
+  const LoginTextField({
+    super.key,
     required this.inputController,
     required this.obscureText,
     required this.hintText,
     required this.prefixIcon,
     /*required this.suffixIcon*/
-  })
-      : super(key: key);
-
-  ColorPalette color = ColorPalette();
+  });
 
   @override
   Widget build(BuildContext context) {
+    final color = ColorPalette();
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 30.0),
       child: TextField(
@@ -67,4 +66,4 @@ class LoginTextField extends StatelessWidget {
           Colors.transparent); // disable other not needed suffixIcon
     }
    */
-  }
+}

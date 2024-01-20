@@ -1,18 +1,14 @@
 import 'dart:io';
 import 'dart:typed_data';
-//import 'dart:ui';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:expand_widget/expand_widget.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:get/get.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:stream_me/android/app/src/data/actor_data.dart';
-import 'package:stream_me/android/app/src/data/streams_data.dart';
 import 'package:stream_me/android/app/src/data/sd_data.dart';
 import 'package:stream_me/android/app/src/data/hd_data.dart';
 import 'package:stream_me/android/app/src/data/uhd_data.dart';
@@ -280,11 +276,10 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                                 widget.stream.plot, context, constraints);*/
                                 ExpandText(widget.stream.plot,
                                     style: TextStyle(
-                                        color: color.bodyTextColor,
-                                        fontSize: 16 *
-                                            1 /
-                                            MediaQuery.of(context)
-                                                .textScaleFactor),
+                                      color: color.bodyTextColor,
+                                      fontSize: MediaQuery.textScalerOf(context)
+                                          .scale(16),
+                                    ),
                                     indicatorIcon: Icons.keyboard_arrow_down,
                                     indicatorIconColor: Colors.grey.shade400,
                                     indicatorPadding:
@@ -541,29 +536,25 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
     );
   }
 
-  /**
-   * A function that divides the different genres with a "•" for better overview
-   */
+  /// A function that divides the different genres with a "•" for better overview
   String divideGenres() {
     List<String> genres = widget.stream.genre;
     String divideString = genres.first;
     if (genres.length < 2) {
       return genres.first;
     } else {
-      genres.forEach((element) {
+      for (var element in genres) {
         if (element != divideString) {
           divideString += " • $element";
         }
-      });
+      }
       return divideString;
     }
   }
 
-  /**
-   * A function that checks if the provider list is empty
-   * If so, only a Text is returned that explains that the movie or stream cannot be streamed anywhere
-   * If not, a title is returned above the listed provider tile cards
-   */
+  /// A function that checks if the provider list is empty
+  /// If so, only a Text is returned that explains that the movie or stream cannot be streamed anywhere
+  /// If not, a title is returned above the listed provider tile cards
   String checkEmptyList() {
     if (widget.stream.provider.isNotEmpty) {
       return "Available on:";
@@ -572,24 +563,20 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
     }
   }
 
-  /**
-   * A function that shares an acutal screenshot when pressing the share icon
-   */
+  /// A function that shares an acutal screenshot when pressing the share icon
   void share(Uint8List imgBytes) async {
     final directory = await getApplicationDocumentsDirectory();
     final img = File("${directory.path}/flutter.png");
     img.writeAsBytes(imgBytes);
 
-    await Share.shareFiles(text: "Gefunden auf StreaMe ☺", [
-      img.path
+    await Share.shareXFiles(text: "Gefunden auf StreaMe ☺", [
+      XFile(img.path)
     ]); //TODO: Wenn man erste mal auf share icon drückt, geht nicht, erst beim 2. Mal
   }
 
-  /**
-   * A function that generates a snackbar if clicked on the heart icon.
-   * If the heart is filled, the "added to Favourites" snack bar is shown,
-   * if not, the "removed from Favourites" snack bar is shown
-   */
+  /// A function that generates a snackbar if clicked on the heart icon.
+  /// If the heart is filled, the "added to Favourites" snack bar is shown,
+  /// if not, the "removed from Favourites" snack bar is shown
   SnackBar favSnackBar(String stream) => SnackBar(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
       behavior: SnackBarBehavior.floating,
@@ -603,11 +590,9 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
         textAlign: TextAlign.center,
       ));
 
-  /**
-   * A function that generates a snackbar if clicked on the plus, respectively check icon.
-   * If the icon changes to a check icon, the "added to Watchlist" snack bar is shown,
-   * if the icon changes to a plus icon, the "removed from Watchlist" snack bar is shown
-   */
+  /// A function that generates a snackbar if clicked on the plus, respectively check icon.
+  /// If the icon changes to a check icon, the "added to Watchlist" snack bar is shown,
+  /// if the icon changes to a plus icon, the "removed from Watchlist" snack bar is shown
   SnackBar listSnackBar(String stream) => SnackBar(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
       behavior: SnackBarBehavior.floating,
@@ -621,9 +606,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
         textAlign: TextAlign.center,
       ));
 
-  /**
-   * A
-   */
+  /// A
   Future makeRating() => showDialog(
       context: context,
       builder: (context) => StatefulBuilder(
@@ -691,10 +674,8 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
         });
       });
 
-  /**
-   * A function that returns a GestureDetector of a Button with the actors/directors
-   * When tapping on Button, the corresponding actor/director screen should be shown
-   */
+  /// A function that returns a GestureDetector of a Button with the actors/directors
+  /// When tapping on Button, the corresponding actor/director screen should be shown
   Widget castAndDirectorButton(String actorDirector) {
     EdgeInsets outsidePadding = const EdgeInsets.fromLTRB(
         10.0, 7.0, 0.0, 7.0); //Normal padding between actor/director buttons
@@ -744,8 +725,10 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                     borderRadius: BorderRadius.circular(20.0),
                     child: CachedNetworkImage(
                       imageUrl: widget.stream.image,
-                      placeholder: (context, url) => cons.streamImagePlaceholder,
-                      errorWidget: (context, url, error) => cons.imageErrorWidget,
+                      placeholder: (context, url) =>
+                          cons.streamImagePlaceholder,
+                      errorWidget: (context, url, error) =>
+                          cons.imageErrorWidget,
                     ),
                   ),
                 ));
@@ -767,11 +750,9 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
 
   // ---------------------------------------------------------------------------------------------------------------------------------------------------------
 
-  /**
-   * A function that checks if the movie or series has a plot with over 5 lines
-   * If so, make text in a scrollable container with Shader Mask for blur effect, a scrollable SizedBox and the defined Text (returnPlot) inside it,
-   * if not, make a simple Text (returnPlot)
-   */
+  /// A function that checks if the movie or series has a plot with over 5 lines
+  /// If so, make text in a scrollable container with Shader Mask for blur effect, a scrollable SizedBox and the defined Text (returnPlot) inside it,
+  /// if not, make a simple Text (returnPlot)
   Widget checkForMaxLines(
       String text, BuildContext context, BoxConstraints constraints) {
     final TextStyle plotStyle = TextStyle(
@@ -846,13 +827,11 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
     return currentActor;
   }
 
-  /**
-   * A function that generates the different Rows of each SD-, HD- and 4k-Tab in the Provider-overview of the specific stream, rowLabel works as a sort of headline and defines the different platforms in it
-   * rowLabel: the different options of a stream in the specific quality (stream with subscription, rent or buy)
-   * platforms: the name of the platforms one can watch the stream, defined for each rowLabel, also indicates link to Logo pictures
-   * platformLabels: the corresponding label of the platforms (including the prices)
-   * platformLinks: the corresponding link to the platforms
-   */
+  /// A function that generates the different Rows of each SD-, HD- and 4k-Tab in the Provider-overview of the specific stream, rowLabel works as a sort of headline and defines the different platforms in it
+  /// rowLabel: the different options of a stream in the specific quality (stream with subscription, rent or buy)
+  /// platforms: the name of the platforms one can watch the stream, defined for each rowLabel, also indicates link to Logo pictures
+  /// platformLabels: the corresponding label of the platforms (including the prices)
+  /// platformLinks: the corresponding link to the platforms
   Align providerRow(String rowLabel, List platforms, List platformLabels,
       List platformLinks) {
     return Align(
@@ -881,15 +860,13 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
     );
   }
 
-  /**
-   * The container of each available stream platform for each "Stream on:", "Rent" and "Buy"
-   * It contains the platform logo (card) and the corresponding text of it below
-   * If the list is empty, it returns a short text instead of a platform tile
-   * rowLabel: the different options of a stream in the specific quality (stream with subscription, rent or buy)
-   * platforms: the name of the platforms one can watch the stream, defined for each rowLabel, also indicates link to Logo pictures
-   * platformLabels: the corresponding label of the platforms (including the prices)
-   * platformLinks: the corresponding link to the platforms
-   */
+  /// The container of each available stream platform for each "Stream on:", "Rent" and "Buy"
+  /// It contains the platform logo (card) and the corresponding text of it below
+  /// If the list is empty, it returns a short text instead of a platform tile
+  /// rowLabel: the different options of a stream in the specific quality (stream with subscription, rent or buy)
+  /// platforms: the name of the platforms one can watch the stream, defined for each rowLabel, also indicates link to Logo pictures
+  /// platformLabels: the corresponding label of the platforms (including the prices)
+  /// platformLinks: the corresponding link to the platforms
   Widget checkEmptyCard(String rowLabel, List platforms, List platformLabels,
       List platformLinks) {
     if (platforms.isEmpty) {
@@ -925,16 +902,14 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
     }
   }
 
-  /**
-   * A function that builds the streaming platform tiles
-   * First it checks, if there is only on provider, if so, it is returned
-   * Otherwise it returnes the other provider tile cards starting from the first different one in the list (if provider.last != provider)
-   * rowLabel: the different options of a stream in the specific quality (stream with subscription, rent or buy)
-   * platform: indicates the link to Logo pictures, also the name of the platforms one can watch the stream, defined for the corresponding rowLabel
-   * platformLabel: the corresponding label of the platforms in List "platforms" (including the prices)
-   * platforms: the name of the platforms one can watch the stream, defined for each rowLabel, also indicates link to Logo pictures
-   * platformLink: the corresponding link to the platform
-   */
+  /// A function that builds the streaming platform tiles
+  /// First it checks, if there is only on provider, if so, it is returned
+  /// Otherwise it returnes the other provider tile cards starting from the first different one in the list (if provider.last != provider)
+  /// rowLabel: the different options of a stream in the specific quality (stream with subscription, rent or buy)
+  /// platform: indicates the link to Logo pictures, also the name of the platforms one can watch the stream, defined for the corresponding rowLabel
+  /// platformLabel: the corresponding label of the platforms in List "platforms" (including the prices)
+  /// platforms: the name of the platforms one can watch the stream, defined for each rowLabel, also indicates link to Logo pictures
+  /// platformLink: the corresponding link to the platform
   Widget buildCard(String rowLabel, String platform, String platformLabel,
       List platforms, String platformLink) {
     String assetImage = platform; //The link of the platform logo
@@ -999,13 +974,11 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
     }
   }
 
-  /**
-   * The content for the onTap function of the platform tiles that opens an alert dialog window with a link to the corresponding stream
-   * rowLabel: the different options of a stream in the specific quality (stream with subscription, rent or buy)
-   * platform: indicates the link to Logo pictures, also the name of the platforms one can watch the stream, defined for the corresponding rowLabel
-   * platforms: the name of the platforms one can watch the stream, defined for each rowLabel, also indicates link to Logo pictures
-   * platformLink: the corresponding link to the platform
-   */
+  /// The content for the onTap function of the platform tiles that opens an alert dialog window with a link to the corresponding stream
+  /// rowLabel: the different options of a stream in the specific quality (stream with subscription, rent or buy)
+  /// platform: indicates the link to Logo pictures, also the name of the platforms one can watch the stream, defined for the corresponding rowLabel
+  /// platforms: the name of the platforms one can watch the stream, defined for each rowLabel, also indicates link to Logo pictures
+  /// platformLink: the corresponding link to the platform
   Padding tapPlatformCard(String rowLabel, String platform,
           String platformLabel, String platformLink) =>
       Padding(

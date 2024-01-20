@@ -1,18 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
 import 'package:stream_me/android/app/src/widgets/navigation_icons.dart';
-import 'package:stream_me/android/app/src/pages/tabs/favourites.dart';
-import 'package:stream_me/android/app/src/pages/tabs/search.dart';
-
-import '../pages/others/filter.dart';
 
 class StreameBottomAppBar extends StatefulWidget {
-  int selectedIndex;
+  const StreameBottomAppBar({super.key, required this.selectedIndex});
 
-  StreameBottomAppBar({super.key, required this.selectedIndex});
-
-  //int selectedIndex = 0;
-
+  final int selectedIndex;
 
   @override
   State<StreameBottomAppBar> createState() => _StreameBottomAppBarState();
@@ -40,15 +33,12 @@ class _StreameBottomAppBarState extends State<StreameBottomAppBar> {
                   icon: Icons.search_outlined,
                   selected: widget.selectedIndex == 1,
                   onPressed: () {
-                    widget.selectedIndex = 1;
                     //Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => SearchPage()));
-                    setState(() {
-
-                      widget.selectedIndex = 1;
-                    });
+                    setState(() {});
                     print(widget.selectedIndex);
                     //Navigator.of(context).pushReplacement(MaterialPageRoute(builder: (context) => SearchPage()));
-                    print("------------------------------------------------- ${widget.selectedIndex}");
+                    print(
+                        "------------------------------------------------- ${widget.selectedIndex}");
                   }),
               NavigationIcons(
                   iconText: "Favourites",
@@ -56,8 +46,6 @@ class _StreameBottomAppBarState extends State<StreameBottomAppBar> {
                   selected: widget.selectedIndex == 2,
                   onPressed: () {
                     setState(() {
-
-                      widget.selectedIndex = 2;
                       print(widget.selectedIndex);
                       //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => FavouritesPage()));
                     });
@@ -68,7 +56,6 @@ class _StreameBottomAppBarState extends State<StreameBottomAppBar> {
                   selected: widget.selectedIndex == 3,
                   onPressed: () {
                     setState(() {
-                      widget.selectedIndex = 3;
                       print(widget.selectedIndex);
                       //Navigator.pushReplacement(context, MaterialPageRoute(builder: (context) => FilterPage()));
                     });

@@ -67,10 +67,12 @@ class _StreameAppBarState extends State<StreameAppBar> {
         ),
       ),
       actions: <Widget>[
-        IconButton(onPressed: () async => await FirebaseAuth.instance.signOut().then((value) =>
-            Navigator.of(context).pushAndRemoveUntil(
-                MaterialPageRoute(builder: (context) => const AuthPage()),
-                    (route) => false)), icon: const Icon(Icons.logout))
+        IconButton(
+            onPressed: () async => await FirebaseAuth.instance.signOut().then(
+                (value) => Navigator.of(context).pushAndRemoveUntil(
+                    MaterialPageRoute(builder: (context) => const AuthPage()),
+                    (route) => false)),
+            icon: const Icon(Icons.logout))
       ],
     );
   }

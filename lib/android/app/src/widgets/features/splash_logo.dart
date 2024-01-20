@@ -1,13 +1,12 @@
 import 'package:another_flutter_splash_screen/another_flutter_splash_screen.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_login/flutter_login.dart';
 import 'package:just_audio/just_audio.dart';
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
 import '../../utils/images.dart';
 import '../../auth/auth_main.dart';
 
 class SplashLogo extends StatefulWidget {
-  const SplashLogo({Key? key}) : super(key: key);
+  const SplashLogo({super.key});
 
   @override
   State<SplashLogo> createState() => _SplashLogoState();
@@ -38,7 +37,7 @@ class _SplashLogoState extends State<SplashLogo> {
       gifPath: image.introBasic,
       gifWidth: 390.0,
       gifHeight: 390.0,
-      defaultNextScreen: const AuthPage(),
+      nextScreen: const AuthPage(),
       onInit: playSound,
       duration: const Duration(milliseconds: 2500),
       backgroundColor: Colors.black,

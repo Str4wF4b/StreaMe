@@ -38,55 +38,55 @@ class _ActorDirectorTabState extends State<ActorDirectorTab> {
           const SizedBox(height: 5.0),
           tabText("Movies", movies!),
           const SizedBox(height: 10.0),
-          tabContent(movies!, allMovies),
+          tabContent(movies, allMovies),
           const SizedBox(height: 20.0),
           tabText("Series", series!),
           const SizedBox(height: 10.0),
-          tabContent(series!, allSeries)
+          tabContent(series, allSeries)
         ],
       ),
     );
   }
 
   Align tabContent(List filtered, List fullList) => Align(
-    alignment: Alignment.topLeft,
-    child: SizedBox(
-      height: filtered.isNotEmpty ? 210 : 0,
-      child: ListView.builder(
-          itemCount: filtered?.length,
-          scrollDirection: Axis.horizontal,
-          shrinkWrap: true,
-          itemBuilder: (context, index) {
-            String currentTitle = filtered?.elementAt(index);
+        alignment: Alignment.topLeft,
+        child: SizedBox(
+          height: filtered.isNotEmpty ? 210 : 0,
+          child: ListView.builder(
+              itemCount: filtered.length,
+              scrollDirection: Axis.horizontal,
+              shrinkWrap: true,
+              itemBuilder: (context, index) {
+                String currentTitle = filtered.elementAt(index);
 
-            if (filtered!.isNotEmpty) {
-              Streams currentStream = fullList
-                  .where((stream) => stream.title.contains(currentTitle))
-                  .single;
-              ActorDirectorTile currentTile = ActorDirectorTile(
-                stream: currentStream,
-                imageUrl: currentStream.image,
-                title: currentTitle,
-              );
-
-              if (filtered.length > 1) {
-                if (filtered.last == currentStream) {
-                  return currentTile;
-                } else {
-                  return Padding(
-                    padding: const EdgeInsets.only(right: 8.0),
-                    child: currentTile,
+                if (filtered.isNotEmpty) {
+                  Streams currentStream = fullList
+                      .where((stream) => stream.title.contains(currentTitle))
+                      .single;
+                  ActorDirectorTile currentTile = ActorDirectorTile(
+                    stream: currentStream,
+                    imageUrl: currentStream.image,
+                    title: currentTitle,
                   );
+
+                  if (filtered.length > 1) {
+                    if (filtered.last == currentStream) {
+                      return currentTile;
+                    } else {
+                      return Padding(
+                        padding: const EdgeInsets.only(right: 8.0),
+                        child: currentTile,
+                      );
+                    }
+                  } else {
+                    return currentTile;
+                  }
+                } else {
+                  return Container();
                 }
-              } else {
-                return currentTile;
-              }
-            } else {
-              return Container();
-            }
-          }),
-    ),
-  );
+              }),
+        ),
+      );
 
   Widget tabText(String tabSubtitle, List filtered) {
     if (filtered.isNotEmpty) {
@@ -96,20 +96,20 @@ class _ActorDirectorTabState extends State<ActorDirectorTab> {
               fontSize: 17.0,
               fontWeight: FontWeight.bold));
     } else {
-        return RichText(
-          text: TextSpan(
-              text: tabSubtitle,
-              style: TextStyle(
-            color: color.bodyTextColor,
-            fontSize: 17.0,
-            fontWeight: FontWeight.bold),
-              children: const [
-                TextSpan(
-                    text: "\n    Not included in any.",
-                    style: TextStyle(
-                        fontWeight: FontWeight.w400, fontSize: 14, height: 1.8)),
-              ]),
-        );
+      return RichText(
+        text: TextSpan(
+            text: tabSubtitle,
+            style: TextStyle(
+                color: color.bodyTextColor,
+                fontSize: 17.0,
+                fontWeight: FontWeight.bold),
+            children: const [
+              TextSpan(
+                  text: "\n    Not included in any.",
+                  style: TextStyle(
+                      fontWeight: FontWeight.w400, fontSize: 14, height: 1.8)),
+            ]),
+      );
     }
   }
 }

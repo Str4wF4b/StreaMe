@@ -4,13 +4,11 @@ import 'package:stream_me/android/app/src/widgets/global/app_overlay.dart';
 import 'package:stream_me/android/app/src/pages/tabs/home.dart';
 import 'package:stream_me/android/app/src/auth/login_or_register.dart';
 
-/**
- * Class that checks if the user is signed in or not
- * If not, the LoginPage is shown, otherwise the HomePage is shown
- */
+/// Class that checks if the user is signed in or not
+/// If not, the LoginPage is shown, otherwise the HomePage is shown
 
 class AuthPage extends StatelessWidget {
-  const AuthPage({Key? key}) : super(key: key);
+  const AuthPage({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -21,10 +19,13 @@ class AuthPage extends StatelessWidget {
           builder: (context, snapshot) {
             // user is logged in:
             if (snapshot.hasData) {
-              return AppOverlay(title: "Home", body: const HomePage(), currentPageIndex: 0) /*HomePage()*/;
+              return AppOverlay(
+                  title: "Home",
+                  body: const HomePage(),
+                  currentPageIndex: 0) /*HomePage()*/;
             } else {
               // user is not logged in:
-              return LoginOrRegisterPage();
+              return const LoginOrRegisterPage();
             }
           }),
     );

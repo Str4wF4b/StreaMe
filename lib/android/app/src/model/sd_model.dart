@@ -5,11 +5,10 @@ class Sd {
   final Map rent;
   final Map buy;
 
-  const Sd({
-    required this.id,
-    required this.streamId,
-    required this.streamOn,
-    required this.rent,
-    required this.buy
-  });
+  const Sd(
+      {required this.id,
+      required this.streamId,
+      required this.streamOn,
+      required this.rent,
+      required this.buy});
 }

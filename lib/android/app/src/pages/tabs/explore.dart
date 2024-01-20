@@ -7,7 +7,7 @@ import 'package:stream_me/android/app/src/utils/styles.dart';
 import 'package:stream_me/android/app/src/widgets/features/swipe_card.dart';
 
 class ExplorePage extends StatefulWidget {
-  const ExplorePage({Key? key}) : super(key: key);
+  const ExplorePage({super.key});
 
   @override
   State<ExplorePage> createState() => _ExplorePageState();
@@ -66,22 +66,24 @@ class _ExplorePageState extends State<ExplorePage> {
                   SizedBox(
                     height: MediaQuery.of(context).size.height,
                     child: AppinioSwiper(
-                      cardsBuilder: (context, index) {
+                      cardBuilder: (BuildContext context, int index) {
                         currentStream = randomStreamList.elementAt(index);
                         return SwipeCard(
                           stream: randomStreamList.elementAt(index),
                         );
                       },
-                      cardsCount: allStreams.length,
-                      swipeOptions: const AppinioSwipeOptions.only(
-                          left: true, right: true, top: true),
+                      cardCount: allStreams.length,
+                      swipeOptions: const SwipeOptions.only(
+                          left: true, right: true, up: true),
                       controller: _swipeCardController,
                       maxAngle: 80,
                       loop: true,
                       //restart again if list is empty
-                      onSwipe: _swipe,
-                      unswipe: _unswipe,
-                      unlimitedUnswipe: true,
+                      onSwipeEnd: _swipe,
+                      onSwipeCancelled: _swipecancel,
+                      onUnSwipe: _unswipe,
+                      allowUnlimitedUnSwipe: true,
+                      threshold: 250,
                     ),
                   ),
                 ],
@@ -89,41 +91,62 @@ class _ExplorePageState extends State<ExplorePage> {
             ),
             Padding(
               padding: EdgeInsets.only(
-                  bottom: screenHeight * 0.073, left: 38.0, right: 41.0),
+                  bottom: screenHeight * 0.033, left: 38.0, right: 41.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   ElevatedButton(
+                  onPressed: () {
+                    _swipeCardController.swipeLeft();
+                  },
+                  style: ButtonStyle(
+                      shape: MaterialStateProperty.all<CircleBorder>(
+                          const CircleBorder()),
+                      padding: MaterialStateProperty.all<EdgeInsets>(
+                          const EdgeInsets.all(16.0)),
+                      backgroundColor: MaterialStateProperty.all<Color>(
+                          Colors.grey.shade900),
+                      overlayColor: getColor(
+                          Colors.grey.shade900, Colors.deepOrangeAccent)),
+                  child: const Icon(
+                    Icons.close,
+                    size: 29,
+                    color: Colors.red,
+                  ),
+                ),
+                  ElevatedButton(
                     onPressed: () {
-                      ScaffoldMessenger.of(context)
-                        ..removeCurrentSnackBar()
-                        ..showSnackBar(listSnackBar(currentStream.type));
-                      setState(() {
-                        addWatchlist = !addWatchlist;
-                        //TODO: Save film to watchlist
-                      });
+                      if(!addWatchlist) {
+                        _swipeCardController.swipeUp();
+                      } else {
+                        _watchlistActions();
+                      }
                     },
                     style: style.exploreButtonStyle,
-                    child: Icon(
-                      addWatchlist ? Icons.check_rounded : Icons.add_rounded,
-                      size: 39,
+                    child: addWatchlist ?
+                    Icon(
+                      Icons.check_rounded,
+                      size: 29,
                       color: color.bodyTextColor,
+                    ) :
+                    const Icon(
+                      Icons.add_rounded,
+                      size: 29,
+                      color: Colors.green,
                     ),
                   ),
                   ElevatedButton(
                     onPressed: () {
-                      ScaffoldMessenger.of(context)
-                        ..removeCurrentSnackBar()
-                        ..showSnackBar(favSnackBar(currentStream.type));
-                      setState(() {
-                        addFavourites = !addFavourites;
-                        //TODO: Save film to favourites
-                      });
+                      if(!addFavourites) {
+                        _swipeCardController.swipeRight();
+                      } else {
+                        _favActions();
+                      }
                     },
                     style: style.exploreButtonStyle,
                     child: Icon(
                       addFavourites ? Icons.favorite : Icons.favorite_outline,
-                      size: 39,
+                      size: 29,
                       color: color.bodyTextColor,
                     ),
                   ),
@@ -142,7 +165,7 @@ class _ExplorePageState extends State<ExplorePage> {
                             Colors.grey.shade900, Colors.deepOrangeAccent)),
                     child: Icon(
                       Icons.undo_outlined,
-                      size: 39,
+                      size: 19,
                       color: color.bodyTextColor,
                     ),
                   ),
@@ -155,36 +178,32 @@ class _ExplorePageState extends State<ExplorePage> {
     );
   }
 
-  /**
-   * A function that generates a snackbar if clicked on the heart icon.
-   * If the heart is filled, the "added to Favourites" snack bar is shown,
-   * if not, the "removed from Favourites" snack bar is shown
-   */
+  /// A function that generates a snackbar if clicked on the heart icon.
+  /// If the heart is filled, the "added to Favourites" snack bar is shown,
+  /// if not, the "removed from Favourites" snack bar is shown
   SnackBar favSnackBar(String stream) => SnackBar(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
       behavior: SnackBarBehavior.floating,
       margin:
-          const EdgeInsets.only(left: 28.0, right: 28.0, bottom: 6.0 + 60.0),
+          const EdgeInsets.only(left: 28.0, right: 28.0, bottom: 7.0 + 100.0),
       //BottomAppBar has height 60.0
       duration: const Duration(milliseconds: 1500),
       content: Text(
         addFavourites
-            ? "$stream removed from Favourites"
-            : "$stream added to Favourites",
+            ? '$stream removed from Favourites'
+            : '$stream added to Favourites',
         style: TextStyle(color: Colors.grey.shade300),
         textAlign: TextAlign.center,
       ));
 
-  /**
-   * A function that generates a snackbar if clicked on the plus, respectively check icon.
-   * If the icon changes to a check icon, the "added to Watchlist" snack bar is shown,
-   * if the icon changes to a plus icon, the "removed from Watchlist" snack bar is shown
-   */
+  /// A function that generates a snackbar if clicked on the plus, respectively check icon.
+  /// If the icon changes to a check icon, the "added to Watchlist" snack bar is shown,
+  /// if the icon changes to a plus icon, the "removed from Watchlist" snack bar is shown
   SnackBar listSnackBar(String stream) => SnackBar(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
       behavior: SnackBarBehavior.floating,
       margin:
-          const EdgeInsets.only(left: 28.0, right: 28.0, bottom: 6.0 + 60.0),
+          const EdgeInsets.only(left: 28.0, right: 28.0, bottom: 7.0 + 100.0),
       //BottomAppBar has height 60.0
       duration: const Duration(milliseconds: 1500),
       content: Text(
@@ -195,9 +214,6 @@ class _ExplorePageState extends State<ExplorePage> {
         textAlign: TextAlign.center,
       ));
 
-  /**
-   * A function
-   */
   MaterialStateProperty<Color> getColor(Color color, Color pressedColor) {
     getColor(Set<MaterialState> states) {
       if (states.contains(MaterialState.pressed)) {
@@ -210,37 +226,58 @@ class _ExplorePageState extends State<ExplorePage> {
     return MaterialStateProperty.resolveWith(getColor);
   }
 
-  void _swipe(int index, AppinioSwiperDirection direction) {
-    AppinioSwiperDirection right = AppinioSwiperDirection.right;
-    AppinioSwiperDirection top = AppinioSwiperDirection.top;
-
-    if (direction == right) {
-      print(direction);
-      ScaffoldMessenger.of(context)
-        ..removeCurrentSnackBar()
-        ..showSnackBar(favSnackBar(currentStream.type));
+  void _favActions(){
+    ScaffoldMessenger.of(context)
+      ..removeCurrentSnackBar()
+      ..showSnackBar(favSnackBar(currentStream.type));
+    setState(() {
+      addFavourites = !addFavourites;
       //TODO: Save movie/series to favourites
-    }
-    if (direction == top) {
-      print(direction);
-      ScaffoldMessenger.of(context)
-        ..removeCurrentSnackBar()
-        ..showSnackBar(listSnackBar(currentStream.type));
-      //TODO: Save movie/series to watchlist
+    });
+  }
+
+  void _watchlistActions(){
+    ScaffoldMessenger.of(context)
+      ..removeCurrentSnackBar()
+      ..showSnackBar(listSnackBar(currentStream.type));
+    setState(() {
+      addWatchlist = !addWatchlist;
+      //TODO: Save film to watchlist
+    });
+  }
+
+  void _swipe(int previousIndex, int targetIndex, SwiperActivity activity) {
+    switch (activity) {
+      case Swipe():
+        print("Swiped: ${activity.direction}");
+        if (activity.direction == AxisDirection.right) {
+          _favActions();
+        }
+        if (activity.direction == AxisDirection.up) {
+          _watchlistActions();
+        }
+        break;
+      case Unswipe():
+      // TODO: Handle this case.
+        print("unswipe");
+      case CancelSwipe():
+      // TODO: Handle this case.
+        print("cancel swipe");
+        break;
+      case DrivenActivity():
+      // TODO: Handle this case.
     }
   }
 
-  void checkSwipeDirection(AppinioSwiperController swipeCardController) {
-    //if (swipeCardController.swipe)
-    //if left: nothing, card flies out
-    //if right: load last card
-    //if undo button: same as right
+
+  void _unswipe(SwiperActivity? swiperActivity) {
+     // TODO: remove from watchlist and fav when unswipe
+    print("unswipe");
+
   }
 
-  void _unswipe(bool unswiped) {
-    //if pressed Undo-Button then unswipe, else do nothing
-    if (unswiped) {
-      _swipeCardController.unswipe();
-    }
+  void _swipecancel(SwiperActivity? swiperActivity) {
+    print("cancel");
+
   }
 }
