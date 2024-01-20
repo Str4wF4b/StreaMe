@@ -51,13 +51,15 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
   Offset? positionRating; //The position of the rating icon
 
   bool addFavourites = false; //boolean to trigger the favourites button option
+  List favourites = [];
   bool addWatchlist = false; //boolean to trigger the watchlist button option
+  List watchlist = [];
   double rating = 1; //initial rating
 
   int i = 0;
 
-  List<bool> favourites = List.filled(allStreams.length,
-      false); //a list with all the favourite movies and streams
+  //List<bool> favourites = List.filled(allStreams.length,
+  //    false); //a list with all the favourite movies and streams
   late List actorsDirectors = allActors;
   late List allSdStreams = allSd;
 
@@ -177,6 +179,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                                         favSnackBar(widget.stream.type));
                                   setState(() {
                                     addFavourites = !addFavourites;
+                                    favourites.add(widget.stream);
                                     //TODO: Save film to favourites
                                   });
                                 },

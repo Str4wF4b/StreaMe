@@ -5,7 +5,7 @@ import 'package:expand_widget/expand_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:stream_me/android/app/src/model/actor_model.dart';
-import 'package:stream_me/android/app/src/widgets/features/actor_director_tab.dart';
+import '../../widgets/features/actor_director_tab.dart';
 import '../../utils/color_palette.dart';
 import '../../utils/constants_and_values.dart';
 import '../../widgets/global/streame_tab.dart';

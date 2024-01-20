@@ -1,4 +1,6 @@
+import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:stream_me/android/app/src/data/actor_data.dart';
 import 'package:stream_me/android/app/src/pages/others/filter_results.dart';
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
@@ -40,7 +42,12 @@ class _FilterPageState extends State<FilterPage> {
   ColorPalette color = ColorPalette();
   final List<String> actors = [];
   final List<String> year = List<String>.generate(
-      225, (index) => "${index + 1800}"); //Years 1800 to 2024
+      130, (index) => "${index + 1895}"); //Years 1895 to 2024
+  final GlobalKey<FormFieldState> _keyPlatforms = GlobalKey();
+  final GlobalKey<FormFieldState> _keyType = GlobalKey();
+  final GlobalKey<FormFieldState> _keyGenre = GlobalKey();
+  final GlobalKey<FormFieldState> _keyYear = GlobalKey();
+  final GlobalKey<FormFieldState> _keyActor = GlobalKey();
   String? _selectedValue;
 
   @override
@@ -50,9 +57,7 @@ class _FilterPageState extends State<FilterPage> {
     for (var actor in allActors) {
       actors.add(actor.displayName);
     }
-
     year.sort((b, a) => a.compareTo(b)); //sort years descending
-
     actors.sort((a, b) => a.toLowerCase().compareTo(
         b.toLowerCase())); //sort actors list before loading filter widget
   }
@@ -93,17 +98,17 @@ class _FilterPageState extends State<FilterPage> {
                 // Actual filters:
                 const SizedBox(height: 100.0),
                 //Streaming Platform, e.g Netflix, Prime:
-                makeFilter(
-                    _selectedValue, widget.provider, "Streaming Platforms"),
+                makeFilter(_selectedValue, widget.provider, "Streaming Platforms",
+                    _keyPlatforms),
                 //Type, i.e. Movie or Series:
                 const SizedBox(height: 25.0),
-                makeFilter(_selectedValue, widget.type, "Type"),
+                makeFilter(_selectedValue, widget.type, "Type", _keyType),
                 //Genre, e.g. Action, Drama:
                 const SizedBox(height: 25.0),
-                makeFilter(_selectedValue, widget.genre, "Genre"),
-                //Year, from 1800 to 2024
+                makeFilter(_selectedValue, widget.genre, "Genre", _keyGenre),
+                //Year, from 1895 to 2024
                 const SizedBox(height: 25.0),
-                makeFilter(_selectedValue, year, "Year"),
+                makeFilter(_selectedValue, year, "Year", _keyYear),
                 /*Center(
                   //Year Textfield
                   child: Container(
@@ -143,7 +148,7 @@ class _FilterPageState extends State<FilterPage> {
                   ),
                 ),*/
                 const SizedBox(height: 25.0),
-                makeFilter(_selectedValue, actors, "Actor"),
+                makeFilter(_selectedValue, actors, "Actor", _keyActor),
                 //search an Actor in the whole Database
                 const SizedBox(height: 45),
                 Padding(
@@ -157,12 +162,23 @@ class _FilterPageState extends State<FilterPage> {
                                 context,
                                 MaterialPageRoute(
                                     builder: (context) =>
-                                        const FilterResultsPage()));
+                                        const FilterResultsPage(
+                                        keyPlatforms: _keyPlatforms,
+                                        keyType: _keyType,
+                                        keyGenre: _keyGenre,
+                                        keyYear: _keyYear,
+                                        keyActor: _keyActor)));
                           },
                           color: Colors.blueAccent,
                           label: "Search"),
                       SelectionButton(
-                          onTap: () {},
+                          onTap: () {
+                            _keyPlatforms.currentState?.reset();
+                            _keyType.currentState?.reset();
+                            _keyGenre.currentState?.reset();
+                            _keyYear.currentState?.reset();
+                            _keyActor.currentState?.reset();
+                          },
                           color: Colors.redAccent,
                           label: "Reset"),
                     ],
@@ -193,26 +209,38 @@ class _FilterPageState extends State<FilterPage> {
     );
   }
 
-  Center makeFilter(String? selectedValue, List<String> list, String label) {
+  String? checkValue(String value) {
+    if (value.contains("None")) {
+      return "Huuuhu";
+    } else {
+      return value;
+    }
+  }
+
+  Center makeFilter(String? selectedValue, List<String> list, String label,
+      GlobalKey keyController) {
     return Center(
       child: Container(
         width: 330,
         padding: const EdgeInsets.only(left: 25.0, right: 25.0),
         //margin left and right edge
-        child: DropdownButtonFormField<String>(
+        child: DropdownButtonFormField2<String>(
+          key: keyController,
+          isExpanded: true,
           value: selectedValue,
           //selected value stands in field
           items: list.map(buildMenuItem).toList(),
           //dropdown items
-          dropdownColor: color.middleBackgroundColor,
-          borderRadius: BorderRadius.circular(20.0),
-          //selectedItemBuilder: ,
+          dropdownStyleData: DropdownStyleData(
+              decoration: BoxDecoration(
+                  color: color.middleBackgroundColor,
+                  borderRadius: BorderRadius.circular(20.0)),
+              maxHeight: 202 * MediaQuery.of(context).textScaleFactor),
           onChanged: (value) {
             setState(() {
               //_selectedValue = value;
             });
           },
-          isExpanded: true,
           //Decoration of the label and border of the dropdown button
           decoration: InputDecoration(
             labelText: label,
@@ -236,16 +264,16 @@ class _FilterPageState extends State<FilterPage> {
 
   DropdownMenuItem<String> buildMenuItem(String item) => DropdownMenuItem(
       value: item,
-      child: Padding(
-        padding: const EdgeInsets.only(left: 5.0, right: 5.0),
-        child: FittedBox(
-          child: Text(
-            item,
-            style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 17,
-                color: Colors.grey.shade100),
-          ),
+      //child: Padding(
+      //padding: const EdgeInsets.only(left: 5.0, right: 5.0),
+      child: FittedBox(
+        child: Text(
+          item,
+          style: TextStyle(
+              fontWeight: FontWeight.bold,
+              fontSize: 17,
+              color: Colors.grey.shade100),
         ),
+        //),
       ));
 }
