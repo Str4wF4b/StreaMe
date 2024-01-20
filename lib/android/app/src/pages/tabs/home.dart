@@ -37,7 +37,7 @@ class _HomePageState extends State<HomePage> {
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 12.0, bottom: 45.0),
+            padding: const EdgeInsets.only(top: 12.0, bottom: 25.0),
             child: Image.asset(image.streameIconWhite, width: 165),
           ),
           Expanded(

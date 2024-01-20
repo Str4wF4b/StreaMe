@@ -102,9 +102,9 @@ class _SearchPageState extends State<SearchPage> {
               ),
               Positioned(
                 //padding: const EdgeInsets.only(left: 354, top: 37),
-                left: MediaQuery.of(context).size.width - 40,
+                left: MediaQuery.of(context).size.width - 35,
                 bottom: MediaQuery.of(context).size.height -
-                    769, //766 when isDense = false
+                    750, //766 when isDense = false
                 child: InkWell(
                   onTap: () {
                     showDialog(
@@ -120,7 +120,7 @@ class _SearchPageState extends State<SearchPage> {
                         });
                   },
                   child: Icon(
-                    size: 22.0,
+                    size: 28.0,
                     Icons.tune,
                     color: color.bodyTextColor,
                   ),
