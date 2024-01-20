@@ -209,7 +209,7 @@ class _FilterPageState extends State<FilterPage> {
           //selectedItemBuilder: ,
           onChanged: (value) {
             setState(() {
-              _selectedValue = value;
+              //_selectedValue = value;
             });
           },
           isExpanded: true,
