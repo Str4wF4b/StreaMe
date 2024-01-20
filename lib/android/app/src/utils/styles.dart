@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import '../utils/color_palette.dart';
 
-class Styles{
+class Styles {
   static ColorPalette color = ColorPalette();
 
   ButtonStyle exploreButtonStyle = ElevatedButton.styleFrom(

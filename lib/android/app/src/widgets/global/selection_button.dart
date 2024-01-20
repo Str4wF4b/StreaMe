@@ -1,15 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:stream_me/android/app/src/utils/color_palette.dart';
 
 class SelectionButton extends StatelessWidget {
   final void Function() onTap;
   final Color color;
   final String label;
 
-  SelectionButton(
-      {super.key, required this.onTap, required this.color, required this.label});
-
-  ColorPalette colorPalette = ColorPalette();
+  const SelectionButton(
+      {super.key,
+      required this.onTap,
+      required this.color,
+      required this.label});
 
   @override
   Widget build(BuildContext context) {

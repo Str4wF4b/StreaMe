@@ -7,8 +7,8 @@ class AuthService {
     final GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
 
     // get auth details from request
-    final GoogleSignInAuthentication googleAuth = await googleUser!
-        .authentication;
+    final GoogleSignInAuthentication googleAuth =
+        await googleUser!.authentication;
 
     // if auth request is good, create new credential for user
     final credential = GoogleAuthProvider.credential(
@@ -23,15 +23,13 @@ class AuthService {
   //TODO: Apple sign in
 
   // Apple sign in:
-  signInWithApple() async {
-
-  }
+  signInWithApple() async {}
 
   // Anonymous sign in:
   Future signInAnon() async {
     try {
-      UserCredential anonCredential = await FirebaseAuth.instance
-          .signInAnonymously();
+      UserCredential anonCredential =
+          await FirebaseAuth.instance.signInAnonymously();
       User? user = anonCredential.user;
       return user;
     } on FirebaseAuthException catch (e) {

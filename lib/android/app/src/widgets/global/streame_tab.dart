@@ -20,7 +20,9 @@ class StreaMeTab extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       height: 35,
-      padding: isWatchlist ? const EdgeInsets.only(left: 15.0, right: 15.0) : null, //TODO: CHANGE THIS ONLY FOR WATCHLIST TABBAR
+      padding: isWatchlist
+          ? const EdgeInsets.only(left: 15.0, right: 15.0)
+          : null, //TODO: CHANGE THIS ONLY FOR WATCHLIST TABBAR
       //width: widthNeeded ? 100 : null,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30.0),
@@ -31,9 +33,12 @@ class StreaMeTab extends StatelessWidget {
               width: 1.0)),
       child: Align(
         alignment: Alignment.center,
-        child: Text(tabTitle,
-            style: TextStyle(
-                fontSize: 14 * 1 / MediaQuery.of(context).textScaleFactor)),
+        child: Text(
+          tabTitle,
+          style: TextStyle(
+            fontSize: 16 * 1 / MediaQuery.of(context).textScaleFactor,
+          ),
+        ),
       ),
     );
   }

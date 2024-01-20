@@ -27,7 +27,6 @@ class ListItems extends StatelessWidget {
             fontSize: 15,
           ),
         ),
-        onTap: onTap
-    );
+        onTap: onTap);
   }
 }

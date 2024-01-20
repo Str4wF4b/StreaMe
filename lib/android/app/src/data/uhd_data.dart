@@ -88,25 +88,19 @@ final allUhd = <Uhd>[
     "Link": []
   }),
   //The Conjuring 2:
-  const Uhd(id: 6, streamId: 6, streamOn: {
-    "Logo": [],
-    "Platform": [],
-    "Link": [
-    ]
-  }, rent: {
-    "Logo": [],
-    "Platform": [],
-    "Link": []
-  }, buy: {
-    "Logo": [],
-    "Platform": [],
-    "Link": []
-  }),
+  const Uhd(
+      id: 6,
+      streamId: 6,
+      streamOn: {"Logo": [], "Platform": [], "Link": []},
+      rent: {"Logo": [], "Platform": [], "Link": []},
+      buy: {"Logo": [], "Platform": [], "Link": []}),
   //Ted Lasso:
   Uhd(id: 7, streamId: 7, streamOn: {
     "Logo": [image.appleTvPlus],
     "Platform": ["Apple TV+"],
-    "Link": ["https://tv.apple.com/de/episode/pilot/umc.cmc.zb0yksqtym68hasbq8mj4jwp?playableId=tvs.sbd.4000%3AVTEDL0560101"]
+    "Link": [
+      "https://tv.apple.com/de/episode/pilot/umc.cmc.zb0yksqtym68hasbq8mj4jwp?playableId=tvs.sbd.4000%3AVTEDL0560101"
+    ]
   }, rent: {
     "Logo": [],
     "Platform": [],
@@ -120,7 +114,9 @@ final allUhd = <Uhd>[
   Uhd(id: 8, streamId: 8, streamOn: {
     "Logo": [image.disneyPlus],
     "Platform": ["Disney+"],
-    "Link": ["https://www.disneyplus.com/de-de/movies/maze-runner-die-auserwahlten-im-labyrinth/5eMMEyNl6tWG?irclickid=VfP3CZxx0xyPTg%3AV9Mwcc0e-UkH008VJkRwcRM0&irgwc=1&cid=DSS-Affiliate-Impact-Content-JustWatch+GmbH-705874&tgclid=04010022-ac11-4e05-bd00-1576657a2c0c&dclid=CNX6ipW3jYMDFWCS_QcdUvUM2w"]
+    "Link": [
+      "https://www.disneyplus.com/de-de/movies/maze-runner-die-auserwahlten-im-labyrinth/5eMMEyNl6tWG?irclickid=VfP3CZxx0xyPTg%3AV9Mwcc0e-UkH008VJkRwcRM0&irgwc=1&cid=DSS-Affiliate-Impact-Content-JustWatch+GmbH-705874&tgclid=04010022-ac11-4e05-bd00-1576657a2c0c&dclid=CNX6ipW3jYMDFWCS_QcdUvUM2w"
+    ]
   }, rent: {
     "Logo": [image.appleTv, image.prime, image.magentaTv],
     "Platform": ["Apple TV €3,99", "Prime €3,99", "Magenta TV €3,99"],
@@ -175,18 +171,10 @@ final allUhd = <Uhd>[
     ]
   }),
   //One Piece:
-  const Uhd(id: 11, streamId: 11, streamOn: {
-    "Logo": [],
-    "Platform": [],
-    "Link": [
-    ]
-  }, rent: {
-    "Logo": [],
-    "Platform": [],
-    "Link": []
-  }, buy: {
-    "Logo": [],
-    "Platform": [],
-    "Link": []
-  }),
+  const Uhd(
+      id: 11,
+      streamId: 11,
+      streamOn: {"Logo": [], "Platform": [], "Link": []},
+      rent: {"Logo": [], "Platform": [], "Link": []},
+      buy: {"Logo": [], "Platform": [], "Link": []}),
 ];

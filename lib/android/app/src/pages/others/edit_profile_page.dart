@@ -5,24 +5,22 @@ import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:stream_me/android/app/src/utils/images.dart';
 import 'package:stream_me/android/app/src/widgets/global/selection_button.dart';
-import '../../widgets/features/edit_text-field.dart';
+import '../../widgets/features/edit_text_field.dart';
 
 class EditProfilePage extends StatefulWidget {
   final Color backgroundColor;
 
-  EditProfilePage({Key? key, required this.backgroundColor})
-      : super(key: key);
+  EditProfilePage({super.key, required this.backgroundColor});
 
   @override
   State<EditProfilePage> createState() => _EditProfilePageState();
 
-  bool showPassword = true;
-  PickedFile? _imageFile;
   final ImagePicker _picker = ImagePicker();
   final user = FirebaseAuth.instance.currentUser;
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
+  XFile? _imageFile;
   Images image = Images();
 
   @override
@@ -62,13 +60,13 @@ class _EditProfilePageState extends State<EditProfilePage> {
                         shape: BoxShape.circle,
                         //profile picture in circle shape
                         image: DecorationImage(
-                          //default profile picture
+                            //default profile picture
                             fit: BoxFit.cover,
                             image: selectImage()),
                       ),
                     ),
                     Positioned(
-                      //positioning the "change picture" item
+                        //positioning the "change picture" item
                         bottom: 0,
                         right: 0,
                         child: Container(
@@ -110,18 +108,36 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 //spacing between profile picture and text field
                 height: 58,
               ),
-              EditTextField(labelText: "Username: ", placeholder: "Enter new Username here", isPassword: false, userInput: "${widget.user?.displayName}"),
-              EditTextField(labelText: "Full Name: ", placeholder: "Enter new Full Name here", isPassword: false, userInput: "${widget.user?.displayName}"),
-              EditTextField(labelText: "E-Mail: ", placeholder: "Enter new E-Mail address here", isPassword: false, userInput: "${widget.user?.email}"),
-              const EditTextField(labelText: "Password: ", placeholder: "Enter new Password here", isPassword: true, userInput: "●●●●●"),
+              EditTextField(
+                  labelText: "Username: ",
+                  placeholder: "Enter new Username here",
+                  isPassword: false,
+                  userInput: "${widget.user?.displayName}"),
+              EditTextField(
+                  labelText: "Full Name: ",
+                  placeholder: "Enter new Full Name here",
+                  isPassword: false,
+                  userInput: "${widget.user?.displayName}"),
+              EditTextField(
+                  labelText: "E-Mail: ",
+                  placeholder: "Enter new E-Mail address here",
+                  isPassword: false,
+                  userInput: "${widget.user?.email}"),
+              const EditTextField(
+                  labelText: "Password: ",
+                  placeholder: "Enter new Password here",
+                  isPassword: true,
+                  userInput: "●●●●●"),
               Padding(
                 padding: const EdgeInsets.only(left: 16.0, right: 16.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   //setting space between buttons cancel and save
                   children: [
-                    SelectionButton(onTap: () {}, color: Colors.blueAccent, label: "Save"),
-                    SelectionButton(onTap: () {}, color: Colors.redAccent, label: "Reset"),
+                    SelectionButton(
+                        onTap: () {}, color: Colors.blueAccent, label: "Save"),
+                    SelectionButton(
+                        onTap: () {}, color: Colors.redAccent, label: "Reset"),
                     /*Padding(
                       padding: const EdgeInsetsDirectional.fromSTEB(
                           16.0, 10.0, 0.0, 0.0),
@@ -207,7 +223,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
             children: <Widget>[
               Padding(
                 padding:
-                const EdgeInsetsDirectional.fromSTEB(16.0, 5.0, 0.0, 0.0),
+                    const EdgeInsetsDirectional.fromSTEB(16.0, 5.0, 0.0, 0.0),
                 child: TextButton.icon(
                   icon: const Icon(
                     Icons.camera_alt,
@@ -228,7 +244,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
               ),
               Padding(
                 padding:
-                const EdgeInsetsDirectional.fromSTEB(0.0, 5.0, 16.0, 0.0),
+                    const EdgeInsetsDirectional.fromSTEB(0.0, 5.0, 16.0, 0.0),
                 child: TextButton.icon(
                   icon: const Icon(
                     Icons.image,
@@ -255,18 +271,18 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   void takePhoto(ImageSource source) async {
-    final pickedFile = await widget._picker.getImage(
+    final pickedFile = await widget._picker.pickImage(
         source:
-        source); //TODO: maybe change function getImage to pickImage if it works
+            source); //TODO: maybe change function getImage to pickImage if it works
     setState(() {
-      widget._imageFile = pickedFile;
+      _imageFile = pickedFile;
     });
   }
 
   ImageProvider<Object> selectImage() {
-    return widget._imageFile == null
+    return _imageFile == null
         ? AssetImage(image.blank)
-        : FileImage(File(widget._imageFile!.path)) as ImageProvider;
+        : FileImage(File(_imageFile!.path)) as ImageProvider;
   }
 
 /*  Future<bool?> showCancelDialog() => showDialog<bool>(

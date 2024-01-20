@@ -1,14 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
 import 'package:stream_me/android/app/src/widgets/global/app_bar.dart';
-import 'package:stream_me/android/app/src/widgets/bottom_app_bar.dart';
-import 'package:stream_me/android/app/src/widgets/list_items.dart';
 
-import '../../pages/others/edit_profile_page.dart';
-import '../navigation_icons.dart';
-import '../../auth/auth_main.dart';
 import '../../pages/others/help.dart';
 import '../../pages/tabs/home.dart';
 import '../../pages/tabs/search.dart';
@@ -18,17 +11,16 @@ import '../../pages/tabs/watchlist.dart';
 
 class AppOverlay extends StatefulWidget {
   AppOverlay(
-      {Key? key,
+      {super.key,
       required this.title,
       required this.body,
-      required this.currentPageIndex}) //title, body, selectedMenuIndex dann title, body, selectedIndex
-      : super(key: key);
+      required this.currentPageIndex});
 
   final String title;
   //int selectedIndex;
-  int currentPageIndex;
   //int selectedMenuIndex;
   final Widget body;
+  final int currentPageIndex;
 
   //final int index;
 
@@ -36,12 +28,12 @@ class AppOverlay extends StatefulWidget {
   //statt Body, alle möglichen Seiten in eine List rein, den body aus allen seiten als hauptrückgabe, kein scaffold zurückgeben, Titel der Seiten wie Bodys und bei beiden Listen über index bei den Body hier zugreifen
   //late StreameBottomAppBar streameBottomAppBar = StreameBottomAppBar();
   final pages = [
-    HomePage(), //Index = 0, selectedIndex = 0
+    const HomePage(), //Index = 0, selectedIndex = 0
     SearchPage(), //Index = 1, selectedIndex = 1
-    FavouritesPage(), //Index = 2, selectedIndex = 2
-    ExplorePage(), //Index = 3, selectedIndex = 3
-    WatchlistPage(), //Index = 4, selectedIndex = 4
-    HelpPage(), //Index = 5, selectedIndex = 5
+    const FavouritesPage(), //Index = 2, selectedIndex = 2
+    const ExplorePage(), //Index = 3, selectedIndex = 3
+    const WatchlistPage(), //Index = 4, selectedIndex = 4
+    const HelpPage(), //Index = 5, selectedIndex = 5
   ];
   final titles = [
     "Home",
@@ -52,19 +44,22 @@ class AppOverlay extends StatefulWidget {
     "Help"
   ];
 
-  //int selectedIndex = this.selectedIndex;
-
   @override
   State<AppOverlay> createState() => _AppOverlayState();
 }
 
-/**
- * The part of the AppBar that is the same for every page
- * includes: AppBar overlay, profile changes, menu navigation
- */
+/// The part of the AppBar that is the same for every page
+/// includes: AppBar overlay, profile changes, menu navigation
 //TODO: make appBar transparent when scrolling
 class _AppOverlayState extends State<AppOverlay> {
   ColorPalette color = ColorPalette();
+  int _currentPageIndex = -1;
+
+  @override
+  void initState() {
+    super.initState();
+    _currentPageIndex = widget.currentPageIndex;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -92,7 +87,7 @@ class _AppOverlayState extends State<AppOverlay> {
             ),
           ),
         ),*/
-        body: widget.pages[widget.currentPageIndex],
+        body: widget.pages[_currentPageIndex],
         //widget.pages[widget.selectedIndex],
         bottomNavigationBar: NavigationBarTheme(
           data: NavigationBarThemeData(
@@ -143,7 +138,8 @@ class _AppOverlayState extends State<AppOverlay> {
               Padding(
                 padding: const EdgeInsets.only(top: 2.0),
                 child: NavigationDestination(
-                    icon: const Icon(Icons.favorite_outline, color: Colors.grey),
+                    icon:
+                        const Icon(Icons.favorite_outline, color: Colors.grey),
                     selectedIcon: Icon(
                       Icons.favorite,
                       color: color.backgroundColor,
@@ -172,10 +168,10 @@ class _AppOverlayState extends State<AppOverlay> {
                     label: "Watchlist"),
               )
             ],
-            selectedIndex: widget.currentPageIndex,
+            selectedIndex: _currentPageIndex,
             onDestinationSelected: (int index) {
               setState(() {
-                widget.currentPageIndex = index;
+                _currentPageIndex = index;
               });
             },
           ),
@@ -265,9 +261,7 @@ class _AppOverlayState extends State<AppOverlay> {
     }
   }*/
 
-  /**
-   * Function that builds the icons of the BottomAppBar
-   */
+  /// Function that builds the icons of the BottomAppBar
   //TODO: make icons selected if selected and unselected if not
   Padding addBottomIcons(
       IconData icon, String iconLabel, EdgeInsets insets, StatefulWidget page) {
@@ -302,9 +296,7 @@ class _AppOverlayState extends State<AppOverlay> {
     );
   }
 
-  /**
-   * Function that builds the header space of the navigation drawer
-   */
+  /// Function that builds the header space of the navigation drawer
   Widget buildHeader(BuildContext context) => Container(
         padding: EdgeInsets.only(
           top: MediaQuery.of(context).padding.top,

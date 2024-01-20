@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:stream_me/android/app/src/auth/auth_popups.dart';
 
 class SignButton extends StatelessWidget {
   final Function()? onTap;
