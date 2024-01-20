@@ -18,7 +18,7 @@ publish_to: 'none' # Remove this line if you wish to publish to pub.dev
 version: 1.0.0+1
 
 environment:
-  sdk: ">=3.0.0 <4.0.0"
+  sdk: ">=2.17.1 <3.0.0"
 
 # Dependencies specify other packages that your package needs in order to work.
 # To automatically upgrade your package dependencies to the latest versions
@@ -38,9 +38,9 @@ dependencies:
   mvc_pattern:
 
   # UI
-  flutter_login: ^5.0.0
+  flutter_login: ^4.0.0
   font_awesome_flutter: ^10.1.0
-  image_picker: ^1.0.7
+  image_picker: ^0.8.6
 
   # Firebase
   firebase_auth: ^4.10.0
@@ -70,25 +70,25 @@ dependencies:
   expand_widget: ^3.1.1
 
   # Network image cache
-  cached_network_image: ^3.3.1
+  cached_network_image: ^3.2.3
 
   # FittedBox in maxLines
   auto_size_text: ^3.0.0
 
   # Explore Swipe
-  appinio_swiper: ^2.1.0
+  appinio_swiper: ^2.0.2
 
   # TabBarView dynamic height
   autoscale_tabbarview: ^1.0.2
 
   # for age
-  intl: ^0.19.0
+  intl: ^0.18.1
 
   # Audio sound
   just_audio: ^0.9.35
 
   # Refresh site
-  custom_refresh_indicator: ^3.0.0
+  custom_refresh_indicator: ^2.2.1
 
   # Launch URLs
   url_launcher: ^6.2.2
@@ -113,7 +113,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^3.0.1
+  flutter_lints: ^2.0.0
 
   flutter_launcher_icons: ^0.13.1
 
