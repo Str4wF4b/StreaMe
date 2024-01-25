@@ -22,6 +22,11 @@ class EditProfilePage extends StatefulWidget {
 class _EditProfilePageState extends State<EditProfilePage> {
   XFile? _imageFile;
   Images image = Images();
+  bool showPassword = true;
+  final TextEditingController _usernameCtrl = TextEditingController();
+  final TextEditingController _fullNameCtrl = TextEditingController();
+  final TextEditingController _emailCtrl = TextEditingController();
+  final TextEditingController _passwordCtrl = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -109,21 +114,25 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 height: 58,
               ),
               EditTextField(
+                  controller: _usernameCtrl,
                   labelText: "Username: ",
                   placeholder: "Enter new Username here",
                   isPassword: false,
                   userInput: "${widget.user?.displayName}"),
               EditTextField(
+                  controller: _fullNameCtrl,
                   labelText: "Full Name: ",
                   placeholder: "Enter new Full Name here",
                   isPassword: false,
                   userInput: "${widget.user?.displayName}"),
               EditTextField(
+                  controller: _emailCtrl,
                   labelText: "E-Mail: ",
                   placeholder: "Enter new E-Mail address here",
                   isPassword: false,
                   userInput: "${widget.user?.email}"),
-              const EditTextField(
+              EditTextField(
+                  controller: _passwordCtrl,
                   labelText: "Password: ",
                   placeholder: "Enter new Password here",
                   isPassword: true,
@@ -137,7 +146,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     SelectionButton(
                         onTap: () {}, color: Colors.blueAccent, label: "Save"),
                     SelectionButton(
-                        onTap: () {}, color: Colors.redAccent, label: "Reset"),
+                        onTap: () {
+                            _usernameCtrl.clear();
+                            _fullNameCtrl.clear();
+                            _emailCtrl.clear();
+                            _passwordCtrl.clear();
+                        },
+                        color: Colors.redAccent,
+                        label: "Reset"),
                     /*Padding(
                       padding: const EdgeInsetsDirectional.fromSTEB(
                           16.0, 10.0, 0.0, 0.0),

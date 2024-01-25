@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
 
 class EditTextField extends StatefulWidget {
+  final TextEditingController controller;
   final String labelText;
   final String placeholder;
   final bool isPassword;
@@ -9,6 +10,7 @@ class EditTextField extends StatefulWidget {
 
   const EditTextField(
       {super.key,
+      required this.controller,
       required this.labelText,
       required this.placeholder,
       required this.isPassword,
@@ -27,6 +29,7 @@ class _EditTextFieldState extends State<EditTextField> {
     return Padding(
       padding: const EdgeInsetsDirectional.fromSTEB(16.0, 7.0, 16.0, 35.0),
       child: TextField(
+        controller: widget.controller,
         style: TextStyle(
           fontWeight: FontWeight.bold,
           fontSize: 15,
