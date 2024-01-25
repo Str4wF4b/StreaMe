@@ -56,7 +56,7 @@ class _StreameAppBarState extends State<StreameAppBar> {
                     barrierLabel: 'Dialog',
                     transitionDuration: const Duration(milliseconds: 350),
                     pageBuilder: (_, __, ___) {
-                      return EditProfile(
+                       return EditProfile(
                           backgroundColor: color.backgroundColor);
                     },
                   );

@@ -1,4 +1,7 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:stream_me/android/app/src/auth/auth_main.dart';
+import '../../utils/color_palette.dart';
 
 import '../../pages/others/edit_profile_page.dart';
 
@@ -12,6 +15,8 @@ class EditProfile extends StatefulWidget {
 }
 
 class _EditProfileState extends State<EditProfile> {
+  ColorPalette color = ColorPalette();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -45,13 +50,50 @@ class _EditProfileState extends State<EditProfile> {
           Expanded(
             flex: 5,
             child: SizedBox.expand(
-              child: EditProfilePage(
-                backgroundColor: widget.backgroundColor,
-              ),
+              //return a Edit Profile Screen if User is not anonymous, otherwise advise User to be anonymous
+              child: FirebaseAuth.instance.currentUser!.isAnonymous
+                  ? anonLoggedIn() //User is anonymous
+                  : EditProfilePage( //User is not anonymous, i.e. can edit his Profile
+                      backgroundColor: widget.backgroundColor,
+                    ),
             ),
           ),
         ],
       ),
     );
+  }
+
+  Widget anonLoggedIn() {
+    return Scaffold(
+        backgroundColor: color.backgroundColor,
+        body: Container(
+          color: color.backgroundColor,
+          child: Padding(
+            padding: const EdgeInsets.only(left: 15.0, top: 30.0),
+            child: Row(
+              children: [
+                const Text(
+                  "You are not logged in. ",
+                  style: TextStyle(color: Colors.grey),
+                ),
+                const Text("Login or register ",
+                    style: TextStyle(color: Colors.grey)),
+                GestureDetector(
+                  child: const Text(
+                    "here",
+                    style: TextStyle(color: Colors.blueAccent),
+                  ),
+                  onTap: () async => await FirebaseAuth.instance.signOut().then(
+                      (value) => Navigator.of(context).pushAndRemoveUntil(
+                          MaterialPageRoute(
+                              builder: (context) => const AuthPage()),
+                          (route) => false)),
+                ),
+                const Text(".",
+                    style: TextStyle(color: Colors.grey))
+              ],
+            ),
+          ),
+        ));
   }
 }
