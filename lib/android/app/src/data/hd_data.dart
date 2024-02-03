@@ -109,7 +109,7 @@ final allHd = <Hd>[
   //Knives Out:
   Hd(id: 5, streamId: 5, streamOn: {
     "Logo": [image.netflix, image.skyGo, image.magentaTv],
-    "Platform": ["Netflix", "SkyGo", "Magenta TV"],
+    "Platform": ["Netflix", "Sky Go", "Magenta TV"],
     "Link": [
       "https://www.netflix.com/de/title/81037684",
       "https://www.sky.de/angebote?ptabId=j-p-tab-aktuelle-angebote-fiction&wkz=WDPRF28&eml=ADGapID_026_800138_549711014-505030906:P376637279:A567890286:C200050466&extLi=30657164&dclid=CNTh14X4ioMDFfSJ_QcdxFYNhQ&et_uk=ed99f18b8cb849ae9bbe9f3dd09f30d1&et_gk=YmM5ZTIyZWE5OTJhNDk5MzkzM2M3NmFlYTU1ODM5ZGYlN0MxMC4wMi4yMDI0KzIyJTNBMjMlM0E0MQ",
@@ -188,7 +188,7 @@ final allHd = <Hd>[
     ]
   }, rent: {
     "Logo": [image.appleTv, image.prime, image.skyGo],
-    "Platform": ["Apple TV €3,99", "Prime €3,99", "SkyGo €3,99"],
+    "Platform": ["Apple TV €3,99", "Prime €3,99", "Sky Go €3,99"],
     "Link": [
       "https://tv.apple.com/de/movie/maze-runner---die-auserwahlten-im-labyrinth/umc.cmc.4ljr4z86mfhtbdouv5ml5h693?playableId=tvs.sbd.9001%3A919198535",
       "https://www.amazon.de/gp/video/detail/0HX2AL1JXHLS8ZOM4EPW5JFV5V/ref=atv_dl_rdr?tag=justdersjd-21",
@@ -196,7 +196,7 @@ final allHd = <Hd>[
     ]
   }, buy: {
     "Logo": [image.appleTv, image.prime, image.skyGo],
-    "Platform": ["Apple TV €9,99", "Prime €9,99", "SkyGo €19,99"],
+    "Platform": ["Apple TV €9,99", "Prime €9,99", "Sky Go €19,99"],
     "Link": [
       "https://tv.apple.com/de/movie/maze-runner---die-auserwahlten-im-labyrinth/umc.cmc.4ljr4z86mfhtbdouv5ml5h693?playableId=tvs.sbd.9001%3A919198535",
       "https://www.amazon.de/gp/video/detail/0HX2AL1JXHLS8ZOM4EPW5JFV5V/ref=atv_dl_rdr?tag=justdersjd-21",
@@ -224,7 +224,7 @@ final allHd = <Hd>[
     "Link": ["https://www.netflix.com/de/title/81002747"]
   }, rent: {
     "Logo": [image.prime, image.appleTv, image.skyGo],
-    "Platform": ["Prime €3,98", "Apple TV €3,99", "SkyGo €3,99"],
+    "Platform": ["Prime €3,98", "Apple TV €3,99", "Sky Go €3,99"],
     "Link": [
       "https://www.amazon.de/gp/video/detail/0O2SSA8EE8BYL2EI1DE0HG8XS4/ref=atv_dl_rdr?tag=justdersjd-21",
       "https://tv.apple.com/de/movie/spider-man-a-new-universe/umc.cmc.4a2ypxddplsdsahwxrc5fkz4x?playableId=tvs.sbd.9001%3A1447687300",
@@ -232,7 +232,7 @@ final allHd = <Hd>[
     ]
   }, buy: {
     "Logo": [image.prime, image.appleTv, image.skyGo],
-    "Platform": ["Prime €9,99", "Apple TV €9,99", "SkyGo €9,99"],
+    "Platform": ["Prime €9,99", "Apple TV €9,99", "Sky Go €9,99"],
     "Link": [
       "https://www.amazon.de/gp/video/detail/0O2SSA8EE8BYL2EI1DE0HG8XS4/ref=atv_dl_rdr?tag=justdersjd-21",
       "https://tv.apple.com/de/movie/spider-man-a-new-universe/umc.cmc.4a2ypxddplsdsahwxrc5fkz4x?playableId=tvs.sbd.9001%3A1447687300",

@@ -11,14 +11,15 @@ class FilterPage extends StatefulWidget {
   FilterPage({Key? key}) : super(key: key);
 
   final List<String> provider = [
-    "Amazon Prime",
     "Apple TV",
+    "Apple TV+",
     "Crunchyroll",
     "Disney+",
     "Hulu",
+    "Magenta TV",
     "Netflix",
-    "SkyGo",
-    "None"
+    "Prime",
+    "Sky Go"
   ];
   String? value;
   final List<String> type = ["Movie", "Series"];

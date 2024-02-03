@@ -189,7 +189,7 @@ final allSd = <Sd>[
     "Link": ["https://www.netflix.com/de/title/81002747"]
   }, rent: {
     "Logo": [image.prime, image.appleTv, image.skyGo],
-    "Platform": ["Prime €3,98", "Apple TV €3,99", "SkyGo €3,99"],
+    "Platform": ["Prime €3,98", "Apple TV €3,99", "Sky Go €3,99"],
     "Link": [
       "https://www.amazon.de/gp/video/detail/0O2SSA8EE8BYL2EI1DE0HG8XS4/ref=atv_dl_rdr?tag=justdersjd-21",
       "https://tv.apple.com/de/movie/spider-man-a-new-universe/umc.cmc.4a2ypxddplsdsahwxrc5fkz4x?playableId=tvs.sbd.9001%3A1447687300",
@@ -197,7 +197,7 @@ final allSd = <Sd>[
     ]
   }, buy: {
     "Logo": [image.prime, image.appleTv, image.skyGo],
-    "Platform": ["Prime €9,99", "Apple TV €9,99", "SkyGo €9,99"],
+    "Platform": ["Prime €9,99", "Apple TV €9,99", "Sky Go €9,99"],
     "Link": [
       "https://www.amazon.de/gp/video/detail/0O2SSA8EE8BYL2EI1DE0HG8XS4/ref=atv_dl_rdr?tag=justdersjd-21",
       "https://tv.apple.com/de/movie/spider-man-a-new-universe/umc.cmc.4a2ypxddplsdsahwxrc5fkz4x?playableId=tvs.sbd.9001%3A1447687300",

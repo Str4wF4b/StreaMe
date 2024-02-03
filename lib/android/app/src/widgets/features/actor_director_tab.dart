@@ -101,7 +101,7 @@ class _ActorDirectorTabState extends State<ActorDirectorTab> {
             text: tabSubtitle,
             style: TextStyle(
                 color: color.bodyTextColor,
-                fontSize: 17.0,
+                fontSize: 19.0,
                 fontWeight: FontWeight.bold),
             children: const [
               TextSpan(

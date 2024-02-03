@@ -13,7 +13,7 @@ final allStreams = <Streams>[
       direction: ["Joaquim Dos Santos", "Kemp Powers", "Justik K. Thompson"],
       plot:
           "After reuniting with Gwen Stacy, Brooklyn’s full-time, friendly neighborhood Spider-Man is catapulted across the Multiverse, where he encounters the Spider Society, a team of Spider-People charged with protecting the Multiverse’s very existence. But when the heroes clash on how to handle a new threat, Miles finds himself pitted against the other Spiders and must set out on his own to save those he loves most.",
-      provider: [],
+      provider: ["Netflix", "Prime", "Apple TV", "Magenta TV", "Sky Go"],
       image:
           "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/8Vt6mWEReuy4Of61Lnj5Xj704m8.jpg"),
   const Streams(
@@ -63,7 +63,7 @@ final allStreams = <Streams>[
       direction: ["Phyllis Carlyle", "Arnold Kopelson"],
       plot:
           "Two homicide detectives are on a desperate hunt for a serial killer whose crimes are based on the \"seven deadly sins\" in this dark and haunting film that takes viewers from the tortured remains of one victim to the next. The seasoned Det. Sommerset researches each sin in an effort to get inside the killer's mind, while his novice partner, Mills, scoffs at his efforts to unravel the case.",
-      provider: ["Netflix"],
+      provider: ["Netflix", "Prime", "Apple TV", "Magenta TV", "Sky Go"],
       image:
           "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/6yoghtyTpznpBik8EngEmJskVUO.jpg"),
   const Streams(
@@ -83,7 +83,7 @@ final allStreams = <Streams>[
       direction: ["	Haruo Sotozaki"],
       plot:
           "It is the Taisho Period in Japan. Tanjiro, a kindhearted boy who sells charcoal for a living, finds his family slaughtered by a demon. To make matters worse, his younger sister Nezuko, the sole survivor, has been transformed into a demon herself. Though devastated by this grim reality, Tanjiro resolves to become a “demon slayer” so that he can turn his sister back into a human, and kill the demon that massacred his family.",
-      provider: ["Crunchyroll", "Hulu", "Netflix", "Wakanim"],
+      provider: ["Crunchyroll", "Netflix", "Prime"],
       image:
           "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/xUfRZu2mi8jH6SzQEJGP6tjBuYj.jpg"),
   const Streams(
@@ -103,7 +103,7 @@ final allStreams = <Streams>[
       direction: ["Rian Johnson"],
       plot:
           "When renowned crime novelist Harlan Thrombey is found dead at his estate just after his 85th birthday, the inquisitive and debonair Detective Benoit Blanc is mysteriously enlisted to investigate. From Harlan's dysfunctional family to his devoted staff, Blanc sifts through a web of red herrings and self-serving lies to uncover the truth behind Harlan's untimely death.",
-      provider: ["MagentaTV"],
+      provider: ["Netflix", "Apple TV", "Prime", "Sky Go", "MagentaTV"],
       image:
           "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/pThyQovXQrw2m0s9x82twj48Jq4.jpg"),
   const Streams(
@@ -123,7 +123,7 @@ final allStreams = <Streams>[
       direction: ["James Wan"],
       plot:
           "Lorraine and Ed Warren travel to north London to help a single mother raising four children alone in a house plagued by malicious spirits.",
-      provider: ["Netflix", "SkyGo", "WOW"],
+      provider: ["Netflix", "Apple TV", "Prime", "Sky Go", "Magenta TV"],
       image:
           "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/zEqyD0SBt6HL7W9JQoWwtd5Do1T.jpg"),
   const Streams(
@@ -143,7 +143,7 @@ final allStreams = <Streams>[
       ],
       plot:
           "Ted Lasso, an American football coach, moves to England when he’s hired to manage a soccer team — despite having no experience. With cynical players and a doubtful town, will he get them to see the Ted Lasso Way?",
-      provider: ["AppleTVPlus"],
+      provider: ["Apple TV+"],
       image:
           "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/5fhZdwP1DVJ0FyVH6vrFdHwpXIn.jpg"),
   const Streams(
@@ -163,7 +163,7 @@ final allStreams = <Streams>[
       direction: ["Wes Ball"],
       plot:
           "Set in a post-apocalyptic world, young Thomas is deposited in a community of boys after his memory is erased, soon learning they're all trapped in a maze that will require him to join forces with fellow “runners” for a shot at escape.",
-      provider: ["DisneyPlus"],
+      provider: ["Disney+", "Apple TV", "Prime", "Sky Go", "Magenta TV"],
       image:
           "https://www.themoviedb.org/t/p/w600_and_h900_bestv2/ode14q7WtDugFDp78fo9lCsmay9.jpg"),
   const Streams(
@@ -203,7 +203,7 @@ final allStreams = <Streams>[
       direction: ["Peter Ramsey", "Bob Persichetti"],
       plot:
           "Miles Morales is juggling his life between being a high school student and being a spider-man. When Wilson \"Kingpin\" Fisk uses a super collider, others from across the Spider-Verse are transported to this dimension.",
-      provider: ["DisneyPlus", "Prime"],
+      provider: ["Netflix", "Prime", "Apple TV", "Sky Go", "Magenta TV"],
       image:
           "https://www.themoviedb.org/t/p/original/vOpV6HrtAkNQxCWAgtU4NmQ1KPe.jpg"),
   const Streams(

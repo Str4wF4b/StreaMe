@@ -30,4 +30,33 @@ class ConstantsAndValues {
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,
           stops: [0.7, 1]));
+
+  final List<String> platforms = [
+    "Apple TV",
+    "Apple TV+",
+    "Crunchyroll",
+    "Disney+",
+    "Hulu",
+    "Magenta TV",
+    "Netflix",
+    "Prime",
+    "Sky Go"
+  ];
+
+  final List<String> genres = [
+    "Action",
+    "Adventure",
+    "Animation",
+    "Comedy",
+    "Crime",
+    "Drama",
+    "Fantasy",
+    "Horror",
+    "Mystery",
+    "Science-Fiction",
+    "Thriller"
+  ];
+
+  final List<String> years = List<String>.generate(
+      130, (index) => "${index + 1895}");
 }
