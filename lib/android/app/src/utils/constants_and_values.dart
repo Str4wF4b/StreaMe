@@ -43,6 +43,8 @@ class ConstantsAndValues {
     "Sky Go"
   ];
 
+  List<String> types = ["Movie", "Series"];
+
   final List<String> genres = [
     "Action",
     "Adventure",
@@ -57,6 +59,6 @@ class ConstantsAndValues {
     "Thriller"
   ];
 
-  final List<String> years = List<String>.generate(
-      130, (index) => "${index + 1895}");
+  final List<String> years =
+      List<String>.generate(130, (index) => "${index + 1895}");
 }

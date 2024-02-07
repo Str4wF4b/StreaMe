@@ -115,12 +115,8 @@ class _FilterResultsPageState extends State<FilterResultsPage> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         //mainAxisSize: MainAxisSize.min,
                         children: [
-                          filterResults(
-                              widget.keyPlatforms,
-                              widget.keyType,
-                              widget.keyGenre,
-                              widget.keyYear,
-                              widget.keyActor),
+                          filterResults(widget.keyPlatforms, widget.keyType,
+                              widget.keyGenre, widget.keyYear, widget.keyActor),
                         ],
                       ),
                     ),
@@ -155,7 +151,6 @@ class _FilterResultsPageState extends State<FilterResultsPage> {
         margin: const EdgeInsets.fromLTRB(7.0, 7.0, 0.0, 7.0),
 
         decoration: BoxDecoration(
-            //border: Border.all(color: Colors.white70),
             color: Colors.grey.shade600,
             borderRadius: BorderRadius.circular(15.0)),
         child: Row(
@@ -180,6 +175,15 @@ class _FilterResultsPageState extends State<FilterResultsPage> {
     }
   }
 
+  ///
+  /// A method that checks if all filters are empty
+  /// keyPlatforms: The GlobalKey of the selected platform-filter
+  /// keyType: The GlobalKey of the selected type-filter
+  /// keyGenre: The GlobalKey of the selected genre-filter
+  /// keyYear: The GlobalKey of the selected year-filter
+  /// keyActor: The GlobalKey of the selected actor-filter
+  /// return: a String message that informs the user that no filter was selected
+  ///
   Widget checkAllEmptyFilters(
       GlobalKey<FormFieldState> keyPlatforms,
       GlobalKey<FormFieldState> keyType,
@@ -187,21 +191,30 @@ class _FilterResultsPageState extends State<FilterResultsPage> {
       GlobalKey<FormFieldState> keyYear,
       GlobalKey<FormFieldState> keyActor) {
     List allFilterKeys = [keyPlatforms, keyType, keyGenre, keyYear, keyActor];
-    Widget text = const Text("");
+    Widget emptyFilterMsg = const Text("");
     if (allFilterKeys.every((element) => element.currentState?.value == null)) {
-      text = Container(
-        padding: const EdgeInsets.fromLTRB(2.0, 5.0, 5.0, 5.0),
+      emptyFilterMsg = Container(
+        padding: const EdgeInsets.fromLTRB(2.0, 5.0, 5.0, 4.0),
         margin: const EdgeInsets.fromLTRB(7.0, 7.0, 0.0, 7.0),
         child: const Text("No filters selected.",
             style: TextStyle(
                 color: Colors.grey,
                 fontWeight: FontWeight.w500,
-                fontSize: 15.0)),
+                fontSize: 15)),
       );
     }
-    return text;
+    return emptyFilterMsg;
   }
 
+  ///
+  /// A method that determines the active filter(s) selected by the user and returns the filter results generated in another method
+  /// keyPlatforms: The GlobalKey of the selected platform-filter
+  /// keyType: The GlobalKey of the selected type-filter
+  /// keyGenre: The GlobalKey of the selected genre-filter
+  /// keyYear: The GlobalKey of the selected year-filter
+  /// keyActor: The GlobalKey of the selected actor-filter
+  /// return: The final results of the user's filter(s)
+  ///
   Widget filterResults(
       GlobalKey<FormFieldState> keyPlatform,
       GlobalKey<FormFieldState> keyType,
@@ -210,23 +223,29 @@ class _FilterResultsPageState extends State<FilterResultsPage> {
       GlobalKey<FormFieldState> keyActor) {
     List keys = [keyPlatform, keyType, keyGenre, keyYear, keyActor];
     List activeFilters = [];
+    Widget filterResult = Container();
 
-    Widget filterWidget = Container();
+    //Checking for active Filters before generating the filter results:
     for (var element in keys) {
       var keyValue = element.currentState.value;
       if (keyValue != null) {
         activeFilters.add(element.currentState.value);
       }
     }
-    // }
 
-    filterWidget = generateResults(activeFilters, keys);
+    filterResult = generateResults(activeFilters);
 
-    return filterWidget;
+    return filterResult;
   }
 
-  Widget generateResults(List activeFilters, List keys) {
-    List filteredStreams = [];
+  ///
+  /// A method that generates the results of the selected filter by the user
+  /// activeFilters: The activeFilters that have to be observed to generate the filter results
+  /// return:
+  ///
+  Widget generateResults(List activeFilters) {
+    print("Aktive Filter: $activeFilters");
+
     List movies = allStreams
         .where((element) => (element.type.toString() == "Movie"))
         .toList();
@@ -234,161 +253,78 @@ class _FilterResultsPageState extends State<FilterResultsPage> {
         .where((element) => (element.type.toString() == "Series"))
         .toList();
 
-    print("Aktive Filter: $activeFilters");
-
-    filteredStreams =
-        checkAllFilters(filteredStreams, activeFilters, movies + series);
-    /*filteredStreams = checkPlatformFilter(movies+series,
-        activeFilters); //Funktioniert nur mit movies, aber nicht allStreams
-    filteredStreams = checkTypeFilter(filteredStreams, activeFilters);
-    filteredStreams = checkGenreFilter(filteredStreams, activeFilters);
-    filteredStreams = checkYearFilter(filteredStreams, activeFilters);
-    filteredStreams = checkActorFilter(filteredStreams, activeFilters);*/
+    List filteredStreams =
+        checkAllFilters([], activeFilters, movies + series);
+    List filteredMovies = filteredStreams
+        .where((element) => element.type.contains("Movie"))
+        .toList();
+    List filteredSeries = filteredStreams
+        .where((element) => element.type.contains("Series"))
+        .toList();
 
     var type = widget.keyType.currentState?.value;
-    print("Type: $type");
 
-    Widget resultWidget = Container();
+    Widget result = Container();
+
     if (type == null) {
       //No type selected, i.e. both types (Movie and Series)
-      List filteredMovies = filteredStreams
-          .where((element) => element.type.contains("Movie"))
-          .toList();
-      for (var element in filteredMovies) {
-        print("FILTERED MOVIES: ${element.title}");
-      }
-      List filteredSeries = filteredStreams
-          .where((element) => element.type.contains("Series"))
-          .toList();
-      for (var element in filteredSeries) {
-        print("FILTERED SERIES: ${element.title}");
-      }
-      resultWidget = Column(
-        //mainAxisAlignment: MainAxisAlignment.start,
+      result = Column(
         crossAxisAlignment: CrossAxisAlignment.start,
-        //mainAxisSize: MainAxisSize.min,
         children: [
-          Text("Movies",
-              style: TextStyle(
-                  color: color.bodyTextColor,
-                  fontSize: 18.0,
-                  fontWeight: FontWeight.bold)),
-          filteredMovies.isNotEmpty
-              ? const SizedBox(height: 10.0)
-              : const SizedBox(height: 0.0),
-          SizedBox(
-            height: filteredMovies.isNotEmpty ? 210 : 30,
-            child: filteredMovies.isNotEmpty
-                ? ListView.builder(
-                    itemCount: filteredMovies.length,
-                    scrollDirection: Axis.horizontal,
-                    shrinkWrap: true,
-                    itemBuilder: (context, index) {
-                      String currentTitle =
-                          filteredMovies.elementAt(index).title;
-                      if (filteredStreams.isNotEmpty) {
-                        Streams currentStream = filteredMovies.elementAt(index);
-                        ActorDirectorTile currentTile = ActorDirectorTile(
-                          stream: currentStream,
-                          imageUrl: currentStream.image,
-                          title: currentTitle,
-                        );
-                        return currentTile;
-                      } else {
-                        return Container();
-                      }
-                    })
-                : Text("    No Movies found.",
-                    style: TextStyle(
-                        color: color.bodyTextColor,
-                        fontWeight: FontWeight.w400,
-                        fontSize: 14,
-                        height: 1.8)),
-          ),
+          filterLabel("Movies"),
+          filterEmptyList(filteredMovies),
+          filteredResults(filteredMovies, filteredStreams, "Movies"),
           const SizedBox(height: 20.0),
           Align(
             alignment: Alignment.centerLeft,
-            child: Text("Series",
-                style: TextStyle(
-                    color: color.bodyTextColor,
-                    fontSize: 18.0,
-                    fontWeight: FontWeight.bold)),
+            child: filterLabel("Series"),
           ),
-          filteredSeries.isNotEmpty
-              ? const SizedBox(height: 10.0)
-              : const SizedBox(height: 0.0),
-          SizedBox(
-            height: filteredSeries.isNotEmpty ? 210 : 30,
-            child: filteredSeries.isNotEmpty
-                ? ListView.builder(
-                itemCount: filteredSeries.length,
-                scrollDirection: Axis.horizontal,
-                shrinkWrap: true,
-                itemBuilder: (context, index) {
-                  String currentTitle = filteredSeries.elementAt(index).title;
-                  if (filteredStreams.isNotEmpty) {
-                    Streams currentStream = filteredSeries.elementAt(index);
-                    ActorDirectorTile currentTile = ActorDirectorTile(
-                      stream: currentStream,
-                      imageUrl: currentStream.image,
-                      title: currentTitle,
-                    );
-                    return currentTile;
-                  } else {
-                    return Container();
-                  }
-                }) : Text("    No Series found.",
-                style: TextStyle(
-                    color: color.bodyTextColor,
-                    fontWeight: FontWeight.w400,
-                    fontSize: 14,
-                    height: 1.8)),
-          ),
+          filterEmptyList(filteredSeries),
+          filteredResults(filteredSeries, filteredStreams, "Series"),
           const SizedBox(height: 15.0)
         ],
       );
+    } else if (type == "Movie") {
+      result = Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          filterLabel("Movies"),
+          filterEmptyList(filteredMovies),
+          filteredResults(filteredMovies, filteredStreams, "Movies"),
+        ],
+      );
+    } else {
+      result = Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          filterLabel("Series"),
+          filterEmptyList(filteredSeries),
+          filteredResults(filteredSeries, filteredStreams, "Series"),
+        ],
+      );
     }
-    return resultWidget;
+    return result;
   }
 
   List checkPlatformFilter(List allMoviesSeries, List activeFilters) {
     if (widget.keyPlatforms.currentState?.value != null) {
       for (var key in activeFilters) {
         if (cav.platforms.contains(key)) {
-          print("Key: $key, null: ${key == null}");
-          for (var element in allMoviesSeries) {
-            print(
-                "------------------------- Start: ${element.title.toString()}");
-          }
           allMoviesSeries
               .removeWhere((element) => !(element.provider.contains(key)));
         }
       }
     }
-
-    for (var element in allMoviesSeries) {
-      print(
-          "------------------------- Nach Platform: ${element.title.toString()}");
-    }
     return allMoviesSeries;
   }
 
   List checkTypeFilter(List filtered, List activeFilters) {
-    List types = ["Movie", "Series"];
     if (widget.keyType.currentState?.value != null) {
       for (var key in activeFilters) {
-        if (types.contains(key)) {
-          print("Key: $key, null: ${key == null}");
-          for (var element in filtered) {
-            print(
-                "------------------------- Start: ${element.title.toString()}");
-          }
+        if (cav.types.contains(key)) {
           filtered.removeWhere((element) => !(element.type.contains(key)));
         }
       }
-    }
-    for (var element in filtered) {
-      print("------------------------- Nach Type: ${element.title.toString()}");
     }
     return filtered;
   }
@@ -397,19 +333,9 @@ class _FilterResultsPageState extends State<FilterResultsPage> {
     if (widget.keyGenre.currentState?.value != null) {
       for (var key in activeFilters) {
         if (cav.genres.contains(key)) {
-          print("Key: $key, null: ${key == null}");
-          for (var element in filtered) {
-            print(
-                "------------------------- Start: ${element.title.toString()}");
-          }
           filtered.removeWhere((element) => !(element.genre.contains(key)));
         }
       }
-    }
-
-    for (var element in filtered) {
-      print(
-          "------------------------- Nach Genre: ${element.title.toString()}");
     }
     return filtered;
   }
@@ -418,15 +344,9 @@ class _FilterResultsPageState extends State<FilterResultsPage> {
     if (widget.keyYear.currentState?.value != null) {
       for (var key in activeFilters) {
         if (cav.years.contains(key)) {
-          print("Key: $key");
-          filtered.removeWhere(
-              (element) => !(element.year.toString().contains(key.toString())));
+          filtered.removeWhere((element) => !(element.year.contains(key)));
         }
       }
-    }
-
-    for (var element in filtered) {
-      print("------------------------- Nach Year: ${element.title.toString()}");
     }
     return filtered;
   }
@@ -435,16 +355,9 @@ class _FilterResultsPageState extends State<FilterResultsPage> {
     if (widget.keyActor.currentState?.value != null) {
       for (var key in activeFilters) {
         if (_actors.contains(key)) {
-          print("Key: $key");
-          print("Leer: ${filtered.isEmpty}");
           filtered.removeWhere((element) => !(element.cast.contains(key)));
         }
       }
-    }
-
-    for (var element in filtered) {
-      print(
-          "------------------------- Nach Actor: ${element.title.toString()}");
     }
     return filtered;
   }
@@ -457,4 +370,55 @@ class _FilterResultsPageState extends State<FilterResultsPage> {
     filteredList = checkActorFilter(filteredList, activeFilters);
     return filteredList;
   }
+
+
+  /*List checkFilter(List continuousList, List activeFilters, GlobalKey<FormFieldState> keyFilter, List filterList, List filterDataList) {
+    if(keyFilter.currentState?.value != null) {
+      for (var key in activeFilters) {
+        if (filterList.contains(key)) {
+          continuousList
+              .removeWhere((element) => !(filterDataList.contains(key)));
+        }
+      }
+    }
+    return continuousList;
+  }*/
+
+  Text filterLabel(String label) => Text(label,
+        style: TextStyle(
+            color: color.bodyTextColor,
+            fontSize: 18.0,
+            fontWeight: FontWeight.bold));
+
+  Widget filteredResults(List filtered, List filteredStreams, String label) => SizedBox(
+        height: filtered.isNotEmpty ? 210 : 30,
+        child: filtered.isNotEmpty
+            ? ListView.builder(
+                itemCount: filtered.length,
+                scrollDirection: Axis.horizontal,
+                shrinkWrap: true,
+                itemBuilder: (context, index) {
+                  String currentTitle = filtered.elementAt(index).title;
+                  if (filteredStreams.isNotEmpty) {
+                    Streams currentStream = filtered.elementAt(index);
+                    ActorDirectorTile currentTile = ActorDirectorTile(
+                      stream: currentStream,
+                      imageUrl: currentStream.image,
+                      title: currentTitle,
+                    );
+                    return currentTile;
+                  } else {
+                    return Container();
+                  }
+                })
+            : Text("    No $label found.",
+                style: TextStyle(
+                    color: color.bodyTextColor,
+                    fontWeight: FontWeight.w400,
+                    fontSize: 14,
+                    height: 1.8)));
+
+  SizedBox filterEmptyList(List filtered) => filtered.isNotEmpty
+      ? const SizedBox(height: 10.0)
+      : const SizedBox(height: 0.0);
 }
