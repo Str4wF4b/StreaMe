@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-import 'package:get/get.dart';
 import '../../widgets/features/actor_director_tile.dart';
 import '../../data/actor_data.dart';
 import '../../data/streams_data.dart';
 import 'package:stream_me/android/app/src/model/streams_model.dart';
 import '../../utils/constants_and_values.dart';
 import '../../utils/color_palette.dart';
-import '../../widgets/features/actor_director_tab.dart';
 
 class FilterResultsPage extends StatefulWidget {
   final GlobalKey<FormFieldState> keyPlatforms;
@@ -241,33 +239,32 @@ class _FilterResultsPageState extends State<FilterResultsPage> {
   ///
   /// A method that generates the results of the selected filter by the user
   /// activeFilters: The activeFilters that have to be observed to generate the filter results
-  /// return:
+  /// return: The filtered movies and/or series Column-widget
   ///
   Widget generateResults(List activeFilters) {
     print("Aktive Filter: $activeFilters");
 
     List movies = allStreams
         .where((element) => (element.type.toString() == "Movie"))
-        .toList();
+        .toList(); //List with all potential movies
     List series = allStreams
         .where((element) => (element.type.toString() == "Series"))
-        .toList();
+        .toList(); //List with all potential series
 
     List filteredStreams =
-        checkAllFilters([], activeFilters, movies + series);
+        checkAllFilters([], activeFilters, movies + series); //List before filtering
     List filteredMovies = filteredStreams
         .where((element) => element.type.contains("Movie"))
-        .toList();
+        .toList(); //Filtered list, but only of movies
     List filteredSeries = filteredStreams
         .where((element) => element.type.contains("Series"))
-        .toList();
+        .toList(); //Filtered list, but only of series
 
-    var type = widget.keyType.currentState?.value;
+    var type = widget.keyType.currentState?.value; //actual type (null, Movie or Series)
 
     Widget result = Container();
 
-    if (type == null) {
-      //No type selected, i.e. both types (Movie and Series)
+    if (type == null) { //No type selected, i.e. both types (Movie and Series)
       result = Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -284,7 +281,7 @@ class _FilterResultsPageState extends State<FilterResultsPage> {
           const SizedBox(height: 15.0)
         ],
       );
-    } else if (type == "Movie") {
+    } else if (type == "Movie") { //Type Movie selected
       result = Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -293,7 +290,7 @@ class _FilterResultsPageState extends State<FilterResultsPage> {
           filteredResults(filteredMovies, filteredStreams, "Movies"),
         ],
       );
-    } else {
+    } else { //Type Movie selected
       result = Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
@@ -306,18 +303,30 @@ class _FilterResultsPageState extends State<FilterResultsPage> {
     return result;
   }
 
-  List checkPlatformFilter(List allMoviesSeries, List activeFilters) {
+  ///
+  /// A method that checks if and what platform filter is selected
+  /// filtered: The current filtered list
+  /// activeFilters: The active filters that have to be observed to generate the filter results
+  /// return: The new filtered list after the (selected) platform filter
+  ///
+  List checkPlatformFilter(List filtered, List activeFilters) {
     if (widget.keyPlatforms.currentState?.value != null) {
       for (var key in activeFilters) {
         if (cav.platforms.contains(key)) {
-          allMoviesSeries
+          filtered
               .removeWhere((element) => !(element.provider.contains(key)));
         }
       }
     }
-    return allMoviesSeries;
+    return filtered;
   }
 
+  ///
+  /// A method that checks if and what type filter is selected
+  /// filtered: The current filtered list
+  /// activeFilters: The active filters that have to be observed to generate the filter results
+  /// return: The new filtered list after the (selected) type filter
+  ///
   List checkTypeFilter(List filtered, List activeFilters) {
     if (widget.keyType.currentState?.value != null) {
       for (var key in activeFilters) {
@@ -329,6 +338,12 @@ class _FilterResultsPageState extends State<FilterResultsPage> {
     return filtered;
   }
 
+  ///
+  /// A method that checks if and what genre filter is selected
+  /// filtered: The current filtered list
+  /// activeFilters: The active filters that have to be observed to generate the filter results
+  /// return: The new filtered list after the (selected) genre filter
+  ///
   List checkGenreFilter(List filtered, List activeFilters) {
     if (widget.keyGenre.currentState?.value != null) {
       for (var key in activeFilters) {
@@ -340,6 +355,12 @@ class _FilterResultsPageState extends State<FilterResultsPage> {
     return filtered;
   }
 
+  ///
+  /// A method that checks if and what year filter is selected
+  /// filtered: The current filtered list
+  /// activeFilters: The active filters that have to be observed to generate the filter results
+  /// return: The new filtered list after the (selected) year filter
+  ///
   List checkYearFilter(List filtered, List activeFilters) {
     if (widget.keyYear.currentState?.value != null) {
       for (var key in activeFilters) {
@@ -351,6 +372,12 @@ class _FilterResultsPageState extends State<FilterResultsPage> {
     return filtered;
   }
 
+  ///
+  /// A method that checks if and what actor filter is selected
+  /// filtered: The current filtered list
+  /// activeFilters: The active filters that have to be observed to generate the filter results
+  /// return: The new filtered list after the (selected) actor filter
+  ///
   List checkActorFilter(List filtered, List activeFilters) {
     if (widget.keyActor.currentState?.value != null) {
       for (var key in activeFilters) {
@@ -362,6 +389,13 @@ class _FilterResultsPageState extends State<FilterResultsPage> {
     return filtered;
   }
 
+  ///
+  /// A method that includes all methods to check the filters
+  /// filteredList: The list that will be filtered throughout the whole method (empty at the beginning)
+  /// activeFilters: The active filters that have to be observed to generate the filter results
+  /// allStreams: The list with all possible streams to start the filtering process
+  /// return: The final filtered list after each (or no) filter has been selected
+  ///
   List checkAllFilters(List filteredList, List activeFilters, List allStreams) {
     filteredList = checkPlatformFilter(allStreams, activeFilters);
     filteredList = checkTypeFilter(filteredList, activeFilters);
@@ -370,7 +404,6 @@ class _FilterResultsPageState extends State<FilterResultsPage> {
     filteredList = checkActorFilter(filteredList, activeFilters);
     return filteredList;
   }
-
 
   /*List checkFilter(List continuousList, List activeFilters, GlobalKey<FormFieldState> keyFilter, List filterList, List filterDataList) {
     if(keyFilter.currentState?.value != null) {
@@ -384,22 +417,36 @@ class _FilterResultsPageState extends State<FilterResultsPage> {
     return continuousList;
   }*/
 
+  ///
+  /// A method that generates a headline above the determined filtered movies or series
+  /// label: The label of the headline for the current checked list (movies or series list)
+  /// return: A Text with the label to form a headline
+  ///
   Text filterLabel(String label) => Text(label,
         style: TextStyle(
             color: color.bodyTextColor,
             fontSize: 18.0,
             fontWeight: FontWeight.bold));
 
+  ///
+  /// A method that checks if the filtered list (either movie or series list, not both) is empty after filtering,
+  /// if not: a List View with the found streams is returned,
+  /// otherwise: a message that indicates that no filter results have been found
+  /// filtered: A list of movies or series (a part of "filteredStreams", i.e. filteredStreams is divided in movies and series)
+  /// filteredStreams: The final filtered list after each filter has been selected (includes movies and series)
+  /// label: The label of the current checked list (movies or series list)
+  /// return: Either a ListView with the determined movies or series after filtering, or a message Text to indicate that no movies or series have been found
+  ///
   Widget filteredResults(List filtered, List filteredStreams, String label) => SizedBox(
         height: filtered.isNotEmpty ? 210 : 30,
-        child: filtered.isNotEmpty
+        child: filtered.isNotEmpty //If the movies or series list is not empty after filtering, return the results
             ? ListView.builder(
                 itemCount: filtered.length,
                 scrollDirection: Axis.horizontal,
                 shrinkWrap: true,
                 itemBuilder: (context, index) {
                   String currentTitle = filtered.elementAt(index).title;
-                  if (filteredStreams.isNotEmpty) {
+                  if (filteredStreams.isNotEmpty) { //If the general filtered list (i.e. includes movies and series) is not empty, tiles for found movies or series can be generated
                     Streams currentStream = filtered.elementAt(index);
                     ActorDirectorTile currentTile = ActorDirectorTile(
                       stream: currentStream,
@@ -407,17 +454,22 @@ class _FilterResultsPageState extends State<FilterResultsPage> {
                       title: currentTitle,
                     );
                     return currentTile;
-                  } else {
+                  } else { //If the general filtered list is empty, no results can be found
                     return Container();
                   }
                 })
-            : Text("    No $label found.",
+            : Text("    No $label found.", //If the movies or series list is empty, return a message to indicate that
                 style: TextStyle(
                     color: color.bodyTextColor,
                     fontWeight: FontWeight.w400,
                     fontSize: 14,
                     height: 1.8)));
 
+  ///
+  /// A method that checks if a list is empty or not and thus determined the space below the label above
+  /// filtered: A list of movies or series
+  /// return: A SizedBox with the determined height
+  ///
   SizedBox filterEmptyList(List filtered) => filtered.isNotEmpty
       ? const SizedBox(height: 10.0)
       : const SizedBox(height: 0.0);
