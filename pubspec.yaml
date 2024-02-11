@@ -76,7 +76,7 @@ dependencies:
   auto_size_text: ^3.0.0
 
   # Explore Swipe
-  appinio_swiper: ^2.0.2
+  appinio_swiper: ^2.1.0
 
   # TabBarView dynamic height
   autoscale_tabbarview: ^1.0.2

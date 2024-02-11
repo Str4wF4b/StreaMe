@@ -20,28 +20,28 @@ class _SwipeCardState extends State<SwipeCard> {
 
   @override
   Widget build(BuildContext context) => SizedBox(
-        height: MediaQuery.of(context).size.height * 0.8,
-        width: MediaQuery.of(context).size.width * 0.8,
-        child: Column(
-          children: [
-            ClipRRect(
-              borderRadius: BorderRadius.circular(20.0),
-              child: GestureDetector(
-                onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) =>
-                          StreamDetailsPage(stream: widget.stream),
-                    )),
-                child: CachedNetworkImage(
-                  imageUrl: widget.stream.image,
-                  fit: BoxFit.contain,
-                  placeholder: (context, url) => cons.explorePlaceholder,
-                  errorWidget: (context, url, error) => cons.imageErrorWidget,
-                ),
-              ),
+    height: MediaQuery.of(context).size.height * 0.8,
+    width: MediaQuery.of(context).size.width * 0.8,
+    child: Column(
+      children: [
+        ClipRRect(
+          borderRadius: BorderRadius.circular(20.0),
+          child: GestureDetector(
+            onTap: () => Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) =>
+                      StreamDetailsPage(stream: widget.stream),
+                )),
+            child: CachedNetworkImage(
+              imageUrl: widget.stream.image,
+              fit: BoxFit.contain,
+              placeholder: (context, url) => cons.explorePlaceholder,
+              errorWidget: (context, url, error) => cons.imageErrorWidget,
             ),
-          ],
+          ),
         ),
-      );
+      ],
+    ),
+  );
 }
