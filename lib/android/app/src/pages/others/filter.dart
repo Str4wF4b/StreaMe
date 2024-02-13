@@ -67,7 +67,7 @@ class _FilterPageState extends State<FilterPage> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      color: Colors.transparent,
+      color: color.backgroundColor.withOpacity(0.93),
       //Container transparent to show Dialog opacity background in SearchPage
       width: MediaQuery.of(context).size.width,
       //Filter screen with full window width
@@ -210,14 +210,6 @@ class _FilterPageState extends State<FilterPage> {
     );
   }
 
-  String? checkValue(String value) {
-    if (value.contains("None")) {
-      return "Huuuhu";
-    } else {
-      return value;
-    }
-  }
-
   Center makeFilter(String? selectedValue, List<String> list, String label,
       GlobalKey keyController) {
     return Center(
@@ -254,6 +246,9 @@ class _FilterPageState extends State<FilterPage> {
                 OutlineInputBorder(borderRadius: BorderRadius.circular(30.0)),
             enabledBorder: OutlineInputBorder(
                 borderSide: BorderSide(color: Colors.grey.shade400),
+                borderRadius: BorderRadius.circular(30.0)),
+            focusedBorder: OutlineInputBorder(
+                borderSide: const BorderSide(color: Colors.blueAccent),
                 borderRadius: BorderRadius.circular(30.0)),
             filled: true,
             fillColor: Colors.black38,

@@ -66,8 +66,7 @@ class _AppOverlayState extends State<AppOverlay> {
     return Scaffold(
         backgroundColor: color.backgroundColor,
         appBar: StreameAppBar(
-            title: widget.titles[widget
-                .currentPageIndex] /*widget.titles[widget.selectedIndex]*/),
+            title: widget.titles[_currentPageIndex] /*widget.titles[widget.selectedIndex]*/),
         //app bar on top of every page
 /*        endDrawer: Drawer(
           backgroundColor: color.backgroundColor,
@@ -91,13 +90,13 @@ class _AppOverlayState extends State<AppOverlay> {
         //widget.pages[widget.selectedIndex],
         bottomNavigationBar: NavigationBarTheme(
           data: NavigationBarThemeData(
-            indicatorColor: Colors.grey.shade300,
+            indicatorColor: color.bodyTextColor,
             labelTextStyle: MaterialStateProperty.resolveWith((states) {
               if (states.contains(MaterialState.selected)) {
                 return TextStyle(
                     fontSize: 13,
                     fontWeight: FontWeight.w400,
-                    color: Colors.grey.shade300,
+                    color: color.bodyTextColor,
                     height: 1.0);
               } else {
                 return const TextStyle(
@@ -111,7 +110,8 @@ class _AppOverlayState extends State<AppOverlay> {
           child: NavigationBar(
             height: 60.0,
             backgroundColor: color.backgroundColor,
-            indicatorColor: Colors.grey.shade300,
+            elevation: 0.0,
+            indicatorColor: color.bodyTextColor,
             labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
             animationDuration: const Duration(milliseconds: 800),
             destinations: [

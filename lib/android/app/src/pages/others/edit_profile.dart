@@ -29,6 +29,7 @@ class _EditProfileState extends State<EditProfile> {
                 child: Text(
                   "Edit Profile",
                   style: TextStyle(
+                    color: Colors.white,
                     fontWeight: FontWeight.w500,
                     fontSize: 22,
                   ),

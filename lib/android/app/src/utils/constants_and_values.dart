@@ -3,21 +3,26 @@ import 'package:flutter/material.dart';
 class ConstantsAndValues {
   Widget streamImagePlaceholder = Transform.scale(
       scale: 0.5,
-      child: const CircularProgressIndicator()); //only for square image covers
+      child: const CircularProgressIndicator(
+          color: Colors.blueAccent)); //only for square image covers
   Widget actorDirectorPlaceholder = Transform.scale(
       scaleX: 0.25,
       scaleY: 0.16, //0.285,
-      child:
-          const CircularProgressIndicator()); //only for actor and director images in ActorDirector Screen
+      child: const CircularProgressIndicator(
+          color: Colors
+              .blueAccent)); //only for actor and director images in ActorDirector Screen
   Widget explorePlaceholder = Transform.scale(
       scale: 1,
-      child:
-          const CircularProgressIndicator()); //only for image covers in Explore Tab
+      child: const CircularProgressIndicator(
+          color: Colors.blueAccent)); //only for image covers in Explore Tab
   Widget streamDetailsPlaceholder = Transform.scale(
       scaleX: 0.215,
       scaleY: 0.25,
-      child:
-          const CircularProgressIndicator()); //only for image cover in StreamDetails Screen;
+      child: const CircularProgressIndicator(
+          color: Colors
+              .blueAccent)); //only for image cover in StreamDetails Screen;
+
+  double textHeight = 1.24; //the height for 2-lined texts
 
   Widget imageErrorWidget =
       const Icon(Icons.error_outline, color: Colors.redAccent, size: 40);

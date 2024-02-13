@@ -16,7 +16,8 @@ class _HelpPageState extends State<HelpPage> {
     return Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
-          title: const Text("Help"),
+          title: Text("Help", style: TextStyle(color: color.bodyTextColor, fontWeight: FontWeight.w500)),
+
           centerTitle: true,
           backgroundColor: color.backgroundColor,
           elevation: 0.0,

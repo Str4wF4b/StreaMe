@@ -45,8 +45,14 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
             SliverAppBar(
               backgroundColor: color.backgroundColor,
               //title: FittedBox(child: Text(widget.actorDirector.displayName)),
-              //centerTitle: true,
               elevation: 0.0,
+              scrolledUnderElevation: 0.0,
+              leading: IconButton(
+                  icon: const Icon(
+                    Icons.arrow_back,
+                    color: Colors.white,
+                  ),
+                  onPressed: () => Navigator.pop(context)),
               pinned: true,
               expandedHeight: MediaQuery.of(context).size.height * 0.375, //298,
               flexibleSpace: Container(
@@ -56,7 +62,13 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(20.0),
                   child: FlexibleSpaceBar(
+                    titlePadding: const EdgeInsets.only(left: 15.0, right: 15.0, bottom: 15.0),
                     expandedTitleScale: 1.2,
+                    centerTitle: true,
+                    title: FittedBox(
+                      child:
+                      Text(widget.actorDirector.displayName), //FittedBox(
+                    ),
                     background: Stack(
                       fit: StackFit.expand,
                       children: [
@@ -86,11 +98,6 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
                       ],
                     ),
                     //titlePadding: const EdgeInsets.only(top: 0.0), //0.0 but necessary to put title on bottom of image
-                    centerTitle: true,
-                    title: FittedBox(
-                      child:
-                          Text(widget.actorDirector.displayName), //FittedBox(
-                    ),
                   ),
                 ),
               ),
@@ -147,6 +154,7 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
                             //padding: const EdgeInsets.only(bottom: 5.0),
                             child: TabBar(
                               physics: const ClampingScrollPhysics(),
+                              dividerHeight: 0.0,
                               labelColor: color.backgroundColor,
                               unselectedLabelColor: Colors.grey,
                               indicator: BoxDecoration(

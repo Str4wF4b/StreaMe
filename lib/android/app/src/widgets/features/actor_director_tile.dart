@@ -53,6 +53,7 @@ class _ActorDirectorTileState extends State<ActorDirectorTile> {
                 color: color.bodyTextColor,
                 fontWeight: FontWeight.w500,
                 fontSize: 14 * 1 / MediaQuery.of(context).textScaleFactor,
+                height: cons.textHeight
               ),
               maxLines: 2,
               textAlign: TextAlign.center,

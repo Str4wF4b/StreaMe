@@ -215,7 +215,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   Widget bottomProfileSheet() {
     return Container(
-      height: 100.0,
+      height: 90.0,
       width: MediaQuery.of(context).size.width,
       margin: const EdgeInsets.symmetric(
         horizontal: 20.0,
@@ -232,7 +232,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
           ),
           const SizedBox(
             //spacing
-            height: 20.0,
+            height: 8.0,
           ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,

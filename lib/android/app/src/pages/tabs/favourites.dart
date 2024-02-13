@@ -39,7 +39,7 @@ class _FavouritesPageState extends State<FavouritesPage>
                   alignment: Alignment.centerLeft,
                   child: TabBar(
                     //overlayColor: MaterialStateColor,
-                    //dividerColor: Colors.redAccent,
+                    dividerColor: Colors.transparent,
                     physics: const ClampingScrollPhysics(),
                     labelColor: color.backgroundColor,
                     unselectedLabelColor: Colors.grey,

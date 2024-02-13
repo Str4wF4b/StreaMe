@@ -23,11 +23,16 @@ class _StreameAppBarState extends State<StreameAppBar> {
   @override
   Widget build(BuildContext context) {
     return AppBar(
-      title: FittedBox(child: Text(widget.title)),
+      title: FittedBox(
+          child: Text(
+        widget.title,
+        style: const TextStyle(color: Colors.white, fontWeight: FontWeight.w500),
+      )),
       //fitting the width of the title of the screen
       centerTitle: true,
       backgroundColor: color.backgroundColor,
       elevation: 0.0,
+      scrolledUnderElevation: 0.0,
       /*shape: const Border(
             //border line under AppBar
             bottom: BorderSide(
@@ -56,7 +61,7 @@ class _StreameAppBarState extends State<StreameAppBar> {
                     barrierLabel: 'Dialog',
                     transitionDuration: const Duration(milliseconds: 350),
                     pageBuilder: (_, __, ___) {
-                       return EditProfile(
+                      return EditProfile(
                           backgroundColor: color.backgroundColor);
                     },
                   );
@@ -72,7 +77,7 @@ class _StreameAppBarState extends State<StreameAppBar> {
                 (value) => Navigator.of(context).pushAndRemoveUntil(
                     MaterialPageRoute(builder: (context) => const AuthPage()),
                     (route) => false)),
-            icon: const Icon(Icons.logout))
+            icon: const Icon(Icons.logout, color: Colors.white))
       ],
     );
   }

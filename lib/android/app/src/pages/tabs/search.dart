@@ -38,7 +38,7 @@ class _SearchPageState extends State<SearchPage> {
   Widget buildBody() {
     return*/
         Scaffold(
-      backgroundColor: Colors.transparent,
+      backgroundColor: color.backgroundColor,
       body: Container(
         color: color.middleBackgroundColor,
         child: Column(
@@ -111,10 +111,10 @@ class _SearchPageState extends State<SearchPage> {
                         context: context,
                         builder: (BuildContext context) {
                           return Dialog(
-                            backgroundColor:
-                                color.middleBackgroundColor.withOpacity(0.93),
+                            backgroundColor: color.backgroundColor.withOpacity(0.5),
                             insetPadding: EdgeInsets.zero,
                             //full width and height
+                            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero), //remove rounded border
                             child: FilterPage(),
                           );
                         });
@@ -170,7 +170,7 @@ class _SearchPageState extends State<SearchPage> {
         ),
         title: Text(
           stream.title,
-          style: TextStyle(color: color.bodyTextColor),
+          style: TextStyle(color: color.bodyTextColor, height: cons.textHeight),
         ),
         onTap: () => Navigator.push(
             context,

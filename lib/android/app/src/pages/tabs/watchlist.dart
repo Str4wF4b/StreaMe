@@ -40,10 +40,16 @@ class _WatchlistPageState extends State<WatchlistPage>
         child: Container(
           color: color.middleBackgroundColor,
           child: Column(
+            //crossAxisAlignment: CrossAxisAlignment.start,
+            //mainAxisSize: MainAxisSize.min,
+            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Align(
                   alignment: Alignment.centerLeft,
                   child: TabBar(
+                    //dividerHeight: 0.0,
+                    tabAlignment: TabAlignment.start,
+                    dividerColor: Colors.transparent,
                     physics: const ClampingScrollPhysics(),
                     isScrollable: true,
                     labelColor: color.backgroundColor,

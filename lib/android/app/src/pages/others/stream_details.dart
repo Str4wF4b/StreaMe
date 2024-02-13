@@ -84,9 +84,19 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
             child: CustomScrollView(slivers: [
               SliverAppBar(
                 backgroundColor: color.backgroundColor,
-                title: FittedBox(child: Text(widget.stream.title)),
+                title: FittedBox(
+                    child: Text(widget.stream.title,
+                        style: const TextStyle(
+                            color: Colors.white, fontWeight: FontWeight.w500))),
                 centerTitle: true,
                 elevation: 0.0,
+                scrolledUnderElevation: 0.0,
+                leading: IconButton(
+                    icon: const Icon(
+                      Icons.arrow_back,
+                      color: Colors.white,
+                    ),
+                    onPressed: () => Navigator.pop(context)),
                 pinned: true,
                 expandedHeight: 300,
                 flexibleSpace: FlexibleSpaceBar(
@@ -280,7 +290,8 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                                       color: color.bodyTextColor,
                                       fontSize: 16 *
                                           1 /
-                                          MediaQuery.of(context).textScaleFactor,
+                                          MediaQuery.of(context)
+                                              .textScaleFactor,
                                     ),
                                     indicatorIcon: Icons.keyboard_arrow_down,
                                     indicatorIconColor: Colors.grey.shade400,
@@ -400,11 +411,22 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                                             height: 40,
                                             child: TabBar(
                                               controller: _tabController,
+                                              indicator:
+                                                  const UnderlineTabIndicator(
+                                                borderSide: BorderSide(
+                                                    width: 3.0,
+                                                    color: Colors.blueAccent),
+                                                insets: EdgeInsets.symmetric(
+                                                    horizontal: 49),
+                                              ),
                                               indicatorPadding:
                                                   const EdgeInsets.only(
                                                       left: 7.0,
                                                       right: 7.0,
                                                       bottom: 4.0),
+                                              labelColor: Colors.white,
+                                              unselectedLabelColor: Colors.grey,
+                                              dividerHeight: 0.0,
                                               tabs: const [
                                                 Tab(
                                                   text: "SD",
@@ -946,7 +968,8 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
             style: TextStyle(
                 color: color.bodyTextColor,
                 fontSize: 11.0,
-                fontWeight: FontWeight.w500),
+                fontWeight: FontWeight.w500,
+                height: cons.textHeight),
             textAlign: TextAlign.center,
             maxLines: 1,
             overflow: TextOverflow.fade,
