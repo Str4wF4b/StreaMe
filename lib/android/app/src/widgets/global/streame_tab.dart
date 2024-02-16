@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
 
 class StreaMeTab extends StatelessWidget {
@@ -22,8 +23,7 @@ class StreaMeTab extends StatelessWidget {
       height: 35,
       padding: isWatchlist
           ? const EdgeInsets.only(left: 15.0, right: 15.0)
-          : null, //TODO: CHANGE THIS ONLY FOR WATCHLIST TABBAR
-      //width: widthNeeded ? 100 : null,
+          : null,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(30.0),
           border: Border.all(

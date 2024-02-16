@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:stream_me/android/app/src/data/streams_data.dart';
 import 'package:stream_me/android/app/src/model/streams_model.dart';
+import 'package:stream_me/android/app/src/pages/tabs/explore.dart';
 
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
 import '../../widgets/features/stream_tile.dart';
@@ -20,13 +21,10 @@ class _FavouritesPageState extends State<FavouritesPage>
   late final TabController _tabController =
       TabController(length: 2, vsync: this);
 
+  final ExplorePage explorePage = const ExplorePage();
+
   @override
   Widget build(BuildContext context) {
-    /*return AppOverlay(title: "Favourites", body: buildBody(),);
-  }
-
-  Widget buildBody() {
-    */
     return Scaffold(
       backgroundColor: color.backgroundColor,
       body: Scaffold(
@@ -38,9 +36,8 @@ class _FavouritesPageState extends State<FavouritesPage>
                 Align(
                   alignment: Alignment.centerLeft,
                   child: TabBar(
-                    //overlayColor: MaterialStateColor,
-                    dividerColor: Colors.transparent,
                     physics: const ClampingScrollPhysics(),
+                    dividerHeight: 0.0,
                     labelColor: color.backgroundColor,
                     unselectedLabelColor: Colors.grey,
                     indicator: BoxDecoration(
@@ -49,31 +46,35 @@ class _FavouritesPageState extends State<FavouritesPage>
                     ),
                     indicatorSize: TabBarIndicatorSize.label,
                     indicatorPadding:
-                        const EdgeInsets.fromLTRB(25.0, 10.5, 25.0, 11.0),
+                        // const EdgeInsets.fromLTRB(25.0, 10.5, 25.0, 11.0),
+                        const EdgeInsets.fromLTRB(25.0, 10.5, 25.0, 10.5),
+                    onTap: (int index) => setState(() {
+                      _tabController.index = index;
+                    }),
                     controller: _tabController,
                     tabs: [
                       Padding(
                           padding:
                               const EdgeInsets.fromLTRB(25.0, 5.0, 25.0, 3.0),
-                          child: addTab("Movies", 0)),
+                          child: favouritesTab("Movies", 0)),
                       Padding(
                           padding:
                               const EdgeInsets.fromLTRB(25.0, 5.0, 25.0, 3.0),
-                          child: addTab("Series", 1))
+                          child: favouritesTab("Series", 1))
                     ],
                   ),
                 ),
                 Expanded(
                     child: TabBarView(
                   controller: _tabController,
+                  physics: const NeverScrollableScrollPhysics(),
                   children: [
                     Padding(
                       padding: const EdgeInsets.fromLTRB(10.0, 2.0, 10.0, 5.0),
                       child: moviesFavourites(),
                     ),
                     Padding(
-                        padding:
-                            const EdgeInsets.fromLTRB(10.0, 2.0, 10.0, 5.0),
+                        padding: const EdgeInsets.fromLTRB(10.0, 2.0, 10.0, 5.0),
                         child: seriesFavourites())
                   ],
                 ))
@@ -120,6 +121,7 @@ class _FavouritesPageState extends State<FavouritesPage>
       ],
     );
   }
+//TODO: Wenn von home bildschirm auf favourites oder explore, kommt snackbar 60 zu hoch und von da an dann immer, sonst nicht
 
   Column seriesFavourites() {
     List series = allStreams
@@ -160,15 +162,12 @@ class _FavouritesPageState extends State<FavouritesPage>
   }
 
   /// todo
-  Widget addTab(String tabTitle, int tabIndex) => Tab(
-      child: GestureDetector(
-          onTap: () => setState(() {
-                _tabController.index = tabIndex;
-              }),
-          child: StreaMeTab(
-            tabTitle: tabTitle,
-            tabIndex: tabIndex,
-            tabController: _tabController,
-            isWatchlist: false,
-          )));
+  Widget favouritesTab(String tabTitle, int tabIndex) => Tab(
+        child: StreaMeTab(
+          tabTitle: tabTitle,
+          tabIndex: tabIndex,
+          tabController: _tabController,
+          isWatchlist: false,
+        ),
+      );
 }

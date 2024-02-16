@@ -61,6 +61,9 @@ class _WatchlistPageState extends State<WatchlistPage>
                     indicatorSize: TabBarIndicatorSize.label,
                     indicatorPadding:
                         const EdgeInsets.fromLTRB(0.0, 10.5, 0.0, 11.0),
+                    onTap: (int index) => setState(() {
+                      _tabController.index = index;
+                    }),
                     //TODO: Try unselectedLabelStyle: , ??
                     controller: _tabController,
                     tabs: [
@@ -72,13 +75,16 @@ class _WatchlistPageState extends State<WatchlistPage>
                     ],
                   )),
               Expanded(
-                  child: TabBarView(controller: _tabController, children: [
-                SizedBox(width: 110, child: addWatchlistTab(all)),
-                addWatchlistTab(movies),
-                addWatchlistTab(series),
-                addWatchlistTab(watch),
-                addWatchlistTab(alreadyWatched)
-              ]))
+                  child: TabBarView(
+                      controller: _tabController,
+                      physics: const NeverScrollableScrollPhysics(),
+                      children: [
+                    SizedBox(width: 110, child: addWatchlistTab(all)),
+                    addWatchlistTab(movies),
+                    addWatchlistTab(series),
+                    addWatchlistTab(watch),
+                    addWatchlistTab(alreadyWatched)
+                  ]))
             ],
           ),
         ),
@@ -90,16 +96,12 @@ class _WatchlistPageState extends State<WatchlistPage>
   Widget addTab(String tabTitle, int tabIndex) => Padding(
         padding: const EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 3.0),
         child: Tab(
-            child: GestureDetector(
-                onTap: () => setState(() {
-                      _tabController.index = tabIndex;
-                    }),
-                child: StreaMeTab(
-                  tabTitle: tabTitle,
-                  tabIndex: tabIndex,
-                  tabController: _tabController,
-                  isWatchlist: true,
-                ))),
+            child: StreaMeTab(
+              tabTitle: tabTitle,
+              tabIndex: tabIndex,
+              tabController: _tabController,
+              isWatchlist: true,
+            )),
       );
 
   Padding addWatchlistTab(List list) => Padding(

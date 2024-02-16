@@ -239,13 +239,15 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
       );
 
   /// a function that adds the look of a tab
-  Widget addTab(String tabTitle, int tabIndex) => Tab(
+  Widget addTab(String tabTitle, int tabIndex) {
+    return Tab(
           child: StreaMeTab(
         tabTitle: tabTitle,
         tabIndex: tabIndex,
         tabController: _tabController,
         isWatchlist: false,
       ));
+  }
 
   /// a function that
   int getAge(String actorAge) {
