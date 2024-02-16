@@ -34,7 +34,8 @@ class AuthPopups {
                     shape: RoundedRectangleBorder(
                         side: const BorderSide(color: Colors.blueAccent),
                         borderRadius: BorderRadius.circular(20.0))),
-                child: const Text("Try again"),
+                child: const Text("Try again",
+                    style: TextStyle(color: Colors.blueAccent)),
               ),
             )
           ],

@@ -162,7 +162,8 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
                     shape: RoundedRectangleBorder(
                         side: const BorderSide(color: Colors.blueAccent),
                         borderRadius: BorderRadius.circular(20.0))),
-                child: Text(checkMessage(correctMail, emailController)),
+                child: Text(checkMessage(correctMail, emailController),
+                    style: const TextStyle(color: Colors.blueAccent)),
               ),
             )
           ],

@@ -48,12 +48,7 @@ class _EditTextFieldState extends State<EditTextField> {
                     },
                     icon: showPassword
                         ? const Icon(Icons.visibility, color: Colors.grey)
-                        : const Icon(Icons.visibility_off,
-                            color: Colors
-                                .grey), /*const Icon(
-                      Icons.remove_red_eye,
-                      color: Colors.grey,
-                    ),*/
+                        : const Icon(Icons.visibility_off, color: Colors.grey),
                   )
                 : null,
             floatingLabelBehavior: FloatingLabelBehavior.always,

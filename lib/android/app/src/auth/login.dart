@@ -65,15 +65,14 @@ class LoginPageState extends State<LoginPage> {
                       inputController: widget.emailController,
                       obscureText: false,
                       hintText: "Email",
-                      prefixIcon: Icons.person /*, const Icon(Icons.abc)*/),
+                      prefixIcon: Icons.person),
                   const SizedBox(height: 13),
                   LoginTextField(
                       // password textfield
                       inputController: widget.passwordController,
                       obscureText: true,
                       hintText: "Password",
-                      prefixIcon:
-                          Icons.lock /*, const Icon(Icons.remove_red_eye)*/),
+                      prefixIcon: Icons.lock),
                   const SizedBox(height: 18),
                   GestureDetector(
                     onTap: () {

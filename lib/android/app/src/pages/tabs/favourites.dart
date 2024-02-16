@@ -21,8 +21,6 @@ class _FavouritesPageState extends State<FavouritesPage>
   late final TabController _tabController =
       TabController(length: 2, vsync: this);
 
-  final ExplorePage explorePage = const ExplorePage();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
