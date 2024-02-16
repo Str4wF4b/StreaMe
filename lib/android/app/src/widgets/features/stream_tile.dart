@@ -35,11 +35,13 @@ class _StreamTileState extends State<StreamTile> {
   final ConstantsAndValues cons = ConstantsAndValues();
 
   final keyRow = GlobalKey();
+  bool _addFavourites = true; //true because it's already in the Favourites list
   //Size? size;
   //Offset? position;
 
   @override
   Widget build(BuildContext context) {
+
     return GestureDetector(
         onTap: () => Navigator.push(
             context,
@@ -183,13 +185,14 @@ class _StreamTileState extends State<StreamTile> {
                                 ..removeCurrentSnackBar()
                                 ..showSnackBar(
                                     removedSnackBar(widget.stream.type));
-                              /*setState(() {
-                              addWatchlist = !addWatchlist;
-                              //TODO: Save film to watchlist
-                            });*/
+                              setState(() {
+                                _addFavourites = !_addFavourites;
+                                //_addFavourites ? favourites.add(currentStream) : favourites.remove(currentStream);
+                                //TODO: Save Stream to Firestore favourites for specific user
+                            });
                             },
-                            icon: const Icon(
-                              Icons.favorite,
+                            icon: Icon(
+                              _addFavourites ? Icons.favorite : Icons.favorite_border_outlined,
                               color: Colors.red,
                             )),
                       )
@@ -250,7 +253,11 @@ class _StreamTileState extends State<StreamTile> {
         ],
       ));
 
-  void undoFavRemoved() {}
+  void undoFavRemoved() {
+    setState(() {
+      _addFavourites = true;
+    });
+  }
 
   void getRowSizeAndPosition() =>
       WidgetsBinding.instance.addPostFrameCallback((_) {

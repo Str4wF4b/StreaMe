@@ -24,11 +24,13 @@ class _ExplorePageState extends State<ExplorePage> {
 
   bool addFavourites = false;
   bool addWatchlist = false;
+  List watchlist = [];
+  List favourites = [];
+
+  bool _buttonReady = false;
 
   final AppinioSwiperController _swipeCardController =
       AppinioSwiperController();
-
-  //final bool _unswipe = false;
 
   @override
   void initState() {
@@ -45,12 +47,6 @@ class _ExplorePageState extends State<ExplorePage> {
 
   @override
   Widget build(BuildContext context) {
-    /*return AppOverlay(title: "Explore", body: buildBody(),);
-  }
-
-
-  Widget buildBody() {
-    */
     screenHeight = MediaQuery.of(context).size.height;
     screenWidth = MediaQuery.of(context).size.width;
 
@@ -89,7 +85,7 @@ class _ExplorePageState extends State<ExplorePage> {
                         onUnSwipe: _unswipe,
                         allowUnlimitedUnSwipe: true,
                         //onSwipeCancelled: _swipeCancel,
-                        //threshold: 250,
+                        threshold: 100,
                       ),
                     ),
                   ),
@@ -104,18 +100,41 @@ class _ExplorePageState extends State<ExplorePage> {
                 children: [
                   ElevatedButton(
                     onPressed: () {
+                      if (_buttonReady) {
+                        _swipeCardController.swipeLeft();
+                        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                      }
+                    },
+                    style: ButtonStyle(
+                        shape: MaterialStateProperty.all<CircleBorder>(
+                            const CircleBorder()),
+                        padding: MaterialStateProperty.all<EdgeInsets>(
+                            const EdgeInsets.all(16.0)),
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            Colors.grey.shade900),
+                        overlayColor:
+                            getColor(Colors.grey.shade900, Colors.redAccent)),
+                    child: Icon(
+                      Icons.close,
+                      size: 30,
+                      color: color.bodyTextColor,
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
                       ScaffoldMessenger.of(context)
                         ..removeCurrentSnackBar()
                         ..showSnackBar(listSnackBar(currentStream.type));
                       setState(() {
                         addWatchlist = !addWatchlist;
-                        //TODO: Save film to watchlist
+                        addWatchlist ? watchlist.add(currentStream) : watchlist.remove(currentStream);
+                        //TODO: Save Stream to Firestore watchlist for specific user
                       });
                     },
                     style: style.exploreButtonStyle,
                     child: Icon(
                       addWatchlist ? Icons.check_rounded : Icons.add_rounded,
-                      size: 39,
+                      size: 30,
                       color: color.bodyTextColor,
                     ),
                   ),
@@ -126,19 +145,21 @@ class _ExplorePageState extends State<ExplorePage> {
                         ..showSnackBar(favSnackBar(currentStream.type));
                       setState(() {
                         addFavourites = !addFavourites;
-                        //TODO: Save film to favourites
+                        addFavourites ? favourites.add(currentStream) : favourites.remove(currentStream);
+                        //TODO: Save Stream to Firestore favourites for specific user
                       });
                     },
                     style: style.exploreButtonStyle,
                     child: Icon(
                       addFavourites ? Icons.favorite : Icons.favorite_outline,
-                      size: 39,
+                      size: 30,
                       color: color.bodyTextColor,
                     ),
                   ),
                   ElevatedButton(
                     onPressed: () {
                       _swipeCardController.unswipe();
+                      ScaffoldMessenger.of(context).removeCurrentSnackBar();
                     },
                     style: ButtonStyle(
                         shape: MaterialStateProperty.all<CircleBorder>(
@@ -148,10 +169,10 @@ class _ExplorePageState extends State<ExplorePage> {
                         backgroundColor: MaterialStateProperty.all<Color>(
                             Colors.grey.shade900),
                         overlayColor: getColor(
-                            Colors.grey.shade900, Colors.deepOrangeAccent)),
+                            Colors.grey.shade900, Colors.orangeAccent)),
                     child: Icon(
                       Icons.undo_outlined,
-                      size: 39,
+                      size: 30,
                       color: color.bodyTextColor,
                     ),
                   ),
@@ -164,16 +185,16 @@ class _ExplorePageState extends State<ExplorePage> {
     );
   }
 
-  /**
-   * A function that generates a snackbar if clicked on the heart icon.
-   * If the heart is filled, the "added to Favourites" snack bar is shown,
-   * if not, the "removed from Favourites" snack bar is shown
-   */
+  ///
+  /// A function that generates a snackbar if clicked on the heart icon.
+  /// If the heart is filled, the "added to Favourites" snack bar is shown,
+  /// if not, the "removed from Favourites" snack bar is shown
+  ///
   SnackBar favSnackBar(String stream) => SnackBar(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
       behavior: SnackBarBehavior.floating,
-      margin: const EdgeInsets.only(
-          left: 28.0, right: 28.0, bottom: 6.0 /* + 60.0*/),
+      margin:
+          const EdgeInsets.only(left: 28.0, right: 28.0, bottom: 66.0 /* 6.0*/),
       //BottomAppBar has height 60.0
       duration: const Duration(milliseconds: 1500),
       content: Text(
@@ -184,16 +205,16 @@ class _ExplorePageState extends State<ExplorePage> {
         textAlign: TextAlign.center,
       ));
 
-  /**
-   * A function that generates a snackbar if clicked on the plus, respectively check icon.
-   * If the icon changes to a check icon, the "added to Watchlist" snack bar is shown,
-   * if the icon changes to a plus icon, the "removed from Watchlist" snack bar is shown
-   */
+  ///
+  /// A function that generates a snackbar if clicked on the plus, respectively check icon.
+  /// If the icon changes to a check icon, the "added to Watchlist" snack bar is shown,
+  /// if the icon changes to a plus icon, the "removed from Watchlist" snack bar is shown
+  ///
   SnackBar listSnackBar(String stream) => SnackBar(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
       behavior: SnackBarBehavior.floating,
-      margin: const EdgeInsets.only(
-          left: 28.0, right: 28.0, bottom: 6.0 /* + 60.0*/),
+      margin:
+          const EdgeInsets.only(left: 28.0, right: 28.0, bottom: 66.0 /* 6.0*/),
       //BottomAppBar has height 60.0
       duration: const Duration(milliseconds: 1500),
       content: Text(
@@ -204,9 +225,9 @@ class _ExplorePageState extends State<ExplorePage> {
         textAlign: TextAlign.center,
       ));
 
-  /**
-   * A function
-   */
+  ///
+  /// A function
+  ///
   MaterialStateProperty<Color> getColor(Color color, Color pressedColor) {
     getColor(Set<MaterialState> states) {
       if (states.contains(MaterialState.pressed)) {
@@ -219,37 +240,30 @@ class _ExplorePageState extends State<ExplorePage> {
     return MaterialStateProperty.resolveWith(getColor);
   }
 
+  ///
+  ///
+  ///
   void _swipe(int previousIndex, int targetIndex, SwiperActivity activity) {
     if (activity.direction == AxisDirection.right &&
-        activity.currentOffset != const Offset(3, 0)) { //check Offset to avoid _shakeCard() to add it automatically to Favourites
+        activity.currentOffset >= const Offset(100, 0)) {
+      //check Offset to avoid _shakeCard() to add it automatically to Favourites and make Offset same as threshold
       print(activity.direction);
       addToFavourites();
     }
-    if (activity.direction == AxisDirection.up&&
-        activity.currentOffset != const Offset(0, -3)) { //check Offset to avoid _shakeCard() to add it automatically to Watchlist
+    if (activity.direction == AxisDirection.up &&
+        activity.currentOffset <= const Offset(0, -100)) {
+      //check Offset to avoid _shakeCard() to add it automatically to Watchlist and make Offset same as threshold
       print(activity.direction);
       addToWatchlist();
     }
   }
 
-  void checkSwipeDirection(AppinioSwiperController swipeCardController) {
-    //if (swipeCardController.swipe)
-    //if left: nothing, card flies out
-    //if right: load last card
-    //if undo button: same as right
-  }
+  /// A function to unswipe a card
+  void _unswipe(SwiperActivity? swiperActivity) {}
 
-  void _unswipe(SwiperActivity? swiperActivity) {
-    //if pressed Undo-Button then unswipe, else do nothing
-    //if (unswiped) {
-    //  _swipeCardController.unswipe();
-    //}
-  }
-
-  void _swipeCancel(SwiperActivity? swiperActivity) {
-    print("cancel");
-  }
-
+  ///
+  ///
+  ///
   void addToFavourites() {
     ScaffoldMessenger.of(context)
       ..removeCurrentSnackBar()
@@ -260,6 +274,9 @@ class _ExplorePageState extends State<ExplorePage> {
         );
   }
 
+  ///
+  ///
+  ///
   void addToWatchlist() {
     ScaffoldMessenger.of(context)
       ..removeCurrentSnackBar()
@@ -269,9 +286,12 @@ class _ExplorePageState extends State<ExplorePage> {
     });
   }
 
+  ///
+  ///
+  ///
   Future<void> _shakeCard() async {
     const double distance = 3;
-    // We can animate back and forth by chaining different animations.
+
     await _swipeCardController.animateTo(
       const Offset(0, -distance), //shake card up
       duration: const Duration(milliseconds: 200),
@@ -293,12 +313,14 @@ class _ExplorePageState extends State<ExplorePage> {
       curve: Curves.easeInOut,
     );
 
-    // We need to animate back to the center because `animateTo` does not center
-    // the card for us.
+    // Animate back manually to center:
     await _swipeCardController.animateTo(
       const Offset(0, 0),
       duration: const Duration(milliseconds: 200),
       curve: Curves.easeInOut,
     );
+
+    _buttonReady =
+        true; //After the quick animation the card can be cancel swiped
   }
 }

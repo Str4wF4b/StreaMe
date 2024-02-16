@@ -2,6 +2,7 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:expand_widget/expand_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
@@ -171,7 +172,8 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                                         listSnackBar(widget.stream.type));
                                   setState(() {
                                     addWatchlist = !addWatchlist;
-                                    //TODO: Save film to watchlist
+                                    addWatchlist ? watchlist.add(widget.stream) : watchlist.remove(widget.stream);
+                                    //TODO: Save Stream to Firestore watchlist for specific user
                                   });
                                 },
                                 icon: addWatchlist
@@ -189,8 +191,9 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                                         favSnackBar(widget.stream.type));
                                   setState(() {
                                     addFavourites = !addFavourites;
-                                    favourites.add(widget.stream);
-                                    //TODO: Save film to favourites
+                                    addFavourites ? favourites.add(widget.stream) : favourites.remove(widget.stream);
+                                    //TODO: Save Stream to Firestore favourites for specific user
+                                    //addFavourites ? await FirebaseFirestore.instance.collection("users").doc
                                   });
                                 },
                                 icon: addFavourites
