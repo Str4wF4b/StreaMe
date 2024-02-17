@@ -69,30 +69,8 @@ class _AppOverlayState extends State<AppOverlay> {
           : const EdgeInsets.only(bottom: 60.0),
       child: Scaffold(
           backgroundColor: color.backgroundColor,
-          appBar: StreameAppBar(
-              title: widget.titles[
-                  _currentPageIndex] /*widget.titles[widget.selectedIndex]*/),
-          //app bar on top of every page
-          /*        endDrawer: Drawer(
-            backgroundColor: color.backgroundColor,
-            shape: const RoundedRectangleBorder(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(25.0),
-                bottomLeft: Radius.circular(25.0)
-              )
-            ),
-            child: SingleChildScrollView(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  buildHeader(context),
-                  buildMenuItems(context),
-                ],
-              ),
-            ),
-          ),*/
+          appBar: StreameAppBar(title: widget.titles[_currentPageIndex]),
           body: widget.pages[_currentPageIndex],
-          //widget.pages[widget.selectedIndex],
           bottomNavigationBar: NavigationBarTheme(
             data: NavigationBarThemeData(
               indicatorColor: color.bodyTextColor,
