@@ -12,21 +12,12 @@ import '../../pages/tabs/watchlist.dart';
 class AppOverlay extends StatefulWidget {
   AppOverlay(
       {super.key,
-      //required this.title,
-      //required this.body,
       required this.fromHomeButton,
       required this.currentPageIndex});
 
-  //final String title;
-  //final Widget body;
   final bool fromHomeButton;
   final int currentPageIndex;
 
-  //final int index;
-
-  //statt body, ganze Liste mti seiten machen und statt body in Konstrukter einfach die positition in der liste nehmen
-  //statt Body, alle möglichen Seiten in eine List rein, den body aus allen seiten als hauptrückgabe, kein scaffold zurückgeben, Titel der Seiten wie Bodys und bei beiden Listen über index bei den Body hier zugreifen
-  //late StreameBottomAppBar streameBottomAppBar = StreameBottomAppBar();
   final pages = [
     const HomePage(), //Index = 0, selectedIndex = 0
     SearchPage(), //Index = 1, selectedIndex = 1
