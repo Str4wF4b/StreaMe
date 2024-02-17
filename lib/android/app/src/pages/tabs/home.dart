@@ -147,8 +147,7 @@ class _HomePageState extends State<HomePage> {
               PageRouteBuilder(
                   pageBuilder: (context, animation1, animation2) {
                     return AppOverlay(
-                        title: title,
-                        body: routeWidget,
+                        fromHomeButton: true,
                         currentPageIndex: index);
                   },
                   transitionDuration: const Duration(milliseconds: 400),

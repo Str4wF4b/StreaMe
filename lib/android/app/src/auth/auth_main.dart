@@ -20,8 +20,7 @@ class AuthPage extends StatelessWidget {
             // user is logged in:
             if (snapshot.hasData) {
               return AppOverlay(
-                  title: "Home",
-                  body: const HomePage(),
+                  fromHomeButton: true,
                   currentPageIndex: 0) /*HomePage()*/;
             } else {
               // user is not logged in:

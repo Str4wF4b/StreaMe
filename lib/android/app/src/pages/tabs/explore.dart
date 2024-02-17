@@ -8,6 +8,9 @@ import 'package:stream_me/android/app/src/widgets/features/swipe_card.dart';
 
 class ExplorePage extends StatefulWidget {
   const ExplorePage({Key? key}) : super(key: key);
+/*
+  GlobalKey _snackbarKey;
+  GlobalKey get snackbarKey => _snackbarKey;*/
 
   @override
   State<ExplorePage> createState() => _ExplorePageState();
@@ -127,7 +130,9 @@ class _ExplorePageState extends State<ExplorePage> {
                         ..showSnackBar(listSnackBar(currentStream.type));
                       setState(() {
                         addWatchlist = !addWatchlist;
-                        addWatchlist ? watchlist.add(currentStream) : watchlist.remove(currentStream);
+                        addWatchlist
+                            ? watchlist.add(currentStream)
+                            : watchlist.remove(currentStream);
                         //TODO: Save Stream to Firestore watchlist for specific user
                       });
                     },
@@ -145,7 +150,9 @@ class _ExplorePageState extends State<ExplorePage> {
                         ..showSnackBar(favSnackBar(currentStream.type));
                       setState(() {
                         addFavourites = !addFavourites;
-                        addFavourites ? favourites.add(currentStream) : favourites.remove(currentStream);
+                        addFavourites
+                            ? favourites.add(currentStream)
+                            : favourites.remove(currentStream);
                         //TODO: Save Stream to Firestore favourites for specific user
                       });
                     },
@@ -194,7 +201,7 @@ class _ExplorePageState extends State<ExplorePage> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
       behavior: SnackBarBehavior.floating,
       margin:
-          const EdgeInsets.only(left: 28.0, right: 28.0, bottom: 66.0 /* 6.0*/),
+          const EdgeInsets.only(left: 28.0, right: 28.0, bottom: 6.0 /* 6.0*/),
       //BottomAppBar has height 60.0
       duration: const Duration(milliseconds: 1500),
       content: Text(
@@ -214,7 +221,7 @@ class _ExplorePageState extends State<ExplorePage> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
       behavior: SnackBarBehavior.floating,
       margin:
-          const EdgeInsets.only(left: 28.0, right: 28.0, bottom: 66.0 /* 6.0*/),
+          const EdgeInsets.only(left: 28.0, right: 28.0, bottom: 6.0 /* 6.0*/),
       //BottomAppBar has height 60.0
       duration: const Duration(milliseconds: 1500),
       content: Text(

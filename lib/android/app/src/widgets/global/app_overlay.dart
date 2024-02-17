@@ -12,14 +12,14 @@ import '../../pages/tabs/watchlist.dart';
 class AppOverlay extends StatefulWidget {
   AppOverlay(
       {super.key,
-      required this.title,
-      required this.body,
+      //required this.title,
+      //required this.body,
+      required this.fromHomeButton,
       required this.currentPageIndex});
 
-  final String title;
-  //int selectedIndex;
-  //int selectedMenuIndex;
-  final Widget body;
+  //final String title;
+  //final Widget body;
+  final bool fromHomeButton;
   final int currentPageIndex;
 
   //final int index;
@@ -63,186 +63,194 @@ class _AppOverlayState extends State<AppOverlay> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-        backgroundColor: color.backgroundColor,
-        appBar: StreameAppBar(
-            title: widget.titles[_currentPageIndex] /*widget.titles[widget.selectedIndex]*/),
-        //app bar on top of every page
-/*        endDrawer: Drawer(
+    return Padding(
+      padding: widget.fromHomeButton
+          ? EdgeInsets.zero
+          : const EdgeInsets.only(bottom: 60.0),
+      child: Scaffold(
           backgroundColor: color.backgroundColor,
-          shape: const RoundedRectangleBorder(
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(25.0),
-              bottomLeft: Radius.circular(25.0)
-            )
-          ),
-          child: SingleChildScrollView(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                buildHeader(context),
-                buildMenuItems(context),
-              ],
-            ),
-          ),
-        ),*/
-        body: widget.pages[_currentPageIndex],
-        //widget.pages[widget.selectedIndex],
-        bottomNavigationBar: NavigationBarTheme(
-          data: NavigationBarThemeData(
-            indicatorColor: color.bodyTextColor,
-            labelTextStyle: MaterialStateProperty.resolveWith((states) {
-              if (states.contains(MaterialState.selected)) {
-                return TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w400,
-                    color: color.bodyTextColor,
-                    height: 1.0);
-              } else {
-                return const TextStyle(
-                    fontSize: 13,
-                    fontWeight: FontWeight.w400,
-                    color: Colors.grey,
-                    height: 0.9);
-              }
-            }),
-          ),
-          child: NavigationBar(
-            height: 60.0,
+          appBar: StreameAppBar(
+              title: widget.titles[
+                  _currentPageIndex] /*widget.titles[widget.selectedIndex]*/),
+          //app bar on top of every page
+          /*        endDrawer: Drawer(
             backgroundColor: color.backgroundColor,
-            elevation: 0.0,
-            indicatorColor: color.bodyTextColor,
-            labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
-            animationDuration: const Duration(milliseconds: 800),
-            destinations: [
-              Padding(
-                padding: const EdgeInsets.only(top: 2.0),
-                child: NavigationDestination(
-                    icon: const Icon(Icons.home_outlined, color: Colors.grey),
-                    selectedIcon: Icon(
-                      Icons.home,
-                      color: color.backgroundColor,
-                    ),
-                    label: "Home"),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 2.0),
-                child: NavigationDestination(
-                    icon: const Icon(Icons.search_outlined, color: Colors.grey),
-                    selectedIcon: Icon(
-                      Icons.search,
-                      color: color.backgroundColor,
-                    ),
-                    label: "Search"),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 2.0),
-                child: NavigationDestination(
-                    icon:
-                        const Icon(Icons.favorite_outline, color: Colors.grey),
-                    selectedIcon: Icon(
-                      Icons.favorite,
-                      color: color.backgroundColor,
-                    ),
-                    label: "Favourites"),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 2.0),
-                child: NavigationDestination(
-                    icon: const Icon(Icons.travel_explore_outlined,
-                        color: Colors.grey),
-                    selectedIcon: Icon(
-                      Icons.travel_explore,
-                      color: color.backgroundColor,
-                    ),
-                    label: "Explore"),
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 2.0),
-                child: NavigationDestination(
-                    icon: const Icon(Icons.list_rounded, color: Colors.grey),
-                    selectedIcon: Icon(
-                      Icons.list_rounded,
-                      color: color.backgroundColor,
-                    ),
-                    label: "Watchlist"),
+            shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(25.0),
+                bottomLeft: Radius.circular(25.0)
               )
-            ],
-            selectedIndex: _currentPageIndex,
-            onDestinationSelected: (int index) {
-              setState(() {
-                _currentPageIndex = index;
-              });
-            },
-          ),
-        )
-        /*BottomAppBar(
-          elevation: 0.0,
-          color: Colors.transparent,
-          child: Container(
-            height: 60.0, // 52
-            width: MediaQuery.of(context).size.width,
-            color: color.backgroundColor,
-            child: Padding(
-              padding:
-                  const EdgeInsets.only(left: 20.0, right: 20.0, bottom: 10.0), // 40, 40, 3
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            ),
+            child: SingleChildScrollView(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
-                  NavigationIcons(
-                      iconText: "Home",
-                      icon: Icons.home,
-                      selected: widget.selectedIndex == 0,
-                      onPressed: () {
-                        //widget.selectedIndex = 0;
-                        setState(() {
-                          widget.selectedIndex = 0;
-                        });
-                      }),
-                  NavigationIcons(
-                      iconText: "Search",
-                      icon: Icons.search_outlined,
-                      selected: widget.selectedIndex == 1,
-                      onPressed: () {
-                        //widget.selectedIndex = 1;
-                        setState(() {
-                          widget.selectedIndex = 1;
-                        });
-                      }),
-                  NavigationIcons(
-                      iconText: "Favourites",
-                      icon: Icons.favorite,
-                      selected: widget.selectedIndex == 2,
-                      onPressed: () {
-                        setState(() {
-                          widget.selectedIndex = 2;
-                        });
-                      }),
-                  NavigationIcons(
-                      iconText: "Explore",
-                      icon: Icons.travel_explore,
-                      selected: widget.selectedIndex == 3,
-                      onPressed: () {
-                        setState(() {
-                          widget.selectedIndex = 3;
-                        });
-                      }),
-                  NavigationIcons(
-                      iconText: "Filter",
-                      icon: Icons.filter_list,
-                      selected: widget.selectedIndex == 4,
-                      onPressed: () {
-                        widget.selectedIndex = 4;
-                        setState(() {
-                          widget.selectedIndex = 4;
-                        });
-                      }),
+                  buildHeader(context),
+                  buildMenuItems(context),
                 ],
               ),
             ),
+          ),*/
+          body: widget.pages[_currentPageIndex],
+          //widget.pages[widget.selectedIndex],
+          bottomNavigationBar: NavigationBarTheme(
+            data: NavigationBarThemeData(
+              indicatorColor: color.bodyTextColor,
+              labelTextStyle: MaterialStateProperty.resolveWith((states) {
+                if (states.contains(MaterialState.selected)) {
+                  return TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w400,
+                      color: color.bodyTextColor,
+                      height: 1.0);
+                } else {
+                  return const TextStyle(
+                      fontSize: 13,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.grey,
+                      height: 0.9);
+                }
+              }),
+            ),
+            child: NavigationBar(
+              height: 60.0,
+              backgroundColor: color.backgroundColor,
+              elevation: 0.0,
+              indicatorColor: color.bodyTextColor,
+              labelBehavior:
+                  NavigationDestinationLabelBehavior.onlyShowSelected,
+              animationDuration: const Duration(milliseconds: 800),
+              destinations: [
+                Padding(
+                  padding: const EdgeInsets.only(top: 2.0),
+                  child: NavigationDestination(
+                      icon: const Icon(Icons.home_outlined, color: Colors.grey),
+                      selectedIcon: Icon(
+                        Icons.home,
+                        color: color.backgroundColor,
+                      ),
+                      label: "Home"),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 2.0),
+                  child: NavigationDestination(
+                      icon:
+                          const Icon(Icons.search_outlined, color: Colors.grey),
+                      selectedIcon: Icon(
+                        Icons.search,
+                        color: color.backgroundColor,
+                      ),
+                      label: "Search"),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 2.0),
+                  child: NavigationDestination(
+                      icon: const Icon(Icons.favorite_outline,
+                          color: Colors.grey),
+                      selectedIcon: Icon(
+                        Icons.favorite,
+                        color: color.backgroundColor,
+                      ),
+                      label: "Favourites"),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 2.0),
+                  child: NavigationDestination(
+                      icon: const Icon(Icons.travel_explore_outlined,
+                          color: Colors.grey),
+                      selectedIcon: Icon(
+                        Icons.travel_explore,
+                        color: color.backgroundColor,
+                      ),
+                      label: "Explore"),
+                ),
+                Padding(
+                  padding: const EdgeInsets.only(top: 2.0),
+                  child: NavigationDestination(
+                      icon: const Icon(Icons.list_rounded, color: Colors.grey),
+                      selectedIcon: Icon(
+                        Icons.list_rounded,
+                        color: color.backgroundColor,
+                      ),
+                      label: "Watchlist"),
+                )
+              ],
+              selectedIndex: _currentPageIndex,
+              onDestinationSelected: (int index) {
+                setState(() {
+                  _currentPageIndex = index;
+                });
+              },
+            ),
+          )
+          /*BottomAppBar(
+            elevation: 0.0,
+            color: Colors.transparent,
+            child: Container(
+              height: 60.0, // 52
+              width: MediaQuery.of(context).size.width,
+              color: color.backgroundColor,
+              child: Padding(
+                padding:
+                    const EdgeInsets.only(left: 20.0, right: 20.0, bottom: 10.0), // 40, 40, 3
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: <Widget>[
+                    NavigationIcons(
+                        iconText: "Home",
+                        icon: Icons.home,
+                        selected: widget.selectedIndex == 0,
+                        onPressed: () {
+                          //widget.selectedIndex = 0;
+                          setState(() {
+                            widget.selectedIndex = 0;
+                          });
+                        }),
+                    NavigationIcons(
+                        iconText: "Search",
+                        icon: Icons.search_outlined,
+                        selected: widget.selectedIndex == 1,
+                        onPressed: () {
+                          //widget.selectedIndex = 1;
+                          setState(() {
+                            widget.selectedIndex = 1;
+                          });
+                        }),
+                    NavigationIcons(
+                        iconText: "Favourites",
+                        icon: Icons.favorite,
+                        selected: widget.selectedIndex == 2,
+                        onPressed: () {
+                          setState(() {
+                            widget.selectedIndex = 2;
+                          });
+                        }),
+                    NavigationIcons(
+                        iconText: "Explore",
+                        icon: Icons.travel_explore,
+                        selected: widget.selectedIndex == 3,
+                        onPressed: () {
+                          setState(() {
+                            widget.selectedIndex = 3;
+                          });
+                        }),
+                    NavigationIcons(
+                        iconText: "Filter",
+                        icon: Icons.filter_list,
+                        selected: widget.selectedIndex == 4,
+                        onPressed: () {
+                          widget.selectedIndex = 4;
+                          setState(() {
+                            widget.selectedIndex = 4;
+                          });
+                        }),
+                  ],
+                ),
+              ),
+            ),
+          )*/
           ),
-        )*/
-        );
+    );
   }
 
   /*Widget checkInput() {
