@@ -16,8 +16,15 @@ class _HelpPageState extends State<HelpPage> {
     return Scaffold(
         backgroundColor: Colors.transparent,
         appBar: AppBar(
-          title: Text("Help", style: TextStyle(color: color.bodyTextColor, fontWeight: FontWeight.w500)),
-
+          leading: IconButton(
+              icon: const Icon(
+                Icons.arrow_back,
+                color: Colors.white,
+              ),
+              onPressed: () => Navigator.pop(context)),
+          title: Text("Help",
+              style: TextStyle(
+                  color: color.bodyTextColor, fontWeight: FontWeight.w500)),
           centerTitle: true,
           backgroundColor: color.backgroundColor,
           elevation: 0.0,
