@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:appinio_swiper/appinio_swiper.dart';
 import 'package:flutter/material.dart';
 import 'package:stream_me/android/app/src/data/streams_data.dart';
@@ -5,9 +7,12 @@ import 'package:stream_me/android/app/src/model/streams_model.dart';
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
 import 'package:stream_me/android/app/src/utils/styles.dart';
 import 'package:stream_me/android/app/src/widgets/features/swipe_card.dart';
+import 'package:stream_me/android/app/src/widgets/global/app_overlay.dart';
 
 class ExplorePage extends StatefulWidget {
-  const ExplorePage({Key? key}) : super(key: key);
+  final bool fromHomeButton;
+  const ExplorePage({Key? key, required this.fromHomeButton}) : super(key: key);
+
 /*
   GlobalKey _snackbarKey;
   GlobalKey get snackbarKey => _snackbarKey;*/
@@ -16,7 +21,7 @@ class ExplorePage extends StatefulWidget {
   State<ExplorePage> createState() => _ExplorePageState();
 }
 
-class _ExplorePageState extends State<ExplorePage> {
+class _ExplorePageState extends State<ExplorePage> with SingleTickerProviderStateMixin {
   final ColorPalette color = ColorPalette();
   final Styles style = Styles();
   late double screenHeight;
@@ -34,6 +39,8 @@ class _ExplorePageState extends State<ExplorePage> {
 
   final AppinioSwiperController _swipeCardController =
       AppinioSwiperController();
+  //late final AnimationController _exploreAnimation = AnimationController(vsync: this);
+  bool _fromHomeButton = false;
 
   @override
   void initState() {
@@ -42,6 +49,7 @@ class _ExplorePageState extends State<ExplorePage> {
     randomStreamList = allStreams..shuffle();
     screenHeight = 0;
     screenWidth = 0;
+    _fromHomeButton = widget.fromHomeButton;
 
     Future.delayed(const Duration(seconds: 1)).then((_) {
       _shakeCard();
@@ -97,7 +105,7 @@ class _ExplorePageState extends State<ExplorePage> {
             ),
             Padding(
               padding: EdgeInsets.only(
-                  bottom: screenHeight * 0.073, left: 38.0, right: 41.0),
+                   bottom: screenHeight * 0.073, left: 38.0, right: 41.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
@@ -127,7 +135,7 @@ class _ExplorePageState extends State<ExplorePage> {
                     onPressed: () {
                       ScaffoldMessenger.of(context)
                         ..removeCurrentSnackBar()
-                        ..showSnackBar(listSnackBar(currentStream.type));
+                        ..showSnackBar(wlistSnackBar(currentStream.type));
                       setState(() {
                         addWatchlist = !addWatchlist;
                         addWatchlist
@@ -201,7 +209,7 @@ class _ExplorePageState extends State<ExplorePage> {
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
       behavior: SnackBarBehavior.floating,
       margin:
-          const EdgeInsets.only(left: 28.0, right: 28.0, bottom: 6.0 /* 6.0*/),
+          EdgeInsets.only(left: 28.0, right: 28.0, bottom: _fromHomeButton ? 6.0 : 66.0 /* 6.0*/),
       //BottomAppBar has height 60.0
       duration: const Duration(milliseconds: 1500),
       content: Text(
@@ -217,11 +225,11 @@ class _ExplorePageState extends State<ExplorePage> {
   /// If the icon changes to a check icon, the "added to Watchlist" snack bar is shown,
   /// if the icon changes to a plus icon, the "removed from Watchlist" snack bar is shown
   ///
-  SnackBar listSnackBar(String stream) => SnackBar(
+  SnackBar wlistSnackBar(String stream) => SnackBar(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
       behavior: SnackBarBehavior.floating,
       margin:
-          const EdgeInsets.only(left: 28.0, right: 28.0, bottom: 6.0 /* 6.0*/),
+      EdgeInsets.only(left: 28.0, right: 28.0, bottom: _fromHomeButton ? 6.0 : 66.0 /* 6.0*/),
       //BottomAppBar has height 60.0
       duration: const Duration(milliseconds: 1500),
       content: Text(
@@ -287,7 +295,7 @@ class _ExplorePageState extends State<ExplorePage> {
   void addToWatchlist() {
     ScaffoldMessenger.of(context)
       ..removeCurrentSnackBar()
-      ..showSnackBar(listSnackBar(currentStream.type));
+      ..showSnackBar(wlistSnackBar(currentStream.type));
     setState(() {
       //TODO: Save film to watchlist
     });
@@ -299,33 +307,36 @@ class _ExplorePageState extends State<ExplorePage> {
   Future<void> _shakeCard() async {
     const double distance = 3;
 
-    await _swipeCardController.animateTo(
-      const Offset(0, -distance), //shake card up
-      duration: const Duration(milliseconds: 200),
-      curve: Curves.easeInOut,
-    );
-    await _swipeCardController.animateTo(
-      const Offset(0, 0), //shake card to center
-      duration: const Duration(milliseconds: 200),
-      curve: Curves.easeInOut,
-    );
-    await _swipeCardController.animateTo(
-      const Offset(-distance, 0), //shake card left
-      duration: const Duration(milliseconds: 200),
-      curve: Curves.easeInOut,
-    );
-    await _swipeCardController.animateTo(
-      const Offset(distance, 0), //shake card right
-      duration: const Duration(milliseconds: 400),
-      curve: Curves.easeInOut,
-    );
+        await _swipeCardController.animateTo(
+          const Offset(0, -distance), //shake card up
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeInOut,
+        );
 
-    // Animate back manually to center:
-    await _swipeCardController.animateTo(
-      const Offset(0, 0),
-      duration: const Duration(milliseconds: 200),
-      curve: Curves.easeInOut,
-    );
+        await _swipeCardController.animateTo(
+          const Offset(0, 0), //shake card to center
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeInOut,
+        );
+
+        await _swipeCardController.animateTo(
+          const Offset(-distance, 0), //shake card left
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeInOut,
+        );
+
+        await _swipeCardController.animateTo(
+          const Offset(distance, 0), //shake card right
+          duration: const Duration(milliseconds: 400),
+          curve: Curves.easeInOut,
+        );
+
+        // Animate back manually to center:
+        await _swipeCardController.animateTo(
+          const Offset(0, 0),
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.easeInOut,
+        );
 
     _buttonReady =
         true; //After the quick animation the card can be cancel swiped

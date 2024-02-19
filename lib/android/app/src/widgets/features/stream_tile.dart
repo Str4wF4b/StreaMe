@@ -14,6 +14,7 @@ class StreamTile extends StatefulWidget {
   final double rating;
   final List cast;
   final List provider;
+  final bool fromHomeButton;
 
   const StreamTile(
       {super.key,
@@ -24,7 +25,8 @@ class StreamTile extends StatefulWidget {
       required this.pg,
       required this.rating,
       required this.cast,
-      required this.provider});
+      required this.provider,
+      required this.fromHomeButton});
 
   @override
   State<StreamTile> createState() => _StreamTileState();
@@ -232,7 +234,7 @@ class _StreamTileState extends State<StreamTile> {
   SnackBar removedSnackBar(String title) => SnackBar(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
       behavior: SnackBarBehavior.floating,
-      margin: const EdgeInsets.only(left: 28.0, right: 28.0, bottom: 6.0), //was 66
+      margin: EdgeInsets.only(left: 28.0, right: 28.0, bottom: widget.fromHomeButton ? 6.0 : 66.0), //was 66
       duration: const Duration(milliseconds: 2500),
       content: Row(
         mainAxisAlignment: MainAxisAlignment.center,

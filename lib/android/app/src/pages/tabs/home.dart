@@ -53,7 +53,6 @@ class _HomePageState extends State<HomePage> {
                         children: [
                           Column(children: [
                             addHomeCards(
-                                const FavouritesPage(),
                                 Icons.favorite,
                                 "Favourites",
                                 2, //6
@@ -62,7 +61,6 @@ class _HomePageState extends State<HomePage> {
                               height: 17,
                             ),
                             addHomeCards(
-                                const ExplorePage(),
                                 Icons.travel_explore_outlined,
                                 "Explore",
                                 3, //5
@@ -71,14 +69,12 @@ class _HomePageState extends State<HomePage> {
                           Column(
                             children: [
                               addHomeCards(
-                                  const WatchlistPage(),
                                   Icons.format_list_bulleted_rounded,
                                   "Watchlist",
                                   4, //8
                                   image.watchlist),
                               const SizedBox(height: 17),
                               addHomeCards(
-                                  const HelpPage(),
                                   Icons.help_outline,
                                   "Help",
                                   5, //9
@@ -136,7 +132,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   /// Function that adds buttons on home page for navigation
-  GestureDetector addHomeCards(StatefulWidget routeWidget, IconData icon,
+  GestureDetector addHomeCards(IconData icon,
       String title, int index, String image) {
     return GestureDetector(
       onTap: () {
@@ -147,7 +143,7 @@ class _HomePageState extends State<HomePage> {
               PageRouteBuilder(
                   pageBuilder: (context, animation1, animation2) {
                     return AppOverlay(
-                        fromHomeButton: true,
+                      fromHomeButton: true,
                         currentPageIndex: index);
                   },
                   transitionDuration: const Duration(milliseconds: 400),

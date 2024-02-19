@@ -8,7 +8,9 @@ import '../../widgets/features/stream_tile.dart';
 import '../../widgets/global/streame_tab.dart';
 
 class FavouritesPage extends StatefulWidget {
-  const FavouritesPage({super.key});
+  final bool fromHomeButton;
+
+  const FavouritesPage({super.key, required this.fromHomeButton});
 
   @override
   State<FavouritesPage> createState() => _FavouritesPageState();
@@ -72,7 +74,8 @@ class _FavouritesPageState extends State<FavouritesPage>
                       child: moviesFavourites(),
                     ),
                     Padding(
-                        padding: const EdgeInsets.fromLTRB(10.0, 2.0, 10.0, 5.0),
+                        padding:
+                            const EdgeInsets.fromLTRB(10.0, 2.0, 10.0, 5.0),
                         child: seriesFavourites())
                   ],
                 ))
@@ -96,15 +99,17 @@ class _FavouritesPageState extends State<FavouritesPage>
               itemBuilder: (context, index) {
                 Streams currentStream = movies.elementAt(index);
                 StreamTile currentTile = StreamTile(
-                    stream: currentStream,
-                    image: currentStream.image,
-                    title: currentStream.title,
-                    year: currentStream.year,
-                    pg: currentStream.pg,
-                    rating: 4.6,
-                    //TODO
-                    cast: currentStream.cast,
-                    provider: currentStream.provider);
+                  stream: currentStream,
+                  image: currentStream.image,
+                  title: currentStream.title,
+                  year: currentStream.year,
+                  pg: currentStream.pg,
+                  rating: 4.6,
+                  //TODO
+                  cast: currentStream.cast,
+                  provider: currentStream.provider,
+                  fromHomeButton: widget.fromHomeButton,
+                );
 
                 if (currentStream == movies.last &&
                     currentStream != movies.first) {
@@ -119,6 +124,7 @@ class _FavouritesPageState extends State<FavouritesPage>
       ],
     );
   }
+
 //TODO: Wenn von home bildschirm auf favourites oder explore, kommt snackbar 60 zu hoch und von da an dann immer, sonst nicht
 
   Column seriesFavourites() {
@@ -143,7 +149,8 @@ class _FavouritesPageState extends State<FavouritesPage>
                     rating: 4.6,
                     //TODO
                     cast: currentStream.cast,
-                    provider: currentStream.provider);
+                    provider: currentStream.provider,
+                    fromHomeButton: widget.fromHomeButton);
 
                 if (currentStream == series.last &&
                     currentStream != series.first) {

@@ -7,7 +7,9 @@ import 'package:stream_me/android/app/src/widgets/features/stream_tile.dart';
 import '../../widgets/global/streame_tab.dart';
 
 class WatchlistPage extends StatefulWidget {
-  const WatchlistPage({super.key});
+  final bool fromHomeButton;
+
+  const WatchlistPage({super.key, required this.fromHomeButton});
 
   @override
   State<WatchlistPage> createState() => _WatchlistPageState();
@@ -64,7 +66,6 @@ class _WatchlistPageState extends State<WatchlistPage>
                     onTap: (int index) => setState(() {
                       _tabController.index = index;
                     }),
-                    //TODO: Try unselectedLabelStyle: , ??
                     controller: _tabController,
                     tabs: [
                       addTab("All", 0),
@@ -97,11 +98,11 @@ class _WatchlistPageState extends State<WatchlistPage>
         padding: const EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 3.0),
         child: Tab(
             child: StreaMeTab(
-              tabTitle: tabTitle,
-              tabIndex: tabIndex,
-              tabController: _tabController,
-              isWatchlist: true,
-            )),
+          tabTitle: tabTitle,
+          tabIndex: tabIndex,
+          tabController: _tabController,
+          isWatchlist: true,
+        )),
       );
 
   Padding addWatchlistTab(List list) => Padding(
@@ -123,7 +124,8 @@ class _WatchlistPageState extends State<WatchlistPage>
                       pg: currentStream.pg,
                       rating: 4.7,
                       cast: currentStream.cast,
-                      provider: currentStream.provider);
+                      provider: currentStream.provider,
+                      fromHomeButton: widget.fromHomeButton);
 
                   if (currentStream == list.last &&
                       currentStream != list.first) {
