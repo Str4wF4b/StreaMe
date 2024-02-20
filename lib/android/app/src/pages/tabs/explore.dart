@@ -7,15 +7,10 @@ import 'package:stream_me/android/app/src/model/streams_model.dart';
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
 import 'package:stream_me/android/app/src/utils/styles.dart';
 import 'package:stream_me/android/app/src/widgets/features/swipe_card.dart';
-import 'package:stream_me/android/app/src/widgets/global/app_overlay.dart';
 
 class ExplorePage extends StatefulWidget {
   final bool fromHomeButton;
   const ExplorePage({Key? key, required this.fromHomeButton}) : super(key: key);
-
-/*
-  GlobalKey _snackbarKey;
-  GlobalKey get snackbarKey => _snackbarKey;*/
 
   @override
   State<ExplorePage> createState() => _ExplorePageState();

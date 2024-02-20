@@ -1,7 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:stream_me/android/app/src/widgets/global/app_overlay.dart';
-import 'package:stream_me/android/app/src/pages/tabs/home.dart';
 import 'package:stream_me/android/app/src/auth/login_or_register.dart';
 
 /// Class that checks if the user is signed in or not
@@ -21,7 +20,7 @@ class AuthPage extends StatelessWidget {
             if (snapshot.hasData) {
               return AppOverlay(
                 fromHomeButton: false,
-                  currentPageIndex: 0) /*HomePage()*/;
+                  currentPageIndex: 0);
             } else {
               // user is not logged in:
               return const LoginOrRegisterPage();
