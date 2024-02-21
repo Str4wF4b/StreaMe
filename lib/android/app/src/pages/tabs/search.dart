@@ -74,6 +74,7 @@ class _SearchPageState extends State<SearchPage> {
                 margin: const EdgeInsets.fromLTRB(20.0, 30.0, 42.0, 20.0),
                 child: TextField(
                   controller: widget.searchController,
+                  style: const TextStyle(decorationThickness: 0.0),
                   decoration: InputDecoration(
                     prefixIcon: const Icon(Icons.search, size: 22),
                     suffixIcon: widget.searchController.text.isNotEmpty

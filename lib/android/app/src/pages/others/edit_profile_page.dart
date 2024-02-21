@@ -138,7 +138,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   isPassword: true,
                   userInput: "●●●●●"),
               Padding(
-                padding: const EdgeInsets.only(left: 16.0, right: 16.0),
+                padding: const EdgeInsets.only(left: 56.0, right: 56.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   //setting space between buttons cancel and save
@@ -152,7 +152,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             _emailCtrl.clear();
                             _passwordCtrl.clear();
                         },
-                        color: Colors.redAccent,
+                        color: Colors.black54.withRed(100),
                         label: "Reset"),
                     /*Padding(
                       padding: const EdgeInsetsDirectional.fromSTEB(

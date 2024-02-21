@@ -43,7 +43,6 @@ class _StreamTileState extends State<StreamTile> {
 
   @override
   Widget build(BuildContext context) {
-
     return GestureDetector(
         onTap: () => Navigator.push(
             context,
@@ -112,11 +111,12 @@ class _StreamTileState extends State<StreamTile> {
                                     child: Text(
                                       widget.pg,
                                       textAlign: TextAlign.center,
-                                      style: const TextStyle(
+                                      style: TextStyle(
                                           color:
                                               Color.fromRGBO(44, 40, 40, 1.0),
                                           fontSize: 13,
-                                          fontWeight: FontWeight.bold),
+                                          fontWeight: FontWeight.bold,
+                                      height: cons.textHeight),
                                     ),
                                   )),
                               const SizedBox(width: 13.0),
@@ -191,10 +191,12 @@ class _StreamTileState extends State<StreamTile> {
                                 _addFavourites = !_addFavourites;
                                 //_addFavourites ? favourites.add(currentStream) : favourites.remove(currentStream);
                                 //TODO: Save Stream to Firestore favourites for specific user
-                            });
+                              });
                             },
                             icon: Icon(
-                              _addFavourites ? Icons.favorite : Icons.favorite_border_outlined,
+                              _addFavourites
+                                  ? Icons.favorite
+                                  : Icons.favorite_border_outlined,
                               color: Colors.red,
                             )),
                       )
@@ -234,7 +236,9 @@ class _StreamTileState extends State<StreamTile> {
   SnackBar removedSnackBar(String title) => SnackBar(
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
       behavior: SnackBarBehavior.floating,
-      margin: EdgeInsets.only(left: 28.0, right: 28.0, bottom: widget.fromHomeButton ? 6.0 : 66.0), //was 66
+      margin: EdgeInsets.only(
+          left: 28.0, right: 28.0, bottom: widget.fromHomeButton ? 4.0 : 64.0),
+      //was 66
       duration: const Duration(milliseconds: 2500),
       content: Row(
         mainAxisAlignment: MainAxisAlignment.center,
@@ -250,7 +254,8 @@ class _StreamTileState extends State<StreamTile> {
             child: const Text("Undo.",
                 style: TextStyle(
                     color: Colors.blueAccent,
-                    decoration: TextDecoration.underline)),
+                    decoration: TextDecoration.underline,
+                    decorationColor: Colors.blueAccent)),
           )
         ],
       ));

@@ -180,7 +180,7 @@ class _FilterPageState extends State<FilterPage> {
                             _keyYear.currentState?.reset();
                             _keyActor.currentState?.reset();
                           },
-                          color: Colors.redAccent,
+                          color: Colors.black54.withRed(100),
                           label: "Reset"),
                     ],
                   ),

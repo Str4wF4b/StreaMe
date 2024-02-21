@@ -22,6 +22,11 @@ class MyApp extends StatelessWidget {
             TargetPlatform.iOS: CupertinoPageTransitionsBuilder(),
             TargetPlatform.android: CupertinoPageTransitionsBuilder(),
           }),
+          textSelectionTheme: const TextSelectionThemeData(
+            cursorColor: Colors.blueAccent,
+            selectionColor: Colors.blueAccent,
+            selectionHandleColor: Colors.blueAccent
+          )
         ));
   }
 }

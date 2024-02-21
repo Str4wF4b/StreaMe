@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
 
 class StreaMeTab extends StatelessWidget {
@@ -36,7 +35,7 @@ class StreaMeTab extends StatelessWidget {
         child: Text(
           tabTitle,
           style: TextStyle(
-            fontSize: 16 * 1 / MediaQuery.of(context).textScaleFactor,
+            fontSize: 15 * 1 / MediaQuery.of(context).textScaleFactor,
           ),
         ),
       ),

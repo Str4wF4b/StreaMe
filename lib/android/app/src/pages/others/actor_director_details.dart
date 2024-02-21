@@ -54,7 +54,8 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
                   ),
                   onPressed: () => Navigator.pop(context)),
               pinned: true,
-              expandedHeight: MediaQuery.of(context).size.height * 0.375, //298,
+              expandedHeight: MediaQuery.of(context).size.height * 0.375,
+              //298,
               flexibleSpace: Container(
                 margin: EdgeInsets.only(
                     left: sliverWidth * 0.223, right: sliverWidth * 0.223),
@@ -62,12 +63,15 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(20.0),
                   child: FlexibleSpaceBar(
-                    titlePadding: const EdgeInsets.only(left: 15.0, right: 15.0, bottom: 15.0),
+                    titlePadding: const EdgeInsets.only(
+                        left: 15.0, right: 15.0, bottom: 15.0),
                     expandedTitleScale: 1.2,
                     centerTitle: true,
                     title: FittedBox(
-                      child:
-                      Text(widget.actorDirector.displayName), //FittedBox(
+                      child: Text(
+                        widget.actorDirector.displayName,
+                        style: const TextStyle(fontWeight: FontWeight.w500),
+                      ), //FittedBox(
                     ),
                     background: Stack(
                       fit: StackFit.expand,
@@ -128,7 +132,8 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
                                     color: color.bodyTextColor,
                                     fontSize: 16 *
                                         1 /
-                                        MediaQuery.of(context).textScaleFactor),
+                                        MediaQuery.of(context).textScaleFactor,
+                                    height: cons.textHeight),
                                 indicatorIcon: Icons.keyboard_arrow_down,
                                 indicatorIconColor: Colors.grey.shade400,
                                 indicatorPadding:
@@ -241,12 +246,12 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
   /// a function that adds the look of a tab
   Widget addTab(String tabTitle, int tabIndex) {
     return Tab(
-          child: StreaMeTab(
-        tabTitle: tabTitle,
-        tabIndex: tabIndex,
-        tabController: _tabController,
-        isWatchlist: false,
-      ));
+        child: StreaMeTab(
+      tabTitle: tabTitle,
+      tabIndex: tabIndex,
+      tabController: _tabController,
+      isWatchlist: false,
+    ));
   }
 
   /// a function that

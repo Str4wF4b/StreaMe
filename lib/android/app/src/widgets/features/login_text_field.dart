@@ -29,7 +29,6 @@ class _LoginTextFieldState extends State<LoginTextField> {
       child: TextField(
         controller: widget.inputController, // get user's input
         obscureText: widget.obscureText ? _showPassword : false,
-        cursorColor: Colors.blueAccent,
         decoration: InputDecoration(
             prefixIcon: Icon(widget.prefixIcon, size: 26),
             prefixIconColor: Colors.grey,

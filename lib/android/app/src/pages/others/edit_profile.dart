@@ -36,6 +36,7 @@ class _EditProfileState extends State<EditProfile> {
                 ),
               ),
               backgroundColor: widget.backgroundColor,
+              scrolledUnderElevation: 0.0,
               automaticallyImplyLeading: false,
               actions: <Widget>[
                 IconButton(

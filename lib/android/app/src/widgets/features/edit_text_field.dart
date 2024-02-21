@@ -34,6 +34,7 @@ class _EditTextFieldState extends State<EditTextField> {
           fontWeight: FontWeight.bold,
           fontSize: 15,
           color: Colors.grey.shade100,
+          decorationThickness: 0.0
         ),
         obscureText: widget.isPassword ? showPassword : false,
         decoration: InputDecoration(
@@ -57,16 +58,16 @@ class _EditTextFieldState extends State<EditTextField> {
             labelStyle: const TextStyle(
               color: Colors.white,
               fontSize: 17,
-              fontWeight: FontWeight.bold,
+              fontWeight: FontWeight.bold
             ),
             //enabledBorder: const UnderlineInputBorder(
             //    borderSide: BorderSide(color: Colors.white)),
             enabledBorder: OutlineInputBorder(
                 borderSide: const BorderSide(color: Colors.white),
-                borderRadius: BorderRadius.circular(25.0)),
+                borderRadius: BorderRadius.circular(30.0)),
             focusedBorder: OutlineInputBorder(
                 borderSide: const BorderSide(color: Colors.blueAccent),
-                borderRadius: BorderRadius.circular(25.0)),
+                borderRadius: BorderRadius.circular(30.0)),
             filled: true,
             fillColor: Colors.black38,
             hintText: widget.placeholder,
@@ -74,8 +75,9 @@ class _EditTextFieldState extends State<EditTextField> {
             hintStyle: const TextStyle(
               fontSize: 13.5,
               color: Colors.grey,
+              fontWeight: FontWeight.w500
             ),
-            contentPadding: const EdgeInsets.fromLTRB(15.0, 18.0, 15.0, 18.0)),
+            contentPadding: const EdgeInsets.fromLTRB(20.0, 18.0, 18.0, 20.0)),
       ),
     );
   }

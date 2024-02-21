@@ -149,7 +149,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                                   )),
                               Padding(
                                 padding: const EdgeInsets.only(
-                                    left: 40.0, top: 13.0),
+                                    left: 40.0, top: 10.0),
                                 child: GestureDetector(
                                   onTap: () async {
                                     await makeRating();
@@ -172,7 +172,9 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                                         listSnackBar(widget.stream.type));
                                   setState(() {
                                     addWatchlist = !addWatchlist;
-                                    addWatchlist ? watchlist.add(widget.stream) : watchlist.remove(widget.stream);
+                                    addWatchlist
+                                        ? watchlist.add(widget.stream)
+                                        : watchlist.remove(widget.stream);
                                     //TODO: Save Stream to Firestore watchlist for specific user
                                   });
                                 },
@@ -191,7 +193,9 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                                         favSnackBar(widget.stream.type));
                                   setState(() {
                                     addFavourites = !addFavourites;
-                                    addFavourites ? favourites.add(widget.stream) : favourites.remove(widget.stream);
+                                    addFavourites
+                                        ? favourites.add(widget.stream)
+                                        : favourites.remove(widget.stream);
                                     //TODO: Save Stream to Firestore favourites for specific user
                                     //addFavourites ? await FirebaseFirestore.instance.collection("users").doc
                                   });
@@ -229,7 +233,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                                 borderRadius: BorderRadius.circular(5.0),
                                 child: Container(
                                   padding: const EdgeInsets.fromLTRB(
-                                      2.2, 1.0, 2.2, 1.0),
+                                      2.2, 0.0, 2.2, 0.0),
                                   height: 23,
                                   width: 35.5,
                                   //25.5 for only numbers
@@ -240,7 +244,8 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                                     style: TextStyle(
                                         color: color.backgroundColor,
                                         fontSize: 18,
-                                        fontWeight: FontWeight.bold),
+                                        fontWeight: FontWeight.bold,
+                                        height: cons.textHeight),
                                   ),
                                 )),
                             const SizedBox(width: 25.0),
@@ -290,12 +295,12 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                                 widget.stream.plot, context, constraints);*/
                                 ExpandText(widget.stream.plot,
                                     style: TextStyle(
-                                      color: color.bodyTextColor,
-                                      fontSize: 16 *
-                                          1 /
-                                          MediaQuery.of(context)
-                                              .textScaleFactor,
-                                    ),
+                                        color: color.bodyTextColor,
+                                        fontSize: 16 *
+                                            1 /
+                                            MediaQuery.of(context)
+                                                .textScaleFactor,
+                                        height: cons.textHeight),
                                     indicatorIcon: Icons.keyboard_arrow_down,
                                     indicatorIconColor: Colors.grey.shade400,
                                     indicatorPadding:
@@ -645,9 +650,10 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                     width: 370.0,
                     child: Dialog(
                         backgroundColor: color.backgroundColor,
+                        elevation: 0.0,
                         shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0),
-                            side: BorderSide(color: Colors.grey.shade400)),
+                            borderRadius: BorderRadius.circular(30.0),
+                            side: BorderSide(color: color.bodyTextColor)),
                         insetPadding:
                             const EdgeInsets.only(left: 125.0, top: 10.0),
                         child: Row(
@@ -1014,6 +1020,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
         child: AlertDialog(
           //Background style of the Alert Dialog:
           backgroundColor: color.middleBackgroundColor.withOpacity(0.93),
+          elevation: 0.0,
           insetPadding: EdgeInsets.zero,
           shape: const RoundedRectangleBorder(
               borderRadius: BorderRadius.all(Radius.circular(20.0)),
@@ -1059,9 +1066,12 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                             //adding the individual URL to every stream
                             child: const Text(
                               style: TextStyle(
+                                  height: 1.10,
                                   color: Colors.blueAccent,
-                                  fontSize: 14,
-                                  decoration: TextDecoration.underline),
+                                  fontSize: 16,
+                                  decoration: TextDecoration.underline,
+                                  //decorationThickness: 0.0,
+                                  decorationColor: Colors.blueAccent),
                               "here",
                             )),
                       ),
