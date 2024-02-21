@@ -60,8 +60,8 @@ class _StreamTileState extends State<StreamTile> {
                   child: CachedNetworkImage(
                     imageUrl: widget.image,
                     fit: BoxFit.cover,
-                    width: 100,
-                    height: 100,
+                    width: 101,
+                    height: 101,
                     placeholder: (context, url) => cons.streamImagePlaceholder,
                     errorWidget: (context, url, error) => cons.imageErrorWidget,
                   ),
@@ -71,7 +71,7 @@ class _StreamTileState extends State<StreamTile> {
               //Second column with 4 lines
               Expanded(
                 child: Padding(
-                  padding: const EdgeInsets.only(left: 10.0, top: 1.0),
+                  padding: const EdgeInsets.only(left: 10.0),
                   child: Stack(
                     children: [
                       Column(
@@ -89,7 +89,7 @@ class _StreamTileState extends State<StreamTile> {
                                   fontSize: 16.0),
                             ),
                           ),
-                          const SizedBox(height: 7.0),
+                          const SizedBox(height: 5.0),
 
                           //Second line: Year, PG and Rating
                           Row(
@@ -113,7 +113,7 @@ class _StreamTileState extends State<StreamTile> {
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
                                           color:
-                                              Color.fromRGBO(44, 40, 40, 1.0),
+                                              color.backgroundColor,
                                           fontSize: 13,
                                           fontWeight: FontWeight.bold,
                                       height: cons.textHeight),
@@ -146,7 +146,7 @@ class _StreamTileState extends State<StreamTile> {
                                     TextSpan(
                                         text: getCast(widget.cast),
                                         style: const TextStyle(
-                                          fontWeight: FontWeight.w400,
+                                          fontWeight: FontWeight.w400
                                         ))
                                   ]),
                               maxLines: 2,

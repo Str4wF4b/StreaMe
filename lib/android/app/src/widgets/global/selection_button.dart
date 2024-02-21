@@ -21,7 +21,7 @@ class SelectionButton extends StatelessWidget {
           width: 120,
           decoration: BoxDecoration(
               color: color,
-              border: Border.all(color: Colors.white, width: 1.5),
+              //border: Border.all(color: Colors.white, width: 1.5),
               borderRadius: BorderRadius.circular(30.0)),
           child: Center(
             child: Text(

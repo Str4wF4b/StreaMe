@@ -40,17 +40,20 @@ class _EditTextFieldState extends State<EditTextField> {
         decoration: InputDecoration(
             //style of label
             suffixIcon: widget.isPassword //show password icon
-                ? IconButton(
-                    onPressed: () {
-                      setState(() {
-                        showPassword =
-                            !showPassword; //switch between showing and not showing password
-                      });
-                    },
-                    icon: showPassword
-                        ? const Icon(Icons.visibility, color: Colors.grey)
-                        : const Icon(Icons.visibility_off, color: Colors.grey),
-                  )
+                ? Padding(
+                  padding: const EdgeInsets.only(right: 3.0),
+                  child: IconButton(
+                      onPressed: () {
+                        setState(() {
+                          showPassword =
+                              !showPassword; //switch between showing and not showing password
+                        });
+                      },
+                      icon: showPassword
+                          ? const Icon(Icons.visibility, color: Colors.grey)
+                          : const Icon(Icons.visibility_off, color: Colors.grey),
+                    ),
+                )
                 : null,
             floatingLabelBehavior: FloatingLabelBehavior.always,
             //input labels are always open

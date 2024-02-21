@@ -152,7 +152,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                             _emailCtrl.clear();
                             _passwordCtrl.clear();
                         },
-                        color: Colors.black54.withRed(100),
+                        color: Colors.red.shade400,
                         label: "Reset"),
                     /*Padding(
                       padding: const EdgeInsetsDirectional.fromSTEB(

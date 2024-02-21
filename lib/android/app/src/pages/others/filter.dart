@@ -1,7 +1,6 @@
 import 'package:dropdown_button2/dropdown_button2.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:get/get.dart';
 import 'package:stream_me/android/app/src/data/actor_data.dart';
 import 'package:stream_me/android/app/src/pages/others/filter_results.dart';
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
@@ -180,7 +179,7 @@ class _FilterPageState extends State<FilterPage> {
                             _keyYear.currentState?.reset();
                             _keyActor.currentState?.reset();
                           },
-                          color: Colors.black54.withRed(100),
+                          color: Colors.red.shade400,
                           label: "Reset"),
                     ],
                   ),
