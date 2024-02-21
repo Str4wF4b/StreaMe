@@ -610,6 +610,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
   /// If the heart is filled, the "added to Favourites" snack bar is shown,
   /// if not, the "removed from Favourites" snack bar is shown
   SnackBar favSnackBar(String stream) => SnackBar(
+      elevation: 0.0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
       behavior: SnackBarBehavior.floating,
       margin: const EdgeInsets.only(left: 28.0, right: 28.0, bottom: 6.0),
@@ -626,6 +627,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
   /// If the icon changes to a check icon, the "added to Watchlist" snack bar is shown,
   /// if the icon changes to a plus icon, the "removed from Watchlist" snack bar is shown
   SnackBar listSnackBar(String stream) => SnackBar(
+      elevation: 0.0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
       behavior: SnackBarBehavior.floating,
       margin: const EdgeInsets.only(left: 28.0, right: 28.0, bottom: 6.0),
