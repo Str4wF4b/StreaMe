@@ -217,7 +217,7 @@ class _ExplorePageState extends State<ExplorePage>
         addFavourites
             ? "$stream removed from Favourites"
             : "$stream added to Favourites",
-        style: TextStyle(color: Colors.grey.shade300),
+        style: TextStyle(color: color.bodyTextColor),
         textAlign: TextAlign.center,
       ));
 
@@ -240,7 +240,7 @@ class _ExplorePageState extends State<ExplorePage>
         addWatchlist
             ? "$stream removed from Watchlist"
             : "$stream added to Watchlist",
-        style: TextStyle(color: Colors.grey.shade300),
+        style: TextStyle(color: color.bodyTextColor),
         textAlign: TextAlign.center,
       ));
 
