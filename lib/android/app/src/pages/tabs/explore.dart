@@ -33,7 +33,7 @@ class _ExplorePageState extends State<ExplorePage>
   //bool _buttonReady = false;
 
   final AppinioSwiperController _swipeCardController =
-  AppinioSwiperController();
+      AppinioSwiperController();
 
 /*  late final AnimationController _exploreAnimation; */
   bool _fromHomeButton = false;
@@ -53,160 +53,148 @@ class _ExplorePageState extends State<ExplorePage>
 
   @override
   Widget build(BuildContext context) {
-    screenHeight = MediaQuery
-        .of(context)
-        .size
-        .height;
-    screenWidth = MediaQuery
-        .of(context)
-        .size
-        .width;
+    screenHeight = MediaQuery.of(context).size.height;
+    screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
       backgroundColor: color.backgroundColor,
       body: SafeArea(
           child: Container(
-            alignment: Alignment.center,
-            color: color.middleBackgroundColor,
-            //height: MediaQuery.of(context).size.height,
-            padding: const EdgeInsets.only(left: 18.0, right: 15.0, top: 5.0),
-            child: Column(
-              children: [
-                Expanded(
-                  child: Stack(
-                    children: [
-                      SizedBox(
-                        height: MediaQuery
-                            .of(context)
-                            .size
-                            .height,
-                        child: Padding(
-                          padding: const EdgeInsets.all(21.5),
-                          child: AppinioSwiper(
-                            cardBuilder: (context, index) {
-                              currentStream = randomStreamList.elementAt(index);
-                              return SwipeCard(
-                                stream: randomStreamList.elementAt(index),
-                              );
-                            },
-                            cardCount: allStreams.length,
-                            swipeOptions: const SwipeOptions.only(
-                                left: true, right: true, up: true),
-                            controller: _swipeCardController,
-                            maxAngle: 80,
-                            loop: true,
-                            //restart again if list is empty
+        alignment: Alignment.center,
+        color: color.middleBackgroundColor,
+        //height: MediaQuery.of(context).size.height,
+        padding: const EdgeInsets.only(left: 18.0, right: 15.0, top: 5.0),
+        child: Column(
+          children: [
+            Expanded(
+              child: Stack(
+                children: [
+                  SizedBox(
+                    height: MediaQuery.of(context).size.height,
+                    child: Padding(
+                      padding: const EdgeInsets.all(21.5),
+                      child: AppinioSwiper(
+                        cardBuilder: (context, index) {
+                          currentStream = randomStreamList.elementAt(index);
+                          return SwipeCard(
+                            stream: randomStreamList.elementAt(index),
+                          );
+                        },
+                        cardCount: allStreams.length,
+                        swipeOptions: const SwipeOptions.only(
+                            left: true, right: true, up: true),
+                        controller: _swipeCardController,
+                        maxAngle: 80,
+                        loop: true,
+                        //restart again if list is empty
 
-                            onSwipeEnd: _swipe,
-                            onUnSwipe: _unswipe,
-                            allowUnlimitedUnSwipe: true,
-                            //onSwipeCancelled: _swipeCancel,
-                            threshold: 100,
-                          ),
-                        ),
+                        onSwipeEnd: _swipe,
+                        onUnSwipe: _unswipe,
+                        allowUnlimitedUnSwipe: true,
+                        //onSwipeCancelled: _swipeCancel,
+                        threshold: 100,
                       ),
-                    ],
+                    ),
                   ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(
-                      bottom: screenHeight * 0.073, left: 38.0, right: 41.0),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      ElevatedButton(
-                        onPressed: () {
-                          //if (_buttonReady) {
-                            _swipeCardController.swipeLeft();
-                            ScaffoldMessenger.of(context)
-                                .removeCurrentSnackBar();
-                          //}
-                        },
-                        style: ButtonStyle(
-                            shape: MaterialStateProperty.all<CircleBorder>(
-                                const CircleBorder()),
-                            padding: MaterialStateProperty.all<EdgeInsets>(
-                                const EdgeInsets.all(16.0)),
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                                Colors.grey.shade900),
-                            elevation: MaterialStateProperty.all<double>(0.0),
-                            overlayColor:
-                            getColor(Colors.grey.shade900, Colors.redAccent)),
-                        child: Icon(
-                          Icons.close,
-                          size: 30,
-                          color: color.bodyTextColor,
-                        ),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          ScaffoldMessenger.of(context)
-                            ..removeCurrentSnackBar()
-                            ..showSnackBar(wlistSnackBar(currentStream.type));
-                          setState(() {
-                            addWatchlist = !addWatchlist;
-                            addWatchlist
-                                ? watchlist.add(currentStream)
-                                : watchlist.remove(currentStream);
-                            //TODO: Save Stream to Firestore watchlist for specific user
-                          });
-                        },
-                        style: style.exploreButtonStyle,
-                        child: Icon(
-                          addWatchlist ? Icons.check_rounded : Icons
-                              .add_rounded,
-                          size: 30,
-                          color: color.bodyTextColor,
-                        ),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          ScaffoldMessenger.of(context)
-                            ..removeCurrentSnackBar()
-                            ..showSnackBar(favSnackBar(currentStream.type));
-                          setState(() {
-                            addFavourites = !addFavourites;
-                            addFavourites
-                                ? favourites.add(currentStream)
-                                : favourites.remove(currentStream);
-                            //TODO: Save Stream to Firestore favourites for specific user
-                          });
-                        },
-                        style: style.exploreButtonStyle,
-                        child: Icon(
-                          addFavourites ? Icons.favorite : Icons
-                              .favorite_outline,
-                          size: 30,
-                          color: color.bodyTextColor,
-                        ),
-                      ),
-                      ElevatedButton(
-                        onPressed: () {
-                          _swipeCardController.unswipe();
-                          ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                        },
-                        style: ButtonStyle(
-                            shape: MaterialStateProperty.all<CircleBorder>(
-                                const CircleBorder()),
-                            padding: MaterialStateProperty.all<EdgeInsets>(
-                                const EdgeInsets.all(16.0)),
-                            backgroundColor: MaterialStateProperty.all<Color>(
-                                Colors.grey.shade900),
-                            elevation: MaterialStateProperty.all<double>(0.0),
-                            overlayColor: getColor(
-                                Colors.grey.shade900, Colors.orangeAccent)),
-                        child: Icon(
-                          Icons.undo_outlined,
-                          size: 30,
-                          color: color.bodyTextColor,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
+                ],
+              ),
             ),
-          )),
+            Padding(
+              padding: EdgeInsets.only(
+                  bottom: screenHeight * 0.073, left: 38.0, right: 41.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  ElevatedButton(
+                    onPressed: () {
+                      //if (_buttonReady) {
+                      _swipeCardController.swipeLeft();
+                      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                      //}
+                    },
+                    style: ButtonStyle(
+                        shape: MaterialStateProperty.all<CircleBorder>(
+                            const CircleBorder()),
+                        padding: MaterialStateProperty.all<EdgeInsets>(
+                            const EdgeInsets.all(16.0)),
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            Colors.grey.shade900),
+                        elevation: MaterialStateProperty.all<double>(0.0),
+                        overlayColor:
+                            getColor(Colors.grey.shade900, Colors.redAccent)),
+                    child: Icon(
+                      Icons.close,
+                      size: 30,
+                      color: color.bodyTextColor,
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      ScaffoldMessenger.of(context)
+                        ..removeCurrentSnackBar()
+                        ..showSnackBar(wlistSnackBar(currentStream.type));
+                      setState(() {
+                        addWatchlist = !addWatchlist;
+                        addWatchlist
+                            ? watchlist.add(currentStream)
+                            : watchlist.remove(currentStream);
+                        //TODO: Save Stream to Firestore watchlist for specific user
+                      });
+                    },
+                    style: style.exploreButtonStyle,
+                    child: Icon(
+                      addWatchlist ? Icons.check_rounded : Icons.add_rounded,
+                      size: 30,
+                      color: color.bodyTextColor,
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      ScaffoldMessenger.of(context)
+                        ..removeCurrentSnackBar()
+                        ..showSnackBar(favSnackBar(currentStream.type));
+                      setState(() {
+                        addFavourites = !addFavourites;
+                        addFavourites
+                            ? favourites.add(currentStream)
+                            : favourites.remove(currentStream);
+                        //TODO: Save Stream to Firestore favourites for specific user
+                      });
+                    },
+                    style: style.exploreButtonStyle,
+                    child: Icon(
+                      addFavourites ? Icons.favorite : Icons.favorite_outline,
+                      size: 30,
+                      color: color.bodyTextColor,
+                    ),
+                  ),
+                  ElevatedButton(
+                    onPressed: () {
+                      _swipeCardController.unswipe();
+                      ScaffoldMessenger.of(context).removeCurrentSnackBar();
+                    },
+                    style: ButtonStyle(
+                        shape: MaterialStateProperty.all<CircleBorder>(
+                            const CircleBorder()),
+                        padding: MaterialStateProperty.all<EdgeInsets>(
+                            const EdgeInsets.all(16.0)),
+                        backgroundColor: MaterialStateProperty.all<Color>(
+                            Colors.grey.shade900),
+                        elevation: MaterialStateProperty.all<double>(0.0),
+                        overlayColor: getColor(
+                            Colors.grey.shade900, Colors.orangeAccent)),
+                    child: Icon(
+                      Icons.undo_outlined,
+                      size: 30,
+                      color: color.bodyTextColor,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ],
+        ),
+      )),
     );
   }
 
@@ -215,48 +203,46 @@ class _ExplorePageState extends State<ExplorePage>
   /// If the heart is filled, the "added to Favourites" snack bar is shown,
   /// if not, the "removed from Favourites" snack bar is shown
   ///
-  SnackBar favSnackBar(String stream) =>
-      SnackBar(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20.0)),
-          behavior: SnackBarBehavior.floating,
-          margin: EdgeInsets.only(
-              left: 28.0,
-              right: 28.0,
-              bottom: _fromHomeButton ? 4.0 : 64.0 /* 6.0*/),
-          //BottomAppBar has height 60.0
-          duration: const Duration(milliseconds: 1500),
-          content: Text(
-            addFavourites
-                ? "$stream removed from Favourites"
-                : "$stream added to Favourites",
-            style: TextStyle(color: Colors.grey.shade300),
-            textAlign: TextAlign.center,
-          ));
+  SnackBar favSnackBar(String stream) => SnackBar(
+      elevation: 0.0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+      behavior: SnackBarBehavior.floating,
+      margin: EdgeInsets.only(
+          left: 28.0,
+          right: 28.0,
+          bottom: _fromHomeButton ? 4.0 : 64.0 /* 6.0*/),
+      //BottomAppBar has height 60.0
+      duration: const Duration(milliseconds: 1500),
+      content: Text(
+        addFavourites
+            ? "$stream removed from Favourites"
+            : "$stream added to Favourites",
+        style: TextStyle(color: Colors.grey.shade300),
+        textAlign: TextAlign.center,
+      ));
 
   ///
   /// A function that generates a snackbar if clicked on the plus, respectively check icon.
   /// If the icon changes to a check icon, the "added to Watchlist" snack bar is shown,
   /// if the icon changes to a plus icon, the "removed from Watchlist" snack bar is shown
   ///
-  SnackBar wlistSnackBar(String stream) =>
-      SnackBar(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(20.0)),
-          behavior: SnackBarBehavior.floating,
-          margin: EdgeInsets.only(
-              left: 28.0,
-              right: 28.0,
-              bottom: _fromHomeButton ? 4.0 : 64.0 /* 6.0*/),
-          //BottomAppBar has height 60.0
-          duration: const Duration(milliseconds: 1500),
-          content: Text(
-            addWatchlist
-                ? "$stream removed from Watchlist"
-                : "$stream added to Watchlist",
-            style: TextStyle(color: Colors.grey.shade300),
-            textAlign: TextAlign.center,
-          ));
+  SnackBar wlistSnackBar(String stream) => SnackBar(
+      elevation: 0.0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+      behavior: SnackBarBehavior.floating,
+      margin: EdgeInsets.only(
+          left: 28.0,
+          right: 28.0,
+          bottom: _fromHomeButton ? 4.0 : 64.0 /* 6.0*/),
+      //BottomAppBar has height 60.0
+      duration: const Duration(milliseconds: 1500),
+      content: Text(
+        addWatchlist
+            ? "$stream removed from Watchlist"
+            : "$stream added to Watchlist",
+        style: TextStyle(color: Colors.grey.shade300),
+        textAlign: TextAlign.center,
+      ));
 
   ///
   /// A function
@@ -304,8 +290,8 @@ class _ExplorePageState extends State<ExplorePage>
       ..showSnackBar(favSnackBar(currentStream.type));
     setState(() {}
 
-      //TODO: Save movie/series to favourites
-    );
+        //TODO: Save movie/series to favourites
+        );
   }
 
   ///
@@ -320,7 +306,7 @@ class _ExplorePageState extends State<ExplorePage>
     });
   }
 
-  /*Future<void> _shakeCard() async {
+/*Future<void> _shakeCard() async {
     const double distance = 3;
 
     await shakeDirection(const Offset(0, -distance), 200); //shake card up

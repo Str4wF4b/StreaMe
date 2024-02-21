@@ -234,6 +234,7 @@ class _StreamTileState extends State<StreamTile> {
   }
 
   SnackBar removedSnackBar(String title) => SnackBar(
+      elevation: 0.0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
       behavior: SnackBarBehavior.floating,
       margin: EdgeInsets.only(
