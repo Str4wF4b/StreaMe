@@ -27,7 +27,7 @@ class _EditTextFieldState extends State<EditTextField> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsetsDirectional.fromSTEB(16.0, 7.0, 16.0, 35.0),
+      padding: const EdgeInsetsDirectional.fromSTEB(16.0, 7.0, 16.0, 33.0),
       child: TextField(
         controller: widget.controller,
         style: TextStyle(

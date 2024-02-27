@@ -3,9 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:stream_me/android/app/src/data/streams_data.dart';
 import 'package:stream_me/android/app/src/widgets/global/app_overlay.dart';
 import 'package:stream_me/android/app/src/pages/others/help.dart';
-import 'package:stream_me/android/app/src/pages/tabs/explore.dart';
-import 'package:stream_me/android/app/src/pages/tabs/favourites.dart';
-import 'package:stream_me/android/app/src/pages/tabs/watchlist.dart';
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
 import 'package:stream_me/android/app/src/utils/images.dart';
 
@@ -195,37 +192,12 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
     );
-    /* MaterialButton(
-        onPressed: () {
-          Navigator.push(
-              context,
-              MaterialPageRoute(
-                  builder: (context) => AppOverlay(
-                        title: title,
-                        body: routeWidget,
-                        selectedMenuIndex: index,
-                      )));
-        },
-        color: Colors.white,
-        textColor: widget.backgroundColor,
-        padding: const EdgeInsets.all(10.0),
-        shape: const CircleBorder(),
-        child: Icon(
-          icon,
-          size: 45,
-        ),
-      ),*/
   }
 
   /// Function that adds button's text on home page
   Padding addHomeCardText(String title, IconData icon) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(17.0, 8.0, 17.0, 0.0),
-      //child: ClipRRect(
-      //  borderRadius: BorderRadius.only(bottomLeft: Radius.circular(15.0), bottomRight: Radius.circular(15.0)),
-      /*child: Container(
-          color: Colors.grey.shade300,
-          height: 25,*/
       child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
         Icon(
           icon,

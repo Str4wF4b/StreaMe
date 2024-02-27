@@ -3,9 +3,13 @@ import 'dart:io';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:stream_me/android/app/src/services/functions/user_data.dart';
+import 'package:stream_me/android/app/src/utils/color_palette.dart';
 import 'package:stream_me/android/app/src/utils/images.dart';
 import 'package:stream_me/android/app/src/widgets/global/selection_button.dart';
 import '../../widgets/features/edit_text_field.dart';
+
+enum ButtonState { init, loading, done }
 
 class EditProfilePage extends StatefulWidget {
   final Color backgroundColor;
@@ -23,13 +27,23 @@ class _EditProfilePageState extends State<EditProfilePage> {
   XFile? _imageFile;
   Images image = Images();
   bool showPassword = true;
+
+  ButtonState buttonState = ButtonState.init;
+  late bool _notSaving;
+  late bool _savingDone;
+
   final TextEditingController _usernameCtrl = TextEditingController();
   final TextEditingController _fullNameCtrl = TextEditingController();
   final TextEditingController _emailCtrl = TextEditingController();
   final TextEditingController _passwordCtrl = TextEditingController();
 
+  //final _user = FirebaseAuth.instance.currentUser;
+
   @override
   Widget build(BuildContext context) {
+    _notSaving = buttonState == ButtonState.init;
+    _savingDone = buttonState == ButtonState.done;
+
     return Scaffold(
       backgroundColor: widget.backgroundColor,
       body: Container(
@@ -138,19 +152,35 @@ class _EditProfilePageState extends State<EditProfilePage> {
                   isPassword: true,
                   userInput: "●●●●●"),
               Padding(
-                padding: const EdgeInsets.only(left: 56.0, right: 56.0),
+                padding:
+                    const EdgeInsets.only(left: 26.0, right: 26.0, top: 10.0),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   //setting space between buttons cancel and save
                   children: [
-                    SelectionButton(
-                        onTap: () {}, color: Colors.blueAccent, label: "Save"),
+                    saveButton(),
+                    /*SelectionButton(
+                        onTap: () async {
+                          print(
+                              " ------------------------------------------------------------ ");
+                          UserData().updateUserPassword(
+                              _passwordCtrl.text, _emailCtrl.text);
+                          // print(widget.user?.providerData.first);
+                          if (_passwordCtrl.text.length > 5) {
+                            await widget.user
+                                ?.updatePassword(_passwordCtrl.text);
+                            //UserData().userSetup(_usernameCtrl.text, _fullNameCtrl.text, _emailCtrl.text, _passwordCtrl.text);
+                          }
+                          //_passwordCtrl.clear();
+                        },
+                        color: Colors.blueAccent,
+                        label: "Save"),*/
                     SelectionButton(
                         onTap: () {
-                            _usernameCtrl.clear();
-                            _fullNameCtrl.clear();
-                            _emailCtrl.clear();
-                            _passwordCtrl.clear();
+                          _usernameCtrl.clear();
+                          _fullNameCtrl.clear();
+                          _emailCtrl.clear();
+                          _passwordCtrl.clear();
                         },
                         color: Colors.red.shade400,
                         label: "Reset"),
@@ -287,9 +317,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   void takePhoto(ImageSource source) async {
-    final pickedFile = await widget._picker.pickImage(
-        source:
-            source); //TODO: maybe change function getImage to pickImage if it works
+    final pickedFile = await widget._picker.pickImage(source: source);
     setState(() {
       _imageFile = pickedFile;
     });
@@ -301,6 +329,54 @@ class _EditProfilePageState extends State<EditProfilePage> {
         : FileImage(File(_imageFile!.path)) as ImageProvider;
   }
 
+  /// The save button that changes its state into a laoding-state and done-state when clicked
+  Widget saveButton() => GestureDetector(
+      onTap: () async {
+        setState(() => buttonState = ButtonState.loading);
+        await Future.delayed(const Duration(seconds: 1));
+        setState(() => buttonState = ButtonState.done);
+        await Future.delayed(const Duration(seconds: 1));
+        setState(() => buttonState = ButtonState.init);
+      },
+      child: Container(
+          padding: _notSaving
+              ? const EdgeInsets.only(top: 15.0, bottom: 15.0)
+              : EdgeInsets.zero,
+          width: 120,
+          height: 53,
+          decoration: BoxDecoration(
+              color: _notSaving ? Colors.blueAccent : Colors.transparent,
+              //removing the left and right background color after the button is pressed
+              borderRadius: BorderRadius.circular(30.0)),
+          child: _notSaving
+              ? const Center(
+                  child: Text("Save",
+                      style: TextStyle(
+                          letterSpacing: 0.5,
+                          fontSize: 16.0,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w500)),
+                )
+              : buildLoadingButton(_savingDone)));
+
+  /// A function that changes between the loading circle indicator and the done icon
+  /// After clicking "Save" the progress indicator is shown and after the done icon
+  /// savingDone: The boolean that indicates if the button was clicked and the save is done, i.e. progress indicator is finished rotating
+  Widget buildLoadingButton(bool savingDone) {
+    final color = savingDone
+        ? Colors.green.shade500
+        : Colors
+            .blueAccent; //changing background depending on showing either the progress indicator (savingDone = false) or the done icon (savingDone = true)
+    return Container(
+      decoration: BoxDecoration(shape: BoxShape.circle, color: color),
+      child: savingDone
+          ? const Icon(Icons.done, size: 32, color: Colors.white)
+          : Transform.scale(
+              scaleX: 0.19,
+              scaleY: 0.42,
+              child: const CircularProgressIndicator(color: Colors.white)),
+    );
+  }
 /*  Future<bool?> showCancelDialog() => showDialog<bool>(
         context: context,
         builder: (context) => AlertDialog(
