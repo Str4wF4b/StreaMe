@@ -2,7 +2,7 @@ class Streams {
   final int id;
   final String title;
   final String type;
-  final String year;
+  final List<String> year;
   final String pg;
   final String seasonOrDuration;
   final List<String> genre;

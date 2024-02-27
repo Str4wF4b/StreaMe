@@ -170,6 +170,9 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                                     ..removeCurrentSnackBar()
                                     ..showSnackBar(
                                         listSnackBar(widget.stream.type));
+                                  if (!addWatchlist) {
+
+                                  }
                                   setState(() {
                                     addWatchlist = !addWatchlist;
                                     addWatchlist
@@ -223,7 +226,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                           children: [
                             //Year:
                             Text(
-                              widget.stream.year,
+                              streamYears(widget.stream.year),
                               style: TextStyle(
                                   color: color.bodyTextColor, fontSize: 18),
                             ),
@@ -697,6 +700,26 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
               ],
             ),
           ));
+
+  String streamYears(List years) {
+    String streamYears = "";
+    for (String year in years) {
+      //if movie or series was produced in one year only:
+      if (years.length == 1) {
+        streamYears = year;
+      } else {
+        String currentYear = DateTime.timestamp().year.toString();
+        if (year.contains(currentYear)) {
+          //if movie or series is still in production
+          streamYears = "${years.first} - current";
+        } else {
+          //if series is longer than one year
+          streamYears = "${years.first} - ${years.last}";
+        }
+      }
+    }
+    return streamYears;
+  }
 
   void getSizeAndPosition() =>
       WidgetsBinding.instance.addPostFrameCallback((_) {

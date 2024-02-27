@@ -9,7 +9,7 @@ class StreamTile extends StatefulWidget {
   final Streams stream;
   final String image;
   final String title;
-  final String year;
+  final List year;
   final String pg;
   final double rating;
   final List cast;
@@ -95,7 +95,7 @@ class _StreamTileState extends State<StreamTile> {
                           Row(
                             children: [
                               Text(
-                                widget.year,
+                                streamYears(widget.year),
                                 style: TextStyle(
                                     color: color.bodyTextColor, fontSize: 13.0),
                               ),
@@ -274,4 +274,24 @@ class _StreamTileState extends State<StreamTile> {
           //size = box.size;
         });
       });
+
+  String streamYears(List years) {
+    String streamYears = "";
+    for (String year in years) {
+      //if movie or series was produced in one year only:
+      if (years.length == 1) {
+        streamYears = year;
+      } else {
+        String currentYear = DateTime.timestamp().year.toString();
+        if (year.contains(currentYear)) {
+          //if movie or series is still in production
+          streamYears = "${years.first} - curr.";
+        } else {
+          //if series is longer than one year
+          streamYears = "${years.first} - ${years.last}";
+        }
+      }
+    }
+    return streamYears;
+  }
 }
