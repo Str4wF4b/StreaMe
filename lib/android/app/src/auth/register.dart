@@ -1,5 +1,8 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import '../services/models/user_model.dart';
+import '../services/functions/user_data.dart';
+import 'package:stream_me/android/app/src/utils/constants_and_values.dart';
 import 'package:stream_me/android/app/src/services/functions/auth_service.dart';
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
 import 'package:stream_me/android/app/src/utils/images.dart';
@@ -8,25 +11,28 @@ import '../widgets/features/login_divider.dart';
 import '../widgets/features/login_sign_buttons.dart';
 import '../widgets/features/login_text_field.dart';
 import '../widgets/features/login_tile.dart';
-import 'auth_popups.dart';
+
+import '../services/functions/auth_popups.dart';
 
 class RegisterPage extends StatefulWidget {
   final Function()? onTap;
 
-  RegisterPage({super.key, required this.onTap});
-
-  final AuthPopups popup = AuthPopups();
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
-  final confirmPasswordController = TextEditingController();
+  const RegisterPage({super.key, required this.onTap});
 
   @override
   State<RegisterPage> createState() => _RegisterPageState();
 }
 
 class _RegisterPageState extends State<RegisterPage> {
-  ColorPalette color = ColorPalette();
-  Images image = Images();
+  final AuthPopups _popup = AuthPopups();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  final _confirmPasswordController = TextEditingController();
+  final ColorPalette _color = ColorPalette();
+  final ConstantsAndValues _cav = ConstantsAndValues();
+  final Images _image = Images();
+  final UserData _userData = UserData();
+  final _user = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
@@ -37,7 +43,7 @@ class _RegisterPageState extends State<RegisterPage> {
         end: Alignment.bottomRight,
         colors: [
           Colors.deepOrangeAccent,
-          color.backgroundColor,
+          _color.backgroundColor,
         ],
       )),
       child: Scaffold(
@@ -51,7 +57,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   const SizedBox(height: 30),
                   Image.asset(
                     //logo
-                    image.streameIcon,
+                    _image.streameIcon,
                     width: 170,
                   ),
                   const SizedBox(height: 35),
@@ -63,20 +69,21 @@ class _RegisterPageState extends State<RegisterPage> {
                           style: TextStyle(
                               color: Colors.grey.shade300,
                               fontWeight: FontWeight.bold,
+                              height: _cav.textHeight,
                               fontSize: 18.0)),
                     ),
                   ),
                   const SizedBox(height: 11),
                   LoginTextField(
                       // username textfield
-                      inputController: widget.emailController,
+                      inputController: _emailController,
                       obscureText: false,
                       hintText: "Email",
                       prefixIcon: Icons.person /*, const Icon(Icons.abc)*/),
                   const SizedBox(height: 10),
                   LoginTextField(
                       // password textfield
-                      inputController: widget.passwordController,
+                      inputController: _passwordController,
                       obscureText: true,
                       hintText: "Password",
                       prefixIcon:
@@ -84,7 +91,7 @@ class _RegisterPageState extends State<RegisterPage> {
                   const SizedBox(height: 10),
                   LoginTextField(
                       // confirm password textfield
-                      inputController: widget.confirmPasswordController,
+                      inputController: _confirmPasswordController,
                       obscureText: true,
                       hintText: "Confirm Password",
                       prefixIcon: Icons
@@ -92,26 +99,26 @@ class _RegisterPageState extends State<RegisterPage> {
                   const SizedBox(height: 30),
                   SignButton(onTap: registerUser, text: "Register"),
                   const SizedBox(height: 55),
-                  const LoginDivider(),
+                  LoginDivider(),
                   const SizedBox(height: 55),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
                       LoginTile(
                           isIcon: false,
-                          imagePath: image.google,
+                          imagePath: _image.google,
                           iconData: Icons.back_hand,
                           onTap: () => AuthService().signInWithGoogle()),
                       const SizedBox(width: 12),
                       LoginTile(
                           isIcon: false,
-                          imagePath: image.apple,
+                          imagePath: _image.apple,
                           iconData: Icons.back_hand,
                           onTap: () => AuthService().signInWithApple()),
                       const SizedBox(width: 12),
                       LoginTile(
                           isIcon: false,
-                          imagePath: image.anon,
+                          imagePath: _image.anon,
                           iconData: Icons.back_hand,
                           onTap: () => AuthService().signInAnon()),
                     ],
@@ -120,15 +127,18 @@ class _RegisterPageState extends State<RegisterPage> {
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
-                      const Text(
+                      Text(
                         "Already have an account?",
-                        style: TextStyle(color: Colors.white),
+                        style: TextStyle(
+                            color: Colors.white, height: _cav.textHeight),
                       ),
                       const SizedBox(width: 4),
                       GestureDetector(
                         onTap: widget.onTap,
-                        child: const Text("Sign in here",
-                            style: TextStyle(color: Colors.lightBlue)),
+                        child: Text("Sign in here",
+                            style: TextStyle(
+                                color: Colors.lightBlue,
+                                height: _cav.textHeight)),
                       )
                     ],
                   )
@@ -143,34 +153,40 @@ class _RegisterPageState extends State<RegisterPage> {
   }
 
   void registerUser() async {
-    // show loading circle
-    showDialog(
-      context: context,
-      builder: (context) {
-        return const Center(
-          child: CircularProgressIndicator(color: Colors.blueAccent),
-        );
-      },
-    );
-
-    // check if password equals confirmed password
-    if (widget.passwordController.text ==
-        widget.confirmPasswordController.text) {
-      // register try
+    //First check if password equals confirmed password:
+    if (_passwordController.text == _confirmPasswordController.text) {
       try {
-        await FirebaseAuth.instance.createUserWithEmailAndPassword(
-            email: widget.emailController.text,
-            password: widget.passwordController.text);
-        // pop loading circle
-        if (mounted) Navigator.pop(context);
-      } on FirebaseAuthException {
-        // pop loading circle
-        if (mounted) Navigator.pop(context);
+        //Register user with email and password:
+        await _userData.registerUser(
+            _emailController.text, _passwordController.text);
+
+        //Show sign up dialog and save user's register data to the Firestore DB:
+        if (mounted) await _popup.signUpDialog(context);
+        await handleUserData();
+
+      } on FirebaseAuthException catch (e) {
+        if (e.code == "weak-password") {
+          if (mounted) _popup.wrongInputPopup(e.code, context, false);
+        } else if (e.code == "email-already-in-use") {
+          if (mounted) _popup.wrongInputPopup(e.code, context, false);
+        }
       }
     } else {
-      Navigator.pop(context);
-      widget.popup.wrongInputPopup('', context, false);
-      //return;
+      if (mounted) {
+        _popup.wrongInputPopup("not-matching-passwords", context, false);
+      }
     }
+  }
+
+  Future<void> handleUserData() async {
+    String userEmail = _emailController.text;
+    String firstUsername = userEmail.substring(0, userEmail.indexOf("@")); //First username is the mail name till @-character
+    String firstFullName = ""; //empty
+    final user = UserModel(
+        username: firstUsername,
+        fullName: firstFullName,
+        email: userEmail,
+        password: _passwordController.text);
+    await _userData.createUserSetup(user);
   }
 }

@@ -55,9 +55,7 @@ class _EditProfileState extends State<EditProfile> {
               //return a Edit Profile Screen if User is not anonymous, otherwise advise User to be anonymous
               child: FirebaseAuth.instance.currentUser!.isAnonymous
                   ? anonLoggedIn() //User is anonymous
-                  : EditProfilePage( //User is not anonymous, i.e. can edit his Profile
-                      backgroundColor: widget.backgroundColor,
-                    ),
+                  : EditProfilePage(), //User is not anonymous, i.e. can edit his Profile
             ),
           ),
         ],
@@ -91,8 +89,7 @@ class _EditProfileState extends State<EditProfile> {
                               builder: (context) => const AuthPage()),
                           (route) => false)),
                 ),
-                const Text(".",
-                    style: TextStyle(color: Colors.grey))
+                const Text(".", style: TextStyle(color: Colors.grey))
               ],
             ),
           ),

@@ -1,27 +1,30 @@
 import 'package:flutter/material.dart';
+import 'package:stream_me/android/app/src/utils/constants_and_values.dart';
 
 class LoginDivider extends StatelessWidget {
-  const LoginDivider({super.key});
+  LoginDivider({super.key});
+
+  final ConstantsAndValues _cav = ConstantsAndValues();
 
   @override
   Widget build(BuildContext context) {
-    return const Padding(
-      padding: EdgeInsets.symmetric(horizontal: 30.0),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 30.0),
       child: Row(
         children: [
-          Expanded(
+          const Expanded(
               child: Divider(
             thickness: 0.5,
             color: Colors.white70,
           )),
           Padding(
-            padding: EdgeInsets.symmetric(horizontal: 10.0),
+            padding: const EdgeInsets.symmetric(horizontal: 10.0),
             child: Text(
               "Or continue with",
-              style: TextStyle(color: Colors.white60),
+              style: TextStyle(color: Colors.white60, height: _cav.textHeight),
             ),
           ),
-          Expanded(child: Divider(thickness: 0.5, color: Colors.white70))
+          const Expanded(child: Divider(thickness: 0.5, color: Colors.white70))
         ],
       ),
     );

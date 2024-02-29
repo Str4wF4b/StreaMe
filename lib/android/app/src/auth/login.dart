@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
 import 'package:stream_me/android/app/src/utils/images.dart';
 import 'package:stream_me/android/app/src/widgets/features/login_divider.dart';
-import 'auth_popups.dart';
+import '../services/functions/auth_popups.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import '../widgets/features/login_sign_buttons.dart';
 import '../widgets/features/login_text_field.dart';
@@ -28,7 +28,6 @@ class LoginPage extends StatefulWidget {
 }
 
 class LoginPageState extends State<LoginPage> {
-// TODO: Move functionality to controller (separate the code into MVC pattern)
 // TODO: Connect with Firebase/Firestore DB (https://github.com/NearHuscarl/flutter_login/issues/162#issuecomment-869908814)
   ColorPalette color = ColorPalette();
   Images image = Images();
@@ -91,7 +90,7 @@ class LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 30),
                   SignButton(onTap: signUserIn, text: "Sign In"),
                   const SizedBox(height: 55),
-                  const LoginDivider(),
+                  LoginDivider(),
                   const SizedBox(height: 55),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
@@ -167,7 +166,6 @@ class LoginPageState extends State<LoginPage> {
       // if email is wrong:
       if (e.code == "user-not-found") {
         if (mounted) widget.popup.wrongInputPopup("Email", context, true);
-        //widget.emailController.text = "Wrong Email.";
         // if password is wrong:
       } else if (e.code == "wrong-password") {
         if (mounted) widget.popup.wrongInputPopup("Password", context, true);
