@@ -32,7 +32,6 @@ class _RegisterPageState extends State<RegisterPage> {
   final ConstantsAndValues _cav = ConstantsAndValues();
   final Images _image = Images();
   final UserData _userData = UserData();
-  final _user = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
@@ -56,7 +55,7 @@ class _RegisterPageState extends State<RegisterPage> {
                 children: [
                   const SizedBox(height: 30),
                   Image.asset(
-                    //logo
+                    // Logo:
                     _image.streameIcon,
                     width: 170,
                   ),
@@ -75,14 +74,14 @@ class _RegisterPageState extends State<RegisterPage> {
                   ),
                   const SizedBox(height: 11),
                   LoginTextField(
-                      // username textfield
+                      // Email text field:
                       inputController: _emailController,
                       obscureText: false,
                       hintText: "Email",
                       prefixIcon: Icons.person /*, const Icon(Icons.abc)*/),
                   const SizedBox(height: 10),
                   LoginTextField(
-                      // password textfield
+                      // Password text field:
                       inputController: _passwordController,
                       obscureText: true,
                       hintText: "Password",
@@ -90,7 +89,7 @@ class _RegisterPageState extends State<RegisterPage> {
                           Icons.lock /*, const Icon(Icons.remove_red_eye)*/),
                   const SizedBox(height: 10),
                   LoginTextField(
-                      // confirm password textfield
+                      // Confirm password text field:
                       inputController: _confirmPasswordController,
                       obscureText: true,
                       hintText: "Confirm Password",

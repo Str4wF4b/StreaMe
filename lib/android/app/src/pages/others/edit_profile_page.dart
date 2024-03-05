@@ -1,11 +1,12 @@
 import 'dart:io';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
 import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:stream_me/android/app/src/services/functions/auth_popups.dart';
 import 'package:stream_me/android/app/src/services/functions/user_data.dart';
 import 'package:stream_me/android/app/src/services/models/user_model.dart';
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
@@ -13,43 +14,42 @@ import 'package:stream_me/android/app/src/utils/images.dart';
 import 'package:stream_me/android/app/src/widgets/global/selection_button.dart';
 import '../../widgets/features/edit_text_field.dart';
 
-enum ButtonState { init, loading, done }
 
 class EditProfilePage extends StatefulWidget {
-  EditProfilePage({super.key});
+  const EditProfilePage({super.key});
 
   @override
   State<EditProfilePage> createState() => _EditProfilePageState();
-
-  final ImagePicker _picker = ImagePicker();
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
   XFile? _imageFile;
+  final ImagePicker _picker = ImagePicker();
+  //UploadTask _uploadTask;
   Images image = Images();
   bool showPassword = true;
   final ColorPalette _color = ColorPalette();
 
-  final _user = FirebaseAuth.instance.currentUser;
-  //late final Rx<User?> firebaseUser; //_authRep = Rx<User?>(widget.user);
+  User? _user = FirebaseAuth.instance.currentUser;
+  late Rx<User?> firebaseUser; //_authRep = Rx<User?>(widget.user);
   final _userRepo = UserData();
 
-  ButtonState buttonState = ButtonState.init;
-  late bool _notSaving;
-  late bool _savingDone;
+  bool _isNotLoading = true;
+
+  late String _oldEmail;
+  late String _oldPassword;
+  bool _updateToFirebase = false;
 
   final TextEditingController _usernameCtrl = TextEditingController();
   final TextEditingController _fullNameCtrl = TextEditingController();
   final TextEditingController _emailCtrl = TextEditingController();
   final TextEditingController _passwordCtrl = TextEditingController();
 
+  final AuthPopups _popups = AuthPopups();
   //final _user = FirebaseAuth.instance.currentUser;
 
   @override
   Widget build(BuildContext context) {
-    _notSaving = buttonState == ButtonState.init;
-    _savingDone = buttonState == ButtonState.done;
-
     return Scaffold(
       backgroundColor: _color.backgroundColor,
       body: Container(
@@ -57,19 +57,21 @@ class _EditProfilePageState extends State<EditProfilePage> {
         padding: const EdgeInsetsDirectional.only(top: 5.0),
         child: GestureDetector(
           onTap: () {
-            FocusScope.of(context).unfocus();
+            //FocusScope.of(context).unfocus();
           },
           child: FutureBuilder(
             future: getUserProfileData(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 //data is completely fetched
+
+                //print("----------------------------------------------------------- _user? - Email: ${_user?.email}");
                 if (snapshot.hasData) {
-                  UserModel userData = snapshot.data as UserModel;
-                  print(userData.fullName);
-                  print(userData.email);
-                  print(userData.password);
-                  print(userData.username);
+                  UserModel user = snapshot.data as UserModel;
+                  final id = TextEditingController(text: user.id);
+                  _oldEmail = user.email;
+                  _oldPassword = user.password;
+                  //print("----------------------------------------------------------- user - Username: ${user.username}");
                   return ListView(
                     children: [
                       Center(
@@ -99,7 +101,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                 image: DecorationImage(
                                     //default profile picture
                                     fit: BoxFit.cover,
-                                    image: selectImage()),
+                                    image: getProfilePicture()),
                               ),
                             ),
                             Positioned(
@@ -132,6 +134,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                         builder: ((builder) =>
                                             bottomProfileSheet()),
                                         backgroundColor: _color.backgroundColor,
+                                        elevation: 0.0
                                       );
                                     },
                                     child: const Icon(
@@ -152,49 +155,33 @@ class _EditProfilePageState extends State<EditProfilePage> {
                           labelText: "Username: ",
                           placeholder: "Enter new Username here",
                           isPassword: false,
-                          userInput: userData.username.isNotEmpty ? userData.username : ""/*"${_user?.displayName}"*/),
+                          userInput: user.username),
                       EditTextField(
                           controller: _fullNameCtrl,
                           labelText: "Full Name: ",
                           placeholder: "Enter new Full Name here",
                           isPassword: false,
-                          userInput: userData.fullName.isNotEmpty ? userData.fullName : ""/*"${_user?.displayName}"*/),
+                          userInput: user.fullName),
                       EditTextField(
                           controller: _emailCtrl,
                           labelText: "E-Mail: ",
                           placeholder: "Enter new E-Mail address here",
                           isPassword: false,
-                          userInput: userData.email/*"${_user?.email}"*/),
+                          userInput: user.email),
                       EditTextField(
                           controller: _passwordCtrl,
                           labelText: "Password: ",
                           placeholder: "Enter new Password here",
                           isPassword: true,
-                          userInput: userData.password/*"●●●●●"*/),
+                          userInput:
+                              "●●●●●${user.password.substring(user.password.length - 1)}"),
                       Padding(
                         padding: const EdgeInsets.only(
                             left: 26.0, right: 26.0, top: 10.0),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          //setting space between buttons cancel and save
                           children: [
-                            saveButton(),
-                            /*SelectionButton(
-                          onTap: () async {
-                            print(
-                                " ------------------------------------------------------------ ");
-                            UserData().updateUserPassword(
-                                _passwordCtrl.text, _emailCtrl.text);
-                            // print(widget.user?.providerData.first);
-                            if (_passwordCtrl.text.length > 5) {
-                              await widget.user
-                                  ?.updatePassword(_passwordCtrl.text);
-                              //UserData().userSetup(_usernameCtrl.text, _fullNameCtrl.text, _emailCtrl.text, _passwordCtrl.text);
-                            }
-                            //_passwordCtrl.clear();
-                          },
-                          color: Colors.blueAccent,
-                          label: "Save"),*/
+                            saveButton(id, user),
                             SelectionButton(
                                 onTap: () {
                                   _usernameCtrl.clear();
@@ -258,14 +245,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       )
                     ],
                   );
-                } else if (snapshot.hasError) {
-                  print("hier");
-                  return Center(child: Text(snapshot.error.toString()));
                 } else {
-                  return const Center(child: Text("Something went wrong!"));
+                  return const Center(
+                      child: Text(
+                          "Something went wrong! Please try to login again."));
                 }
               } else {
-                return const Center(child: CircularProgressIndicator(color: Colors.blueAccent));
+                return const Center(
+                    child: CircularProgressIndicator(color: Colors.blueAccent));
               }
             },
           ),
@@ -308,7 +295,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     color: Colors.blue,
                   ),
                   onPressed: () {
-                    takePhoto(ImageSource.camera);
+                    changePicture(ImageSource.camera);
                   },
                   label: const Text(
                     'Camera',
@@ -329,7 +316,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     color: Colors.blue,
                   ),
                   onPressed: () {
-                    takePhoto(ImageSource.gallery);
+                    changePicture(ImageSource.gallery);
                   },
                   label: const Text(
                     'Gallery',
@@ -346,74 +333,152 @@ class _EditProfilePageState extends State<EditProfilePage> {
       ),
     );
   }
-
-  void takePhoto(ImageSource source) async {
-    final pickedFile = await widget._picker.pickImage(source: source);
+  /// A function that changes the current profile picture by picking from a source
+  /// source: The source the picture is picked from, i.e. from camera or gallery
+  void changePicture(ImageSource source) async {
+    final pickedFile = await _picker.pickImage(source: source);
     setState(() {
       _imageFile = pickedFile;
     });
+    print("Image saving");
+    uploadPicture(_imageFile);
   }
 
-  ImageProvider<Object> selectImage() {
+  Future uploadPicture(XFile? pickedFile) async {
+    /*if (_updateToFirebase && (_oldEmail != _user?.email)) {
+      // Delete the path of the old email when changing the user's email:
+      final oldPath = "profilePictures/$_oldEmail";
+      await File(oldPath).delete();
+    }*/
+
+    // Add the path:
+    final path = "profilePictures/${_user?.email}/${_imageFile!.name}";
+    final file = File(pickedFile!.path);
+    final ref = FirebaseStorage.instance.ref().child(path);
+    ref.putFile(file);
+  }
+
+  ImageProvider<Object> getProfilePicture() {
     return _imageFile == null
         ? AssetImage(image.blank)
         : FileImage(File(_imageFile!.path)) as ImageProvider;
   }
 
-  /// The save button that changes its state into a laoding-state and done-state when clicked
-  Widget saveButton() => GestureDetector(
-      onTap: () async {
-        setState(() => buttonState = ButtonState.loading);
-        await Future.delayed(const Duration(seconds: 1));
-        setState(() => buttonState = ButtonState.done);
-        await Future.delayed(const Duration(seconds: 1));
-        setState(() => buttonState = ButtonState.init);
-      },
-      child: Container(
-          padding: _notSaving
-              ? const EdgeInsets.only(top: 15.0, bottom: 15.0)
-              : EdgeInsets.zero,
-          width: 120,
-          height: 53,
-          decoration: BoxDecoration(
-              color: _notSaving ? Colors.blueAccent : Colors.transparent,
-              //removing the left and right background color after the button is pressed
-              borderRadius: BorderRadius.circular(30.0)),
-          child: _notSaving
-              ? const Center(
-                  child: Text("Save",
-                      style: TextStyle(
-                          letterSpacing: 0.5,
-                          fontSize: 16.0,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w500)),
-                )
-              : buildLoadingButton(_savingDone)));
+  /// The save button that changes its state into a loading- and done-state when clicked
+  Widget saveButton(TextEditingController id, UserModel user) =>
+      GestureDetector(
+          onTap: () async {
+            _updateToFirebase = true;
+            setState(() {
+              _isNotLoading = false;
+            });
+            // Update profile changes:
+            final updatedUserData = UserModel(
+                id: id.text,
+                email: _emailCtrl.text.isEmpty
+                    ? user.email
+                    : _emailCtrl.text.trim(),
+                fullName: _fullNameCtrl.text.isEmpty
+                    ? user.fullName
+                    : _fullNameCtrl.text,
+                password: _passwordCtrl.text.isEmpty
+                    ? user.password
+                    : _passwordCtrl.text,
+                username: _usernameCtrl.text.isEmpty
+                    ? user.username
+                    : _usernameCtrl.text);
 
-  /// A function that changes between the loading circle indicator and the done icon
-  /// After clicking "Save" the progress indicator is shown and after the done icon
-  /// savingDone: The boolean that indicates if the button was clicked and the save is done, i.e. progress indicator is finished rotating
-  Widget buildLoadingButton(bool savingDone) {
-    final color = savingDone
-        ? Colors.green.shade500
-        : Colors
-            .blueAccent; //changing background depending on showing either the progress indicator (savingDone = false) or the done icon (savingDone = true)
-    return Container(
-      decoration: BoxDecoration(shape: BoxShape.circle, color: color),
-      child: savingDone
-          ? const Icon(Icons.done, size: 32, color: Colors.white)
-          : Transform.scale(
-              scaleX: 0.19,
-              scaleY: 0.42,
-              child: const CircularProgressIndicator(color: Colors.white)),
-    );
-  }
+            // Clear text field inputs after saving:
+
+            await updateUserProfileData(updatedUserData);
+            _usernameCtrl.clear();
+            _fullNameCtrl.clear();
+            _emailCtrl.clear();
+            _passwordCtrl.clear();
+            if (mounted) setState(() {});
+            //print(
+            //    "----------------------------------------------------------- user - Password: ${user.password}");
+            //print("-----------------------------------------------------------  updatedUserData - updated Password: ${updatedUserData
+            //    .password}");
+
+            _isNotLoading = true;
+          },
+          child: Container(
+              padding: _isNotLoading
+                  ? const EdgeInsets.only(top: 15.0, bottom: 15.0)
+                  : EdgeInsets.zero,
+              width: 120,
+              height: 53,
+              decoration: BoxDecoration(
+                  color: _isNotLoading ? Colors.blueAccent : Colors.transparent,
+                  //removing the left and right background color after the button is pressed
+                  borderRadius: BorderRadius.circular(30.0)),
+              child: _isNotLoading
+                  ? const Center(
+                      child: Text("Save",
+                          style: TextStyle(
+                              letterSpacing: 0.5,
+                              fontSize: 16.0,
+                              color: Colors.white,
+                              fontWeight: FontWeight.w500)),
+                    )
+                  : Container(
+                decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.blueAccent),
+                child: Transform.scale(
+                    scaleX: 0.19,
+                    scaleY: 0.42,
+                    child: const CircularProgressIndicator(color: Colors.white)),
+              )));
 
   getUserProfileData() {
     //firebaseUser = Rx<User?>(_user);
+    //final email = firebaseUser.value?.email;
+    _user = FirebaseAuth.instance.currentUser;
     final email = _user?.email;
+    print("----------------------------------------------------------- getUserProfileData - Email: $email");
+    //print("Firebase User: $email");
+    //final id = _user?.uid;
     if (email != null) {
       return _userRepo.getUserData(email);
+    }
+  }
+
+  updateUserProfileData(UserModel user) async {
+    await updateData(user);
+    if (_updateToFirebase) {
+      await _userRepo.updateUserData(user);
+    }
+  }
+
+  updateData(UserModel user) async {
+    try {
+      await _user?.updateDisplayName(user.username);
+      await _user?.reload();
+      await _user?.updateEmail(user.email);
+      await _user?.updatePassword(user.password);
+      await _user?.reload();
+
+      _user = FirebaseAuth.instance
+          .currentUser; // new user data, i.e. username, full name, email and password will be fetched from new current user
+      _updateToFirebase = true;
+      //String? newDisplayName = _user?.displayName;
+      //String? newEmail = _user?.email;
+      //print("----------------------------------------------------------- updateData - New Display Name: $newDisplayName");
+      //print("----------------------------------------------------------- updateData - New Email: $newEmail");
+    } on FirebaseAuthException catch (e) {
+      await _user?.reload();
+      if (e.code == "requires-recent-login") {
+        AuthCredential newCredential = EmailAuthProvider.credential(
+            email: _oldEmail, password: _oldPassword);
+        _user = FirebaseAuth.instance.currentUser;
+        print("----------------------------------------------------------- Requires recent login: ${user.email} ${_user?.email}");
+        print("----------------------------------------------------------- oldEmail: $_oldEmail | oldPassword: $_oldPassword");
+        _emailCtrl.clear();
+        _passwordCtrl.clear();
+        if (mounted) _popups.reauthenticateDialog(context);
+        _updateToFirebase = false;
+        await _user?.reauthenticateWithCredential(newCredential);
+      }
     }
   }
 }

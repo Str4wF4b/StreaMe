@@ -13,8 +13,8 @@ class UserModel {
     required this.email,
     required this.password});
 
-  ///A function that returns the Json value of the UserModel to store it into Firestore DB
-  ///If it's a Google Account, the password is not known and it will return null
+  /// A function that returns the Json value of the UserModel to store it into Firestore DB
+  /// If it's a Google Account, the password is not known and it will return 5 dots
   toJson() =>
       password != ""
           ? {
@@ -26,11 +26,11 @@ class UserModel {
           : {
         "Email": email,
         "Full_Name": fullName,
-        "Password": null,
+        "Password": "•••••",
         "Username": username,
       };
 
-  ///A function that fetches data in a map from Firebase to UserModel
+  /// A function that fetches data in a map from Firebase to UserModel
   factory UserModel.fromSnapshot(
       DocumentSnapshot<Map<String, dynamic>> document) {
     final data = document.data()!;

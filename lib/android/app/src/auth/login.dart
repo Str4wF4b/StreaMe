@@ -9,28 +9,28 @@ import '../widgets/features/login_sign_buttons.dart';
 import '../widgets/features/login_text_field.dart';
 import '../widgets/features/login_tile.dart';
 import '../services/functions/auth_service.dart';
+import '../services/functions/user_data.dart';
 import 'forgot_password.dart';
 
 class LoginPage extends StatefulWidget {
   final Function()? onTap;
 
-  LoginPage({super.key, required this.onTap});
+  const LoginPage({super.key, required this.onTap});
 
   final String title = "Login";
-
-  FirebaseFirestore get firestore => FirebaseFirestore.instance;
-  final AuthPopups popup = AuthPopups();
-  final emailController = TextEditingController();
-  final passwordController = TextEditingController();
 
   @override
   State<LoginPage> createState() => LoginPageState();
 }
 
 class LoginPageState extends State<LoginPage> {
-// TODO: Connect with Firebase/Firestore DB (https://github.com/NearHuscarl/flutter_login/issues/162#issuecomment-869908814)
-  ColorPalette color = ColorPalette();
-  Images image = Images();
+  final ColorPalette _color = ColorPalette();
+  final Images _image = Images();
+  final UserData _userData = UserData();
+  final AuthPopups _popup = AuthPopups();
+  final _emailController = TextEditingController();
+  final _passwordController = TextEditingController();
+  //FirebaseFirestore get firestore => FirebaseFirestore.instance;
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +41,7 @@ class LoginPageState extends State<LoginPage> {
         end: Alignment.bottomRight,
         colors: [
           Colors.deepOrangeAccent,
-          color.backgroundColor,
+          _color.backgroundColor,
         ],
       )),
       child: Scaffold(
@@ -55,20 +55,20 @@ class LoginPageState extends State<LoginPage> {
                   const SizedBox(height: 50),
                   Image.asset(
                     //logo
-                    image.streameIcon,
+                    _image.streameIcon,
                     width: 200,
                   ),
                   const SizedBox(height: 50),
                   LoginTextField(
-                      // username textfield
-                      inputController: widget.emailController,
+                      // Email text field:
+                      inputController: _emailController,
                       obscureText: false,
                       hintText: "Email",
                       prefixIcon: Icons.person),
                   const SizedBox(height: 13),
                   LoginTextField(
-                      // password textfield
-                      inputController: widget.passwordController,
+                      // Password text field:
+                      inputController: _passwordController,
                       obscureText: true,
                       hintText: "Password",
                       prefixIcon: Icons.lock),
@@ -97,21 +97,20 @@ class LoginPageState extends State<LoginPage> {
                     children: [
                       LoginTile(
                           isIcon: false,
-                          imagePath: image.google,
+                          imagePath: _image.google,
                           iconData: Icons.back_hand,
                           onTap: () => AuthService().signInWithGoogle()),
                       const SizedBox(width: 12),
                       LoginTile(
                           isIcon: false,
-                          imagePath: image.apple,
+                          imagePath: _image.apple,
                           iconData: Icons.back_hand,
                           onTap: () => AuthService().signInWithApple()),
                       const SizedBox(width: 12),
                       LoginTile(
                           isIcon: false,
-                          imagePath: image.anon,
+                          imagePath: _image.anon,
                           iconData: Icons.back_hand,
-                          //TODO: show restricted anonymous site
                           onTap: () => AuthService().signInAnon()),
                     ],
                   ),
@@ -154,9 +153,7 @@ class LoginPageState extends State<LoginPage> {
 
     // sign in try
     try {
-      await FirebaseAuth.instance.signInWithEmailAndPassword(
-          email: widget.emailController.text,
-          password: widget.passwordController.text);
+      await _userData.loginUser(_emailController.text, _passwordController.text);
       // pop loading circle
       if (mounted) Navigator.pop(context);
     } on FirebaseAuthException catch (e) {
@@ -165,15 +162,15 @@ class LoginPageState extends State<LoginPage> {
 
       // if email is wrong:
       if (e.code == "user-not-found") {
-        if (mounted) widget.popup.wrongInputPopup("Email", context, true);
+        if (mounted) _popup.wrongInputPopup("Email", context, true);
         // if password is wrong:
       } else if (e.code == "wrong-password") {
-        if (mounted) widget.popup.wrongInputPopup("Password", context, true);
+        if (mounted) _popup.wrongInputPopup("Password", context, true);
       } else if (e.code == "user-not-found" && e.code == "wrong-password") {
         //wrongEmailPopup();
       }
     }
 
-    // Navigator.pop(context);
+    //if(mounted) Navigator.pop(context);
   }
 }

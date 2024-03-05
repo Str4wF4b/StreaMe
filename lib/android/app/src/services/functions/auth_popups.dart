@@ -1,10 +1,11 @@
 import 'dart:async';
 
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:stream_me/android/app/src/auth/auth_main.dart';
 import '../../utils/color_palette.dart';
 
 class AuthPopups {
-  final bool done = false;
   final ColorPalette _color = ColorPalette();
 
   /// A function that returns a popup if the email or password is wrong when logging in
@@ -86,7 +87,7 @@ class AuthPopups {
     return dialogContent;
   }
 
-  ///A function that returns a dialog after a user has been succesfully created
+  ///A function that returns a dialog after a user has been successfully created
   Future signUpDialog(BuildContext context) {
     return showDialog(
       context: context,
@@ -126,6 +127,61 @@ class AuthPopups {
                       Icon(
                         Icons.arrow_forward,
                         color: Colors.green,
+                      ),
+                    ],
+                  ),
+                ))
+          ],
+        );
+      },
+    );
+  }
+
+  Future reauthenticateDialog(BuildContext context) {
+    return showDialog(
+      context: context,
+      builder: (context) {
+        return AlertDialog(
+          backgroundColor: _color.backgroundColor,
+          elevation: 0.0,
+          content: Text(
+            "Please login again to change your Email and/or Password.",
+            style: TextStyle(fontSize: 16.0, color: _color.bodyTextColor),
+            textAlign: TextAlign.center,
+          ),
+          contentPadding: const EdgeInsets.fromLTRB(25.0, 20.0, 25.0, 20.0),
+          shape: RoundedRectangleBorder(
+              borderRadius: const BorderRadius.all(Radius.circular(30.0)),
+              side: BorderSide(color: _color.bodyTextColor, width: 2.0)),
+          actions: [
+            GestureDetector(
+                onTap: () async {
+                  await FirebaseAuth.instance.signOut().then(
+                          (value) => Navigator.of(context)
+                          .pushAndRemoveUntil(
+                          MaterialPageRoute(
+                              builder: (context) =>
+                              const AuthPage()),
+                              (route) => false));
+                },
+                child: Container(
+                  padding: const EdgeInsets.fromLTRB(3.0, 5.0, 0.0, 5.0),
+                  margin: const EdgeInsets.symmetric(horizontal: 65.0),
+                  decoration: BoxDecoration(
+                      border: Border.all(
+                        color: _color.bodyTextColor, /*width: 2.0*/),
+                      borderRadius: BorderRadius.circular(30.0)),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text("Login ",
+                          style: TextStyle(
+                              color: _color.bodyTextColor,
+                              fontSize: 16.0)),
+                      const SizedBox(width: 5),
+                      Icon(
+                        Icons.login,
+                        color: _color.bodyTextColor,
                       ),
                     ],
                   ),

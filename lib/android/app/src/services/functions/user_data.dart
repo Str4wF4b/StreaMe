@@ -50,6 +50,14 @@ class UserData {
         .createUserWithEmailAndPassword(email: email, password: password);
   }
 
+  /// A function that signs the user in with its email and password
+  /// email: The email of the user which he attempted to sign in with
+  /// password: The password of the user which he attempted to sign in with
+  Future<void> loginUser(String email, String password) async {
+    await FirebaseAuth.instance
+        .signInWithEmailAndPassword(email: email, password: password);
+  }
+
   /// A function that saves a new registered user to the Firestore DB
   /// user: The UserModel with the user's username, full name, email and password
   Future<void> createUserSetup(UserModel user) async {
@@ -69,5 +77,11 @@ class UserData {
     final snapshot = await _db.collection("Users").get(); //get data from all users
     final userData = snapshot.docs.map((e) => UserModel.fromSnapshot(e)).toList(); //map data to convert it
     return userData;
+  }
+
+  /// A function that updates a user's data from its UserModel
+  /// user: The UserModel with the user's username, full name, email and password
+  Future<void> updateUserData(UserModel user) async {
+    await _db.collection("Users").doc(user.id).update(user.toJson());
   }
 }
