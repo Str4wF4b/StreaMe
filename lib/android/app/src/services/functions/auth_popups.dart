@@ -145,7 +145,7 @@ class AuthPopups {
           backgroundColor: _color.backgroundColor,
           elevation: 0.0,
           content: Text(
-            "Please login again to change your Email and/or Password.",
+            "Please login again to change your Profile.",
             style: TextStyle(fontSize: 16.0, color: _color.bodyTextColor),
             textAlign: TextAlign.center,
           ),

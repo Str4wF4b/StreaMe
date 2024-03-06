@@ -61,7 +61,7 @@ class AuthService {
 
   void handleUserData(String username, String fullName, String email) {
     final user = UserModel(
-        username: username, fullName: fullName, email: email, password: "");
+        username: username, fullName: fullName, email: email, password: "", imageUrl: "");
     _userData.createUserSetup(user);
   }
 }

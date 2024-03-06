@@ -10,6 +10,7 @@ import 'package:stream_me/android/app/src/services/functions/auth_popups.dart';
 import 'package:stream_me/android/app/src/services/functions/user_data.dart';
 import 'package:stream_me/android/app/src/services/models/user_model.dart';
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
+import 'package:stream_me/android/app/src/utils/constants_and_values.dart';
 import 'package:stream_me/android/app/src/utils/images.dart';
 import 'package:stream_me/android/app/src/widgets/global/selection_button.dart';
 import '../../widgets/features/edit_text_field.dart';
@@ -25,10 +26,11 @@ class EditProfilePage extends StatefulWidget {
 class _EditProfilePageState extends State<EditProfilePage> {
   XFile? _imageFile;
   final ImagePicker _picker = ImagePicker();
-  //UploadTask _uploadTask;
+  late UploadTask _uploadTask;
   Images image = Images();
   bool showPassword = true;
   final ColorPalette _color = ColorPalette();
+  final ConstantsAndValues _cav = ConstantsAndValues();
 
   User? _user = FirebaseAuth.instance.currentUser;
   late Rx<User?> firebaseUser; //_authRep = Rx<User?>(widget.user);
@@ -39,6 +41,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
   late String _oldEmail;
   late String _oldPassword;
   bool _updateToFirebase = false;
+  String _urlDownload = "";
+  bool _pickedImage = false;
 
   final TextEditingController _usernameCtrl = TextEditingController();
   final TextEditingController _fullNameCtrl = TextEditingController();
@@ -101,7 +105,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                 image: DecorationImage(
                                     //default profile picture
                                     fit: BoxFit.cover,
-                                    image: getProfilePicture()),
+                                    image: getProfilePicture(user)),
                               ),
                             ),
                             Positioned(
@@ -263,7 +267,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
 
   Widget bottomProfileSheet() {
     return Container(
-      height: 90.0,
+      height: 92.0,
       width: MediaQuery.of(context).size.width,
       margin: const EdgeInsets.symmetric(
         horizontal: 20.0,
@@ -337,7 +341,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
   /// source: The source the picture is picked from, i.e. from camera or gallery
   void changePicture(ImageSource source) async {
     final pickedFile = await _picker.pickImage(source: source);
+    if (pickedFile != null) {
+      _pickedImage = true;
+    }
     setState(() {
+      print("Now");
       _imageFile = pickedFile;
     });
     print("Image saving");
@@ -351,17 +359,26 @@ class _EditProfilePageState extends State<EditProfilePage> {
       await File(oldPath).delete();
     }*/
 
-    // Add the path:
+    // Add the path to Firestore storage:
     final path = "profilePictures/${_user?.email}/${_imageFile!.name}";
     final file = File(pickedFile!.path);
     final ref = FirebaseStorage.instance.ref().child(path);
-    ref.putFile(file);
+    _uploadTask = ref.putFile(file);
+
+    final snapshot = await _uploadTask!/*.whenComplete(() => {})*/;
+    _urlDownload = await snapshot.ref.getDownloadURL();
+    print(_urlDownload);
+    print("--------------------------------------------------------------------- ${_imageFile!.path}");
   }
 
-  ImageProvider<Object> getProfilePicture() {
-    return _imageFile == null
-        ? AssetImage(image.blank)
-        : FileImage(File(_imageFile!.path)) as ImageProvider;
+  ImageProvider<Object> getProfilePicture(UserModel user) {
+    if (user.imageUrl == "" && !_pickedImage) {
+        return AssetImage(image.blank);
+    } else if (!_pickedImage){
+      return FileImage(File(user.imageUrl)); /*as ImageProvider;*/
+    } else {
+      return FileImage(File(_imageFile!.path));
+    }
   }
 
   /// The save button that changes its state into a loading- and done-state when clicked
@@ -381,6 +398,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 fullName: _fullNameCtrl.text.isEmpty
                     ? user.fullName
                     : _fullNameCtrl.text,
+                imageUrl: _imageFile?.path == null ? user.imageUrl : _imageFile!.path,
                 password: _passwordCtrl.text.isEmpty
                     ? user.password
                     : _passwordCtrl.text,
@@ -473,6 +491,8 @@ class _EditProfilePageState extends State<EditProfilePage> {
         _user = FirebaseAuth.instance.currentUser;
         print("----------------------------------------------------------- Requires recent login: ${user.email} ${_user?.email}");
         print("----------------------------------------------------------- oldEmail: $_oldEmail | oldPassword: $_oldPassword");
+        _usernameCtrl.clear();
+        _fullNameCtrl.clear();
         _emailCtrl.clear();
         _passwordCtrl.clear();
         if (mounted) _popups.reauthenticateDialog(context);

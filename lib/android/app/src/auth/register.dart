@@ -185,7 +185,8 @@ class _RegisterPageState extends State<RegisterPage> {
         username: firstUsername,
         fullName: firstFullName,
         email: userEmail,
-        password: _passwordController.text);
+        password: _passwordController.text,
+        imageUrl: "");
     await _userData.createUserSetup(user);
   }
 }
