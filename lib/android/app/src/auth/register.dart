@@ -162,7 +162,6 @@ class _RegisterPageState extends State<RegisterPage> {
         //Show sign up dialog and save user's register data to the Firestore DB:
         if (mounted) await _popup.signUpDialog(context);
         await handleUserData();
-
       } on FirebaseAuthException catch (e) {
         if (e.code == "weak-password") {
           if (mounted) _popup.wrongInputPopup(e.code, context, false);
@@ -179,7 +178,10 @@ class _RegisterPageState extends State<RegisterPage> {
 
   Future<void> handleUserData() async {
     String userEmail = _emailController.text;
-    String firstUsername = userEmail.substring(0, userEmail.indexOf("@")); //First username is the mail name till @-character
+    String firstUsername = userEmail.substring(
+        0,
+        userEmail
+            .indexOf("@")); //First username is the mail name till @-character
     String firstFullName = ""; //empty
     final user = UserModel(
         username: firstUsername,
@@ -187,6 +189,7 @@ class _RegisterPageState extends State<RegisterPage> {
         email: userEmail,
         password: _passwordController.text,
         imageUrl: "");
+    await FirebaseAuth.instance.currentUser?.updateDisplayName!(firstUsername);
     await _userData.createUserSetup(user);
   }
 }
