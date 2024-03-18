@@ -1,6 +1,7 @@
 import 'package:auto_size_text/auto_size_text.dart';
 import 'package:autoscale_tabbarview/autoscale_tabbarview.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:expand_widget/expand_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -9,7 +10,6 @@ import '../../widgets/features/actor_director_tab.dart';
 import '../../utils/color_palette.dart';
 import '../../utils/constants_and_values.dart';
 import '../../widgets/global/streame_tab.dart';
-import '../../widgets/global/streame_refresh.dart';
 
 class ActorDirectorDetailsPage extends StatefulWidget {
   final Actor actorDirector;
@@ -23,7 +23,7 @@ class ActorDirectorDetailsPage extends StatefulWidget {
 
 class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
     with TickerProviderStateMixin {
-  final ColorPalette color = ColorPalette();
+  final ColorPalette _color = ColorPalette();
   final ConstantsAndValues cons = ConstantsAndValues();
 
   final keyImage = GlobalKey();
@@ -38,12 +38,23 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
     final sliverWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
-      backgroundColor: color.backgroundColor,
-      body: StreameRefresh(
+      backgroundColor: _color.backgroundColor,
+      body: CustomRefreshIndicator(
+        onRefresh: () {
+          setState(() {});
+          return Future.delayed(const Duration(milliseconds: 1200));
+        },
+        builder: MaterialIndicatorDelegate(builder: (context, controller) {
+          return Icon(
+            Icons.camera,
+            color: _color.backgroundColor,
+            size: 30,
+          );
+        }),
         child: CustomScrollView(
           slivers: [
             SliverAppBar(
-              backgroundColor: color.backgroundColor,
+              backgroundColor: _color.backgroundColor,
               //title: FittedBox(child: Text(widget.actorDirector.displayName)),
               elevation: 0.0,
               scrolledUnderElevation: 0.0,
@@ -91,12 +102,15 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
                                   begin: FractionalOffset.topCenter,
                                   end: FractionalOffset.bottomCenter,
                                   colors: [
-                                Colors.grey.withOpacity(0.0), // or black
-                                Colors.black87, // or black54
+                                Colors.black38.withOpacity(0.0),
+                                Colors.black38,
+                                Colors.black38,
+                                Colors.black38.withOpacity(0.0),
                               ],
-                                  stops: const [
-                                0.8, // or 0.77
-                                1.0
+                                  stops: const [0.82,
+                                    0.88,
+                                0.92,
+                                0.98
                               ])),
                         )
                       ],
@@ -129,7 +143,7 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
                               widget.stream.plot, context, constraints);*/
                             ExpandText(widget.actorDirector.biography,
                                 style: TextStyle(
-                                    color: color.bodyTextColor,
+                                    color: _color.bodyTextColor,
                                     fontSize: 16 *
                                         1 /
                                         MediaQuery.of(context).textScaleFactor,
@@ -160,11 +174,11 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
                             child: TabBar(
                               physics: const ClampingScrollPhysics(),
                               dividerHeight: 0.0,
-                              labelColor: color.backgroundColor,
+                              labelColor: _color.backgroundColor,
                               unselectedLabelColor: Colors.grey,
                               indicator: BoxDecoration(
                                 borderRadius: BorderRadius.circular(30.0),
-                                color: color.bodyTextColor,
+                                color: _color.bodyTextColor,
                               ),
                               indicatorSize: TabBarIndicatorSize.label,
                               indicatorPadding:
@@ -227,14 +241,14 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
         TextSpan(
             text: label,
             style: TextStyle(
-              color: color.bodyTextColor,
+              color: _color.bodyTextColor,
               fontSize: 17,
             ),
             children: [
               TextSpan(
                   text: input,
                   style: TextStyle(
-                    color: color.bodyTextColor,
+                    color: _color.bodyTextColor,
                     fontSize: 19,
                     fontWeight: FontWeight.bold,
                   ))

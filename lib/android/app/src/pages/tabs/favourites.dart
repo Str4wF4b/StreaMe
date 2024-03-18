@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:stream_me/android/app/src/data/streams_data.dart';
 import 'package:stream_me/android/app/src/model/streams_model.dart';
-import 'package:stream_me/android/app/src/pages/tabs/explore.dart';
 import 'package:stream_me/android/app/src/services/functions/favourites_data.dart';
 import 'package:stream_me/android/app/src/services/functions/user_data.dart';
 import 'package:stream_me/android/app/src/services/models/favourites_model.dart';
@@ -110,11 +109,12 @@ class _FavouritesPageState extends State<FavouritesPage>
                   List<FavouritesModel> favouriteMovies = snapshot.data
                       as List<FavouritesModel>; // List of all saved Favourites
 
-                  movies = movies // Check full movies list if movie is in user's favourites list
-                      .where((element) => favouriteMovies.any((movie) =>
-                          element.type == "Movie" &&
-                          element.id.toString() == movie.streamId))
-                      .toList();
+                  movies =
+                      movies // Check full movies list if movie is in user's favourites list
+                          .where((element) => favouriteMovies.any((movie) =>
+                              element.type == "Movie" &&
+                              element.id.toString() == movie.streamId))
+                          .toList();
 
                   return ListView.builder(
                       itemCount: movies.length,
@@ -167,33 +167,59 @@ class _FavouritesPageState extends State<FavouritesPage>
     return Column(
       children: [
         Expanded(
-          child: ListView.builder(
-              itemCount: series.length,
-              scrollDirection: Axis.vertical,
-              shrinkWrap: true,
-              itemBuilder: (context, index) {
-                Streams currentStream = series.elementAt(index);
-                StreamTile currentTile = StreamTile(
-                    stream: currentStream,
-                    image: currentStream.image,
-                    title: currentStream.title,
-                    year: currentStream.year,
-                    pg: currentStream.pg,
-                    rating: 4.6,
-                    //TODO
-                    cast: currentStream.cast,
-                    provider: currentStream.provider,
-                    fromHomeButton: widget.fromHomeButton);
+          child: FutureBuilder(
+            future: getFavouriteMovies(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.done) {
+                if (snapshot.hasData) {
+                  List<FavouritesModel> favouriteMovies = snapshot.data
+                      as List<FavouritesModel>; // List of all saved Favourites
 
-                if (currentStream == series.last &&
-                    currentStream != series.first) {
-                  return currentTile;
+                  series =
+                      series // Check full series list if series is in user's favourites list
+                          .where((element) => favouriteMovies.any((movie) =>
+                              element.type == "Series" &&
+                              element.id.toString() == movie.streamId))
+                          .toList();
+
+                  return ListView.builder(
+                      itemCount: series.length,
+                      scrollDirection: Axis.vertical,
+                      shrinkWrap: true,
+                      itemBuilder: (context, index) {
+                        Streams currentStream = series.elementAt(index);
+                        StreamTile currentTile = StreamTile(
+                            stream: currentStream,
+                            image: currentStream.image,
+                            title: currentStream.title,
+                            year: currentStream.year,
+                            pg: currentStream.pg,
+                            rating: 4.6,
+                            //TODO
+                            cast: currentStream.cast,
+                            provider: currentStream.provider,
+                            fromHomeButton: widget.fromHomeButton);
+
+                        if (currentStream == series.last &&
+                            currentStream != series.first) {
+                          return currentTile;
+                        } else {
+                          return Column(
+                            children: [currentTile, const SizedBox(height: 20)],
+                          );
+                        }
+                      });
                 } else {
-                  return Column(
-                    children: [currentTile, const SizedBox(height: 20)],
-                  );
+                  return const Center(
+                      child: Text(
+                          "Something went wrong! Please try to login again."));
                 }
-              }),
+              } else {
+                return const Center(
+                    child: CircularProgressIndicator(color: Colors.blueAccent));
+              }
+            },
+          ),
         ),
       ],
     );
