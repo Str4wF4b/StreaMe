@@ -55,7 +55,7 @@ class _EditProfileState extends State<EditProfile> {
               //return a Edit Profile Screen if User is not anonymous, otherwise advise User to be anonymous
               child: FirebaseAuth.instance.currentUser!.isAnonymous
                   ? anonLoggedIn() //User is anonymous
-                  : EditProfilePage(), //User is not anonymous, i.e. can edit his Profile
+                  : const EditProfilePage(), //User is not anonymous, i.e. can edit his Profile
             ),
           ),
         ],
