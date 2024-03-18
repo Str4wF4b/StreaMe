@@ -1,6 +1,5 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:stream_me/android/app/src/data/streams_data.dart';
 import 'package:stream_me/android/app/src/widgets/global/app_overlay.dart';
 import 'package:stream_me/android/app/src/pages/others/help.dart';
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
@@ -18,28 +17,22 @@ class HomePage extends StatefulWidget {
 /// Body of the home page of the app.
 /// The stack widget connects a container with a Logout button inside and a container with icon buttons
 class _HomePageState extends State<HomePage> {
-  late List streams = allStreams; //temporarily
-  ColorPalette color = ColorPalette();
-  Images image = Images();
+  final ColorPalette _color = ColorPalette();
+  final Images _image = Images();
 
   @override
   Widget build(BuildContext context) {
-    streams.sort((a, b) => a.title
-        .toString()
-        .toLowerCase()
-        .compareTo(b.title.toString().toLowerCase())); //temporarily
-
     return Container(
-      color: color.middleBackgroundColor,
+      color: _color.middleBackgroundColor,
       child: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.only(top: 12.0, bottom: 45.0),
-            child: Image.asset(image.streameIconWhite, width: 165),
+            padding: const EdgeInsets.only(top: 20, bottom: 65.0),
+            child: Image.asset(_image.streameIconWhite, width: 165),
           ),
           Expanded(
             child: Container(
-              color: color.middleBackgroundColor,
+              color: _color.middleBackgroundColor,
               child: SingleChildScrollView(
                 child: Padding(
                   padding: const EdgeInsets.only(left: 7.0, right: 7.0),
@@ -49,43 +42,43 @@ class _HomePageState extends State<HomePage> {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           Column(children: [
-                            addHomeCards(
+                            addHomeButtons(
                                 Icons.favorite,
                                 "Favourites",
                                 2, //6
-                                image.favourites),
+                                _image.favourites),
                             const SizedBox(
-                              height: 17,
+                              height: 45, //17,
                             ),
-                            addHomeCards(
+                            addHomeButtons(
                                 Icons.travel_explore_outlined,
                                 "Explore",
                                 3, //5
-                                image.explore),
+                                _image.explore),
                           ]),
                           Column(
                             children: [
-                              addHomeCards(
+                              addHomeButtons(
                                   Icons.format_list_bulleted_rounded,
                                   "Watchlist",
                                   4, //8
-                                  image.watchlist),
-                              const SizedBox(height: 17),
-                              addHomeCards(
+                                  _image.watchlist),
+                              const SizedBox(height: 45 /*17*/),
+                              addHomeButtons(
                                   Icons.help_outline,
                                   "Help",
                                   5, //9
-                                  image.help),
+                                  _image.help),
                             ],
                           ),
                         ],
                       ),
                       Padding(
-                        padding: const EdgeInsets.only(top: 45.0),
+                        padding: const EdgeInsets.only(top: 55.0),
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(20.0),
                           child: Container(
-                            color: color.backgroundColor,
+                            color: _color.backgroundColor,
                             width: 130,
                             height: 45,
                             child: Row(
@@ -128,9 +121,13 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  /// Function that adds buttons on home page for navigation
-  GestureDetector addHomeCards(IconData icon,
-      String title, int index, String image) {
+  /// A function that adds the home buttons to the Home Page with integrated navigation to
+  /// icon: The icon of a home button followed by the title
+  /// title: The title of a home button
+  /// index: The index of the tab to navigates to
+  /// image: The image of the home button
+  GestureDetector addHomeButtons(
+      IconData icon, String title, int index, String image) {
     return GestureDetector(
       onTap: () {
         if (index != 5) {
@@ -140,8 +137,7 @@ class _HomePageState extends State<HomePage> {
               PageRouteBuilder(
                   pageBuilder: (context, animation1, animation2) {
                     return AppOverlay(
-                      fromHomeButton: true,
-                        currentPageIndex: index);
+                        fromHomeButton: true, currentPageIndex: index);
                   },
                   transitionDuration: const Duration(milliseconds: 400),
                   transitionsBuilder:
@@ -157,36 +153,63 @@ class _HomePageState extends State<HomePage> {
       child: AbsorbPointer(
         child: Container(
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(20.0),
-              color: color.backgroundColor,
+              borderRadius: BorderRadius.circular(100.0),
+              color: _color.backgroundColor,
               boxShadow: [
                 BoxShadow(
                     color: Colors.grey.shade400,
                     spreadRadius: 1,
                     blurRadius: 4),
               ]),
-          height: 190, //200, 180
-          width: 170,
-          //color: widget.backgroundColor,
+          height: 150, //200, 180
+          width: 150,
           child: Padding(
-            padding: const EdgeInsets.only(top: 16.0),
+            padding: const EdgeInsets.only(
+                top: 5.0, left: 5.0, right: 5.0, bottom: 5.0),
             child: Align(
               alignment: Alignment.topCenter,
-              child: Column(children: [
-                ClipRRect(
-                    borderRadius: BorderRadius.circular(15.0),
-                    //BorderRadius.only(topLeft: Radius.circular(15.0), topRight: Radius.circular(15.0)),
-                    child: InkWell(
-                      onTap: () {},
-                      child: Image.asset(
-                        image,
-                        height: 135, //150
-                        width: 135,
-                        fit: BoxFit.cover,
+              child: Stack(
+                children: [
+                  ClipRRect(
+                      borderRadius: BorderRadius.circular(100.0),
+                      child: InkWell(
+                        onTap: () {},
+                        child: Image.asset(
+                          image,
+                          height: 140, //135,
+                          width: 140, //135,
+                          fit: BoxFit.cover,
+                        ),
+                      )),
+                  ClipRRect(
+                    borderRadius: BorderRadius.circular(100.0),
+                    child: Padding(
+                      padding: const EdgeInsets.only(top: 102.0, bottom: 10.0),
+                      child: Container(
+                        decoration: const BoxDecoration(
+                            gradient: LinearGradient(
+                                begin: FractionalOffset.topCenter,
+                                end: FractionalOffset.bottomCenter,
+                                colors: [
+                              Colors.transparent, // or black
+                              Colors.black45, // or black54
+                              Colors.black45,
+                              Colors.transparent
+                            ],
+                                stops: [
+                              0.0,
+                              0.2,
+                              0.8,
+                              1.0
+                            ])),
                       ),
-                    )),
-                addHomeCardText(title, icon)
-              ]),
+                    ),
+                  ),
+                  Padding(
+                      padding: const EdgeInsets.only(top: 100),
+                      child: addHomeCardText(title, icon)),
+                ],
+              ),
             ),
           ),
         ),
@@ -194,21 +217,22 @@ class _HomePageState extends State<HomePage> {
     );
   }
 
-  /// Function that adds button's text on home page
+  /// A function that adds a text to its corresponding home button on the Home Page
+  /// title: The title of a home button
+  /// icon: The icon of a home button followed by the title
   Padding addHomeCardText(String title, IconData icon) {
     return Padding(
-      padding: const EdgeInsets.fromLTRB(17.0, 8.0, 17.0, 0.0),
+      padding: const EdgeInsets.fromLTRB(12.0, 6.0, 17.0, 0.0),
       child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
         Icon(
           icon,
           color: Colors.grey.shade300,
-          size: 20,
+          size: 17,
         ),
         const SizedBox(width: 4),
-        Text(title, style: TextStyle(color: Colors.grey.shade300, fontSize: 16))
+        Text(title,
+            style: TextStyle(color: Colors.grey.shade300, fontSize: 13))
       ]),
-      //),
-      //),
     );
   }
 }
