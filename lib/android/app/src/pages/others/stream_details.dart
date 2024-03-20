@@ -2,15 +2,15 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:expand_widget/expand_widget.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:screenshot/screenshot.dart';
 import 'package:share_plus/share_plus.dart';
 import 'package:stream_me/android/app/src/data/actor_data.dart';
-import 'package:stream_me/android/app/src/data/streams_data.dart';
 import 'package:stream_me/android/app/src/data/sd_data.dart';
 import 'package:stream_me/android/app/src/data/hd_data.dart';
 import 'package:stream_me/android/app/src/data/uhd_data.dart';
@@ -19,10 +19,12 @@ import 'package:stream_me/android/app/src/model/streams_model.dart';
 import 'package:stream_me/android/app/src/model/sd_model.dart';
 import 'package:stream_me/android/app/src/model/hd_model.dart';
 import 'package:stream_me/android/app/src/model/uhd_model.dart';
+import 'package:stream_me/android/app/src/services/functions/favourites_data.dart';
+import 'package:stream_me/android/app/src/services/functions/user_data.dart';
+import 'package:stream_me/android/app/src/services/models/favourites_model.dart';
+import 'package:stream_me/android/app/src/services/models/user_model.dart';
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
-import 'package:stream_me/android/app/src/utils/images.dart';
 import 'package:url_launcher/url_launcher.dart';
-import '../../widgets/global/streame_refresh.dart';
 import '../../utils/constants_and_values.dart';
 import '../others/actor_director_details.dart';
 
@@ -37,32 +39,36 @@ class StreamDetailsPage extends StatefulWidget {
 
 class _StreamDetailsPageState extends State<StreamDetailsPage>
     with TickerProviderStateMixin {
-  final ColorPalette color = ColorPalette();
-  final Images image = Images();
-  final ConstantsAndValues cons = ConstantsAndValues();
+  final ColorPalette _color = ColorPalette();
+  final ConstantsAndValues _cons = ConstantsAndValues();
 
-  final screenshotController =
-      ScreenshotController(); //controller to manage screenshots
+  final _screenshotController =
+      ScreenshotController(); // controller to manage screenshots
   late final TabController _tabController =
       TabController(length: 3, vsync: this);
 
   final keyRating =
-      GlobalKey(); //GlobalKey to determine the size and position of the rating icon
-  Size? sizeRating; //The size of the rating icon
-  Offset? positionRating; //The position of the rating icon
+      GlobalKey(); // GlobalKey to determine the size and position of the rating icon
+  Size? sizeRating; // the size of the rating icon
+  Offset? positionRating; // the position of the rating icon
 
-  bool addFavourites = false; //boolean to trigger the favourites button option
+  late bool _addFavourites =
+      false; // flag to trigger the favourites button option
   List favourites = [];
-  bool addWatchlist = false; //boolean to trigger the watchlist button option
+  bool addWatchlist = false; // boolean to trigger the watchlist button option
   List watchlist = [];
-  double rating = 1; //initial rating
+  double rating = 1; // initial rating
 
-  int i = 0;
+  final FavouritesData _favouritesRepo = FavouritesData();
 
-  //List<bool> favourites = List.filled(allStreams.length,
-  //    false); //a list with all the favourite movies and streams
   late List actorsDirectors = allActors;
   late List allSdStreams = allSd;
+
+  @override
+  void initState() {
+    getFavourites();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -71,20 +77,31 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
     final Hd hdProvider = allHd[widget.stream.id];
     final Uhd uhdProvider = allUhd[widget.stream.id];
 
+    FavouritesModel favourite = FavouritesModel(
+        streamId: widget.stream.id.toString(),
+        title: widget.stream.title,
+        type: widget.stream.type,
+        rating: 4.5);
+
     return Screenshot(
-      controller: screenshotController,
+      controller: _screenshotController,
       child: Scaffold(
-          backgroundColor: color.backgroundColor,
-          /*appBar: AppBar(
-          title: FittedBox(child: Text(widget.stream.title)),
-          centerTitle: true,
-          backgroundColor: backgroundColor,
-          elevation: 0.0,
-        ),*/
-          body: StreameRefresh(
+          backgroundColor: _color.backgroundColor,
+          body: CustomRefreshIndicator(
+            onRefresh: () {
+              setState(() {});
+              return Future.delayed(const Duration(milliseconds: 1200));
+            },
+            builder: MaterialIndicatorDelegate(builder: (context, controller) {
+              return Icon(
+                Icons.camera,
+                color: _color.backgroundColor,
+                size: 30,
+              );
+            }),
             child: CustomScrollView(slivers: [
               SliverAppBar(
-                backgroundColor: color.backgroundColor,
+                backgroundColor: _color.backgroundColor,
                 title: FittedBox(
                     child: Text(widget.stream.title,
                         style: const TextStyle(
@@ -107,7 +124,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
               SliverToBoxAdapter(
                 child: Container(
                   padding: const EdgeInsets.only(bottom: 10.0),
-                  color: color.backgroundColor,
+                  color: _color.backgroundColor,
                   child: SingleChildScrollView(
                     child: Column(children: [
                       //Image:
@@ -116,7 +133,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                         child: isOnline(),
                       ),*/
 
-                      //First row with share, rating, add to watchlist and add to favourites
+                      // First row with share, rating, add to watchlist and add to favourites:
                       Padding(
                         padding: const EdgeInsets.only(
                             left: 15.0, right: 15.0, top: 10.0),
@@ -124,17 +141,17 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             IconButton(
-                              //Share Button
+                              // Share Button:
                               onPressed: () async {
                                 final imgBytes =
-                                    await screenshotController.capture();
+                                    await _screenshotController.capture();
                                 share(imgBytes!);
                               },
                               icon: Icon(Icons.share_rounded,
-                                  color: color.bodyTextColor, size: 28.0),
+                                  color: _color.bodyTextColor, size: 28.0),
                             ),
                             Stack(children: [
-                              //Rating Button + overall Rating //TODO: Function for overall rating in Text widget
+                              // Rating Button + overall Rating: //TODO: Function for overall rating in Text widget
                               IconButton(
                                   onPressed: () async {
                                     await makeRating();
@@ -143,7 +160,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                                   },
                                   icon: Icon(
                                     Icons.star,
-                                    color: color.bodyTextColor,
+                                    color: _color.bodyTextColor,
                                     size: 28.0,
                                     key: keyRating,
                                   )),
@@ -159,20 +176,18 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                                   child: Text("$rating",
                                       style: TextStyle(
                                           fontSize: 20.0,
-                                          color: color.bodyTextColor)),
+                                          color: _color.bodyTextColor)),
                                 ),
                               )
                             ]),
                             IconButton(
-                                //Add to Watchlist Button
+                                // Add to Watchlist Button:
                                 onPressed: () {
                                   ScaffoldMessenger.of(context)
                                     ..removeCurrentSnackBar()
                                     ..showSnackBar(
                                         listSnackBar(widget.stream.type));
-                                  if (!addWatchlist) {
-
-                                  }
+                                  if (!addWatchlist) {}
                                   setState(() {
                                     addWatchlist = !addWatchlist;
                                     addWatchlist
@@ -183,27 +198,16 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                                 },
                                 icon: addWatchlist
                                     ? Icon(Icons.check_rounded,
-                                        color: color.bodyTextColor, size: 34.0)
+                                        color: _color.bodyTextColor, size: 34.0)
                                     : Icon(Icons.add_rounded,
-                                        color: color.bodyTextColor,
+                                        color: _color.bodyTextColor,
                                         size: 34.0)),
                             IconButton(
-                                //Favourites Button
-                                onPressed: () {
-                                  ScaffoldMessenger.of(context)
-                                    ..removeCurrentSnackBar()
-                                    ..showSnackBar(
-                                        favSnackBar(widget.stream.type));
-                                  setState(() {
-                                    addFavourites = !addFavourites;
-                                    addFavourites
-                                        ? favourites.add(widget.stream)
-                                        : favourites.remove(widget.stream);
-                                    //TODO: Save Stream to Firestore favourites for specific user
-                                    //addFavourites ? await FirebaseFirestore.instance.collection("users").doc
-                                  });
+                                // Favourites Button:
+                                onPressed: () async {
+                                  favouriteActions(favourite);
                                 },
-                                icon: addFavourites
+                                icon: _addFavourites
                                     ? const Icon(
                                         Icons.favorite,
                                         color: Colors.red,
@@ -218,20 +222,20 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                         ),
                       ),
 
-                      //Second row with year, pg and seasons/duration
+                      // Second row with year, pg and seasons/duration:
                       Padding(
                         padding: const EdgeInsets.only(
                             left: 15.0, right: 8.0, top: 25.0),
                         child: Row(
                           children: [
-                            //Year:
+                            // Year:
                             Text(
                               streamYears(widget.stream.year),
                               style: TextStyle(
-                                  color: color.bodyTextColor, fontSize: 18),
+                                  color: _color.bodyTextColor, fontSize: 18),
                             ),
                             const SizedBox(width: 25.0),
-                            //PG:
+                            // PG:
                             ClipRRect(
                                 borderRadius: BorderRadius.circular(5.0),
                                 child: Container(
@@ -245,24 +249,24 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                                     widget.stream.pg,
                                     textAlign: TextAlign.center,
                                     style: TextStyle(
-                                        color: color.backgroundColor,
+                                        color: _color.backgroundColor,
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold,
-                                        height: cons.textHeight),
+                                        height: _cons.textHeight),
                                   ),
                                 )),
                             const SizedBox(width: 25.0),
-                            //Seasons / Duration:
+                            // Seasons / Duration:
                             Text(
                               widget.stream.seasonOrDuration,
                               style: TextStyle(
-                                  color: color.bodyTextColor, fontSize: 18),
+                                  color: _color.bodyTextColor, fontSize: 18),
                             )
                           ],
                         ),
                       ),
 
-                      //Third row with genres
+                      // Third row with genres:
                       Padding(
                         padding: const EdgeInsets.only(
                             left: 15.0, right: 15.0, top: 20.0),
@@ -270,7 +274,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                           alignment: Alignment.centerLeft,
                           child: SingleChildScrollView(
                             scrollDirection: Axis.horizontal,
-                            //Genres:
+                            // Genres:
                             child: Row(
                               mainAxisAlignment: MainAxisAlignment.start,
                               children: [
@@ -278,7 +282,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                                   textAlign: TextAlign.left,
                                   divideGenres(),
                                   style: TextStyle(
-                                      color: color.bodyTextColor,
+                                      color: _color.bodyTextColor,
                                       fontSize: 17,
                                       fontWeight: FontWeight.w500),
                                 ),
@@ -288,7 +292,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                         ),
                       ),
 
-                      //Fourth row with plot
+                      // Fourth row with plot:
                       Padding(
                           padding: const EdgeInsets.only(
                               left: 15.0, right: 15.0, top: 18.0),
@@ -298,12 +302,12 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                                 widget.stream.plot, context, constraints);*/
                                 ExpandText(widget.stream.plot,
                                     style: TextStyle(
-                                        color: color.bodyTextColor,
+                                        color: _color.bodyTextColor,
                                         fontSize: 16 *
                                             1 /
                                             MediaQuery.of(context)
                                                 .textScaleFactor,
-                                        height: cons.textHeight),
+                                        height: _cons.textHeight),
                                     indicatorIcon: Icons.keyboard_arrow_down,
                                     indicatorIconColor: Colors.grey.shade400,
                                     indicatorPadding:
@@ -315,7 +319,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                                         ExpandIndicatorStyle.icon);
                           })),
 
-                      //Fifth row with cast
+                      // Fifth row with cast:
                       Padding(
                           padding: const EdgeInsets.only(
                               left: 15.0, right: 15.0, top: 15.0),
@@ -326,7 +330,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                                 child: Text(
                                   "Cast:",
                                   style: TextStyle(
-                                      color: color.bodyTextColor,
+                                      color: _color.bodyTextColor,
                                       fontSize: 17,
                                       fontWeight: FontWeight.bold),
                                 ),
@@ -347,7 +351,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                             ],
                           )),
 
-                      //Sixth row with director
+                      // Sixth row with director:
                       Padding(
                         padding: const EdgeInsets.only(
                             left: 15.0, right: 15.0, top: 10.0),
@@ -358,7 +362,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                               child: Text(
                                 "Directed by:",
                                 style: TextStyle(
-                                    color: color.bodyTextColor,
+                                    color: _color.bodyTextColor,
                                     fontSize: 17,
                                     fontWeight: FontWeight.bold),
                               ),
@@ -381,18 +385,18 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                         ),
                       ),
 
-                      //last row with streaming providers
+                      // Last row with streaming providers:
                       Padding(
                         padding: const EdgeInsets.only(
                             left: 15.0, top: 30.0, right: 15.0),
-                        //Stream providers:
+                        // Streaming providers:
                         child: Column(
                           children: [
                             Align(
                               alignment: Alignment.centerLeft,
                               child: Text(/*checkEmptyList()*/ "Available on:",
                                   style: TextStyle(
-                                      color: color.bodyTextColor,
+                                      color: _color.bodyTextColor,
                                       fontSize: 18,
                                       fontWeight: FontWeight.bold)),
                             ),
@@ -403,9 +407,10 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                                 child: Container(
                                   //Container that includes the 3 Tabs SD, HD and 4k and its streaming providers
                                   decoration: BoxDecoration(
-                                    color: color.middleBackgroundColor,
+                                    color: _color.middleBackgroundColor,
                                     border: Border.all(
-                                        width: 1.0, color: color.bodyTextColor),
+                                        width: 1.0,
+                                        color: _color.bodyTextColor),
                                     borderRadius: const BorderRadius.all(
                                         Radius.circular(25.0)),
                                     // shape: BoxShape.rectangle
@@ -414,7 +419,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                                     borderRadius: BorderRadius.circular(25.0),
                                     child: Column(
                                       children: [
-                                        //3 Tabs on top:
+                                        // 3 Tabs on top:
                                         Padding(
                                           padding:
                                               const EdgeInsets.only(top: 1.0),
@@ -450,7 +455,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                                             ),
                                           ),
                                         ),
-                                        //Content of the 3 Tabs:
+                                        // Content of the 3 Tabs:
                                         Padding(
                                           padding: const EdgeInsets.fromLTRB(
                                               7.0, 7.0, 7.0, 20.0),
@@ -463,7 +468,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                                             child: TabBarView(
                                               controller: _tabController,
                                               children: [
-                                                //First Tab (SD Streams):
+                                                // First Tab (SD Streams):
                                                 Column(
                                                   children: [
                                                     providerRow(
@@ -491,7 +496,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                                                         sdProvider.buy["Link"])
                                                   ],
                                                 ),
-                                                //Second Tab (HD Streams):
+                                                // Second Tab (HD Streams):
                                                 Column(
                                                   children: [
                                                     providerRow(
@@ -520,7 +525,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                                                             .buy["Platform"])
                                                   ],
                                                 ),
-                                                //Third Tab (4k Streams):
+                                                // Third Tab (4k Streams):
                                                 Column(
                                                   children: [
                                                     providerRow(
@@ -598,7 +603,8 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
     }
   }
 
-  /// A function that shares an acutal screenshot when pressing the share icon
+  /// A function that shares an actual screenshot when pressing the share icon
+  /// imgBytes: Bytes to load image
   void share(Uint8List imgBytes) async {
     final directory = await getApplicationDocumentsDirectory();
     final img = File("${directory.path}/flutter.png");
@@ -612,6 +618,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
   /// A function that generates a snackbar if clicked on the heart icon.
   /// If the heart is filled, the "added to Favourites" snack bar is shown,
   /// if not, the "removed from Favourites" snack bar is shown
+  /// stream: The current stream that is added to or removed from Favourites
   SnackBar favSnackBar(String stream) => SnackBar(
       elevation: 0.0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
@@ -619,7 +626,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
       margin: const EdgeInsets.only(left: 28.0, right: 28.0, bottom: 6.0),
       duration: const Duration(milliseconds: 1500),
       content: Text(
-        addFavourites
+        _addFavourites
             ? "$stream removed from Favourites"
             : "$stream added to Favourites",
         style: TextStyle(color: Colors.grey.shade300),
@@ -629,6 +636,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
   /// A function that generates a snackbar if clicked on the plus, respectively check icon.
   /// If the icon changes to a check icon, the "added to Watchlist" snack bar is shown,
   /// if the icon changes to a plus icon, the "removed from Watchlist" snack bar is shown
+  /// /// stream: The current stream that is added to or removed from Watchlist
   SnackBar listSnackBar(String stream) => SnackBar(
       elevation: 0.0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
@@ -643,7 +651,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
         textAlign: TextAlign.center,
       ));
 
-  /// A
+  /// A function
   Future makeRating() => showDialog(
       context: context,
       builder: (context) => StatefulBuilder(
@@ -654,11 +662,11 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                   child: SizedBox(
                     width: 370.0,
                     child: Dialog(
-                        backgroundColor: color.backgroundColor,
+                        backgroundColor: _color.backgroundColor,
                         elevation: 0.0,
                         shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(30.0),
-                            side: BorderSide(color: color.bodyTextColor)),
+                            side: BorderSide(color: _color.bodyTextColor)),
                         insetPadding:
                             const EdgeInsets.only(left: 125.0, top: 10.0),
                         child: Row(
@@ -701,6 +709,8 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
             ),
           ));
 
+  /// A function
+  /// years:
   String streamYears(List years) {
     String streamYears = "";
     for (String year in years) {
@@ -721,6 +731,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
     return streamYears;
   }
 
+  /// A function that
   void getSizeAndPosition() =>
       WidgetsBinding.instance.addPostFrameCallback((_) {
         final RenderBox box =
@@ -734,6 +745,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
 
   /// A function that returns a GestureDetector of a Button with the actors/directors
   /// When tapping on Button, the corresponding actor/director screen should be shown
+  /// actorDirector:
   Widget castAndDirectorButton(String actorDirector) {
     EdgeInsets outsidePadding = const EdgeInsets.fromLTRB(
         10.0, 7.0, 0.0, 7.0); //Normal padding between actor/director buttons
@@ -764,13 +776,14 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
         child: Center(
             child: Text(actorDirector,
                 style: TextStyle(
-                    color: color.backgroundColor,
+                    color: _color.backgroundColor,
                     fontWeight: FontWeight.w500,
                     fontSize: 14.0))),
       ),
     );
   }
 
+  /// A function that
   Widget loadCoverImage() {
     //try {
     return GestureDetector(
@@ -784,9 +797,9 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                     child: CachedNetworkImage(
                       imageUrl: widget.stream.image,
                       placeholder: (context, url) =>
-                          cons.streamImagePlaceholder,
+                          _cons.streamImagePlaceholder,
                       errorWidget: (context, url, error) =>
-                          cons.imageErrorWidget,
+                          _cons.imageErrorWidget,
                     ),
                   ),
                 ));
@@ -796,8 +809,8 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
         //width: double.infinity, height: 320, fit: BoxFit.cover
         fit: BoxFit.cover,
         height: MediaQuery.of(context).size.height,
-        placeholder: (context, url) => cons.streamDetailsPlaceholder,
-        errorWidget: (context, url, error) => cons.imageErrorWidget,
+        placeholder: (context, url) => _cons.streamDetailsPlaceholder,
+        errorWidget: (context, url, error) => _cons.imageErrorWidget,
       ),
     );
     //} on SocketException catch (_) {
@@ -806,11 +819,12 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
     //}
   }
 
-  // ---------------------------------------------------------------------------------------------------------------------------------------------------------
-
   /// A function that checks if the movie or series has a plot with over 5 lines
   /// If so, make text in a scrollable container with Shader Mask for blur effect, a scrollable SizedBox and the defined Text (returnPlot) inside it,
   /// if not, make a simple Text (returnPlot)
+  /// text:
+  /// context:
+  /// constraints:
   Widget checkForMaxLines(
       String text, BuildContext context, BoxConstraints constraints) {
     final TextStyle plotStyle = TextStyle(
@@ -904,7 +918,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
             child: Text(
               rowLabel,
               style: TextStyle(
-                  color: color.bodyTextColor,
+                  color: _color.bodyTextColor,
                   fontSize: 15.0,
                   fontWeight: FontWeight.w500),
             ),
@@ -972,7 +986,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
       List platforms, String platformLink) {
     String assetImage = platform; //The link of the platform logo
 
-    //Create Card with platform logo in it:
+    // Create Card with platform logo in it:
     Widget card = GestureDetector(
       onTap: () {
         //function for the platform tiles that opens an alert dialog window with a link to the corresponding stream
@@ -1000,10 +1014,10 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
           Text(
             platformLabel,
             style: TextStyle(
-                color: color.bodyTextColor,
+                color: _color.bodyTextColor,
                 fontSize: 11.0,
                 fontWeight: FontWeight.w500,
-                height: cons.textHeight),
+                height: _cons.textHeight),
             textAlign: TextAlign.center,
             maxLines: 1,
             overflow: TextOverflow.fade,
@@ -1044,7 +1058,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
         padding: const EdgeInsets.only(left: 15.0, right: 15.0),
         child: AlertDialog(
           //Background style of the Alert Dialog:
-          backgroundColor: color.middleBackgroundColor.withOpacity(0.93),
+          backgroundColor: _color.middleBackgroundColor.withOpacity(0.93),
           elevation: 0.0,
           insetPadding: EdgeInsets.zero,
           shape: const RoundedRectangleBorder(
@@ -1070,7 +1084,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                   style: TextStyle(
                       fontSize: 18.0,
                       fontWeight: FontWeight.bold,
-                      color: color.bodyTextColor),
+                      color: _color.bodyTextColor),
                   textAlign: TextAlign.center,
                 ),
                 const SizedBox(
@@ -1082,8 +1096,8 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                     children: [
                       TextSpan(
                         text: "Try it out. Click ",
-                        style:
-                            TextStyle(color: color.bodyTextColor, fontSize: 16),
+                        style: TextStyle(
+                            color: _color.bodyTextColor, fontSize: 16),
                       ),
                       WidgetSpan(
                         child: InkWell(
@@ -1101,8 +1115,8 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                             )),
                       ),
                       TextSpan(
-                        style:
-                            TextStyle(color: color.bodyTextColor, fontSize: 16),
+                        style: TextStyle(
+                            color: _color.bodyTextColor, fontSize: 16),
                         text: " to watch ${widget.stream.title}.",
                       )
                     ],
@@ -1117,22 +1131,22 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                       margin: const EdgeInsets.symmetric(horizontal: 108.0),
                       decoration: BoxDecoration(
                           //border: Border.all(color: Colors.white70),
-                          color: color.bodyTextColor.withOpacity(0.3),
+                          color: _color.bodyTextColor.withOpacity(0.3),
                           border: Border.all(
-                              color: color.middleBackgroundColor, width: 0.5),
+                              color: _color.middleBackgroundColor, width: 0.5),
                           borderRadius: BorderRadius.circular(30.0)),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Icon(
                             Icons.close,
-                            color: color.middleBackgroundColor,
+                            color: _color.middleBackgroundColor,
                             size: 20.0,
                           ),
                           const SizedBox(width: 5),
                           Text("Close",
                               style: TextStyle(
-                                  color: color.middleBackgroundColor,
+                                  color: _color.middleBackgroundColor,
                                   //fontWeight: FontWeight.bold,
                                   fontSize: 14.0)),
                         ],
@@ -1143,4 +1157,51 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
           ),
         ),
       );
+
+
+  /// A function that fetches the current user's data
+  getUserProfileData() {
+    User? user = FirebaseAuth.instance.currentUser;
+    final email = user?.email;
+    if (email != null) {
+      return UserData().getUserData(email);
+    }
+  }
+
+  /// A function that fetches the favourite movies and series of a user
+  getFavourites() async {
+    UserModel user = await getUserProfileData();
+    String? id = user.id; // get user's id for Favourites list
+
+    favourites = await _favouritesRepo.getFavourites(id!);
+    _addFavourites = favourites
+        .where((favourite) => favourite.title == widget.stream.title)
+        .isNotEmpty; // check if the current opened stream is saved in Favourites
+  }
+
+  /// A function that handles the Favourites actions of a user,
+  /// i.e. showing a snackbar and adding or removing a Stream to its Favourites
+  /// favourite: The current stream that will be added or removed from the user's Favourites list
+  void favouriteActions(FavouritesModel favourite) async {
+    ScaffoldMessenger.of(context)
+      ..removeCurrentSnackBar()
+      ..showSnackBar(favSnackBar(widget.stream
+          .type)); // show Snackbar when adding or removing a stream to Favourites list
+
+    UserModel user = await getUserProfileData();
+    String? id =
+        user.id; // get user's id for adding or removing a movie or series
+
+    setState(() {
+      _addFavourites = !_addFavourites;
+    });
+
+    _addFavourites
+        ? await _favouritesRepo.addToFavourites(id!,
+            favourite) // if clicked on empty heart, i.e. addFavourites = true => add to Favourites
+        : await _favouritesRepo.removeFromFavourites(
+            id!,
+            widget.stream.id.toString(),
+            favourite); // if clicked on full heart, i.e. addFavourites = false => remove from Favourites
+  }
 }
