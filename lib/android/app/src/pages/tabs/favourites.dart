@@ -113,7 +113,7 @@ class _FavouritesPageState extends State<FavouritesPage>
     print("------ ${user.id}");
     String? id = user.id;
     print(_favouritesRepo.getFavourites(id!));
-    return _favouritesRepo.getFavourites(id!);
+    return _favouritesRepo.getFavourites(id);
   }
 
   /// A function to fetch the current user's data
