@@ -1,6 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:stream_me/android/app/src/model/streams_model.dart';
+import 'package:stream_me/android/app/src/services/functions/favourites_data.dart';
+import 'package:stream_me/android/app/src/services/functions/user_data.dart';
+import 'package:stream_me/android/app/src/services/models/favourites_model.dart';
+import 'package:stream_me/android/app/src/services/models/user_model.dart';
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
 import '../../utils/constants_and_values.dart';
 import '../../pages/others/stream_details.dart';
@@ -15,6 +20,8 @@ class StreamTile extends StatefulWidget {
   final List cast;
   final List provider;
   final bool fromHomeButton;
+  final void Function()? onPressed;
+  final Widget icon;
 
   const StreamTile(
       {super.key,
@@ -26,7 +33,9 @@ class StreamTile extends StatefulWidget {
       required this.rating,
       required this.cast,
       required this.provider,
-      required this.fromHomeButton});
+      required this.fromHomeButton,
+      required this.onPressed,
+      required this.icon});
 
   @override
   State<StreamTile> createState() => _StreamTileState();
@@ -37,12 +46,21 @@ class _StreamTileState extends State<StreamTile> {
   final ConstantsAndValues cons = ConstantsAndValues();
 
   final keyRow = GlobalKey();
-  bool _addFavourites = true; //true because it's already in the Favourites list
-  //Size? size;
-  //Offset? position;
+
+  //late bool _addFavourites =
+  //    true; // true because it's already in the Favourites list
+  User? _user = FirebaseAuth.instance.currentUser;
+  final _userRepo = UserData();
+  final _favouritesRepo = FavouritesData();
 
   @override
   Widget build(BuildContext context) {
+    FavouritesModel favourite = FavouritesModel(
+        streamId: widget.stream.id.toString(),
+        title: widget.stream.title,
+        type: widget.stream.type,
+        rating: 4.5);
+
     return GestureDetector(
         onTap: () => Navigator.push(
             context,
@@ -112,11 +130,10 @@ class _StreamTileState extends State<StreamTile> {
                                       widget.pg,
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
-                                          color:
-                                              color.backgroundColor,
+                                          color: color.backgroundColor,
                                           fontSize: 13,
                                           fontWeight: FontWeight.bold,
-                                      height: cons.textHeight),
+                                          height: cons.textHeight),
                                     ),
                                   )),
                               const SizedBox(width: 13.0),
@@ -146,8 +163,7 @@ class _StreamTileState extends State<StreamTile> {
                                     TextSpan(
                                         text: getCast(widget.cast),
                                         style: const TextStyle(
-                                          fontWeight: FontWeight.w400
-                                        ))
+                                            fontWeight: FontWeight.w400))
                                   ]),
                               maxLines: 2,
                               overflow: TextOverflow.ellipsis,
@@ -182,23 +198,17 @@ class _StreamTileState extends State<StreamTile> {
                         left: MediaQuery.of(context).size.width - 168,
                         bottom: 24,
                         child: IconButton(
-                            onPressed: () {
-                              ScaffoldMessenger.of(context)
-                                ..removeCurrentSnackBar()
-                                ..showSnackBar(
-                                    removedSnackBar(widget.stream.type));
-                              setState(() {
-                                _addFavourites = !_addFavourites;
-                                //_addFavourites ? favourites.add(currentStream) : favourites.remove(currentStream);
-                                //TODO: Save Stream to Firestore favourites for specific user
-                              });
-                            },
-                            icon: Icon(
+                            onPressed: widget.onPressed,
+                            /*() async {
+                              favouriteActions(favourite);
+                            },*/
+                            icon: /*Icon(
                               _addFavourites
                                   ? Icons.favorite
                                   : Icons.favorite_border_outlined,
                               color: Colors.red,
-                            )),
+                            )*/
+                                widget.icon),
                       )
                     ],
                   ),
@@ -206,6 +216,34 @@ class _StreamTileState extends State<StreamTile> {
               )
             ]));
   }
+
+/*  /// A function that handles the Favourites actions of a user,
+  /// i.e. showing a snackbar and adding or removing a Stream to its Favourites
+  /// favourite: The current stream that will be added or removed from the user's Favourites list
+  void favouriteActions(FavouritesModel favourite) async {
+    UserModel user = await getUserProfileData();
+    String? id =
+        user.id; // get user's id for adding or removing a movie or series
+
+    if (mounted) {
+      ScaffoldMessenger.of(context)
+        ..removeCurrentSnackBar()
+        ..showSnackBar(removedSnackBar(widget.stream.type, favourite,
+            id!)); // show Snackbar when adding or removing a stream to Favourites list
+    }
+
+    setState(() {
+      _addFavourites = !_addFavourites;
+    });
+
+    _addFavourites
+        ? await _favouritesRepo.addToFavourites(id!,
+            favourite) // if clicked on empty heart, i.e. addFavourites = true => add to Favourites
+        : await _favouritesRepo.removeFromFavourites(
+            id!,
+            widget.stream.id.toString(),
+            favourite); // if clicked on full heart, i.e. addFavourites = false => remove from Favourites
+  }*/
 
   String getCast(List list) {
     String cast = "";
@@ -233,47 +271,56 @@ class _StreamTileState extends State<StreamTile> {
     return provider;
   }
 
-  SnackBar removedSnackBar(String title) => SnackBar(
-      elevation: 0.0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-      behavior: SnackBarBehavior.floating,
-      margin: EdgeInsets.only(
-          left: 28.0, right: 28.0, bottom: widget.fromHomeButton ? 4.0 : 64.0),
-      //was 66
-      duration: const Duration(milliseconds: 2500),
-      content: Row(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Text(
-            "$title removed from Favourites.",
-            style: TextStyle(color: color.bodyTextColor),
-            textAlign: TextAlign.center,
-          ),
-          const SizedBox(width: 5),
-          GestureDetector(
-            onTap: undoFavRemoved,
-            child: const Text("Undo.",
-                style: TextStyle(
-                    color: Colors.blueAccent,
-                    decoration: TextDecoration.underline,
-                    decorationColor: Colors.blueAccent)),
-          )
-        ],
-      ));
+/*  removedSnackBar(String title, FavouritesModel favourite, String id) {
+    if (_addFavourites) {
+      return SnackBar(
+          elevation: 0.0,
+          shape:
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+          behavior: SnackBarBehavior.floating,
+          margin: EdgeInsets.only(
+              left: 28.0,
+              right: 28.0,
+              bottom: widget.fromHomeButton ? 4.0 : 64.0),
+          duration: const Duration(milliseconds: 2500),
+          content: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "$title removed from Favourites.",
+                style: TextStyle(color: color.bodyTextColor),
+                textAlign: TextAlign.center,
+              ),
+              const SizedBox(width: 5),
+              GestureDetector(
+                onTap: () => undoFavRemoved(favourite, id),
+                child: const Text("Undo.",
+                    style: TextStyle(
+                        color: Colors.blueAccent,
+                        //decoration: TextDecoration.underline,
+                        decorationColor: Colors.blueAccent)),
+              )
+            ],
+          ));
+    }
+  }
 
-  void undoFavRemoved() {
+  undoFavRemoved(FavouritesModel favourite, String id) async {
+    await _favouritesRepo.addToFavourites(id,
+        favourite); // if clicked on "Undo", i.e. addFavourites = true => add to Favourites again
+
     setState(() {
       _addFavourites = true;
     });
-  }
+  }*/
 
-  void getRowSizeAndPosition() =>
+  /*void getRowSizeAndPosition() =>
       WidgetsBinding.instance.addPostFrameCallback((_) {
         setState(() {
           //position = box.localToGlobal(Offset.zero); //coordinate system
           //size = box.size;
         });
-      });
+      });*/
 
   String streamYears(List years) {
     String streamYears = "";
@@ -293,5 +340,13 @@ class _StreamTileState extends State<StreamTile> {
       }
     }
     return streamYears;
+  }
+
+  getUserProfileData() {
+    _user = FirebaseAuth.instance.currentUser;
+    final email = _user?.email;
+    if (email != null) {
+      return _userRepo.getUserData(email);
+    }
   }
 }
