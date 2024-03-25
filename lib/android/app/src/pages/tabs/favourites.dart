@@ -108,7 +108,7 @@ class _FavouritesPageState extends State<FavouritesPage>
       );
 
   /// A function that fetches the user's Favourite list
-  getFavouriteMovies() async {
+  getFavouriteStreams() async {
     UserModel user = await getUserProfileData();
     print("------ ${user.id}");
     String? id = user.id;
@@ -135,7 +135,7 @@ class _FavouritesPageState extends State<FavouritesPage>
       children: [
         Expanded(
           child: FutureBuilder(
-            future: getFavouriteMovies(),
+            future: getFavouriteStreams(),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 if (snapshot.hasData) {
@@ -143,9 +143,9 @@ class _FavouritesPageState extends State<FavouritesPage>
                       as List<FavouritesModel>; // List of all saved Favourites
 
                   typeList =
-                      typeList // Check full movies or series list if movie or series is in user's favourites list
+                      typeList // Check full movies or series list if movie or series is in user's Favourites list
                           .where((stream) => favourites.any((favouriteStream) =>
-                              stream.type == type &&
+                              stream.type == type && // check corresponding type to add Stream to Movies or Series Tab
                               stream.id.toString() == favouriteStream.streamId))
                           .toList();
 
@@ -189,11 +189,7 @@ class _FavouritesPageState extends State<FavouritesPage>
                                   favouriteActions(favourite, currentStream);
                                 },
                                 icon: const Icon(
-                                  Icons.favorite
-                                  /*_addFavourites
-                                      ? Icons.favorite
-                                      : Icons.favorite_border_outlined*/
-                                  ,
+                                  Icons.favorite,
                                   color: Colors.red,
                                 ));
                             if (currentStream == typeList.last &&
@@ -247,14 +243,16 @@ class _FavouritesPageState extends State<FavouritesPage>
     _addFavourites
         ? await _favouritesRepo.addToFavourites(id!,
             favourite) // if clicked on empty heart, i.e. _addFavourites = true => add to Favourites
-        : await _favouritesRepo.removeFromFavourites(id!, stream.id.toString(),
-            favourite); // if clicked on full heart, i.e. _addFavourites = false => remove from Favourites
+        : await _favouritesRepo.removeFromFavourites(
+            id!,
+            stream.id
+                .toString()); // if clicked on full heart, i.e. _addFavourites = false => remove from Favourites
 
     _addFavourites = true;
   }
 
   /// A function that shows a Snackbar if the user removes the movie from his Favourites list by clicking on the icon of the Stream tile inside Favourites-Tab
-  /// type: The time of the current stream (Movie or Series)
+  /// type: The type of the current stream (Movie or Series)
   /// favourite: The current stream that will has been removed from the user's Favourites list
   /// id: The id of the current user
   removedSnackBar(String type, FavouritesModel favourite, String id) {
@@ -291,7 +289,7 @@ class _FavouritesPageState extends State<FavouritesPage>
     }
   }
 
-  /// A function that allows the user to undo the action of removing a movie or series from its Favourites list
+  /// A function that allows the user to undo the action of removing a movie or series from his Favourites list
   /// favourite: The current stream that will has been removed from the user's Favourites list
   /// id: The id of the current user
   undoFavRemoved(FavouritesModel favourite, String id) async {

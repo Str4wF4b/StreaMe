@@ -19,7 +19,7 @@ class FavouritesData {
   /// id: The current document id
   /// streamId: The current stream id
   /// favourite: The movie or series with its streamId, title and type that should be deleted from Favourites
-  Future<void> removeFromFavourites(String id, String streamId, FavouritesModel favourites) async {
+  Future<void> removeFromFavourites(String id, String streamId) async {
     final snapshot = await _db.collection("Users").doc(id).collection("Favourites").where("StreamId", isEqualTo: streamId).get();
     final removeFavourite = snapshot.docs.map((e) => FavouritesModel.fromSnapshot(e)).single;
     await _db.collection("Users").doc(id).collection("Favourites").doc(removeFavourite.id).delete();
