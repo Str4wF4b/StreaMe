@@ -15,6 +15,7 @@ class HomePage extends StatefulWidget {
 }
 
 class _HomePageState extends State<HomePage> {
+  // Utils:
   final ColorPalette _color = ColorPalette();
   final Images _image = Images();
 
