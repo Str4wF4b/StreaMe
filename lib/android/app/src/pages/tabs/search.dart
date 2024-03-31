@@ -9,40 +9,41 @@ import 'package:stream_me/android/app/src/services/models/user_model.dart';
 import '../../pages/others/filter.dart';
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
 import '../../utils/constants_and_values.dart';
-
-// Test:
 import '../../pages/others/stream_details.dart';
 
 class SearchPage extends StatefulWidget {
   const SearchPage({super.key});
-
-  //TODO: If showFilter = true, show Container on the actual one within Stack
 
   @override
   State<SearchPage> createState() => _SearchPageState();
 }
 
 class _SearchPageState extends State<SearchPage> {
-  final _searchController = TextEditingController();
-  User? _user = FirebaseAuth.instance.currentUser;
-  final _userRepo = UserData();
-  late List<Streams> streams = allStreams;
+  // Utils:
   final ColorPalette _color = ColorPalette();
   final ConstantsAndValues _cav = ConstantsAndValues();
+
+  // Instances:
+  final _searchController = TextEditingController();
+
+  // Local instances:
   String _username = "unknown User";
-  late final List _streams = allStreams; //temporarily
+  late List _streams = allStreams; //temporarily
+
+  // Database:
+  User? _user = FirebaseAuth.instance.currentUser;
+  final _userRepo = UserData();
 
   @override
   void initState() {
     super.initState();
     if (_user?.displayName != null) {
-      _username = _user!.displayName!;
+      _username = _user!
+          .displayName!; // change username to User's username if not anonymous
     }
 
-    _streams.sort((a, b) => a.title
-        .toString()
-        .toLowerCase()
-        .compareTo(b.title.toString().toLowerCase())); // sorting List in search alphabetically
+    _streams.sort((a, b) => a.title.toString().toLowerCase().compareTo(
+        b.title.toString().toLowerCase())); // sorting List alphabetically
   }
 
   @override
@@ -50,6 +51,7 @@ class _SearchPageState extends State<SearchPage> {
     return Scaffold(
       backgroundColor: _color.backgroundColor,
       body: CustomRefreshIndicator(
+        // refresh page
         onRefresh: () {
           setState(() {});
           return Future.delayed(const Duration(milliseconds: 1200));
@@ -73,11 +75,14 @@ class _SearchPageState extends State<SearchPage> {
                     alignment: Alignment.centerLeft,
                     child: FutureBuilder(
                         future: getUserProfileData(),
+                        // fetch user's profile data to get and display his username
                         builder: (context, snapshot) {
                           if (snapshot.hasData) {
                             UserModel user = snapshot.data as UserModel;
-                            _username = user.username;
+                            _username = user
+                                .username; // if user is not anonymous (i.e. data is available) or username has been changed, change the username
                           }
+                          // The info text at the top of the screen:
                           return RichText(
                             text: TextSpan(
                                 text: "Hey ",
@@ -103,21 +108,26 @@ class _SearchPageState extends State<SearchPage> {
                   ),
                 ),
                 Stack(children: [
+                  // The Textfield to search after Movies or Series:
                   Container(
                     margin: const EdgeInsets.fromLTRB(20.0, 30.0, 42.0, 20.0),
                     child: TextField(
                       controller: _searchController,
                       style: const TextStyle(decorationThickness: 0.0),
+                      // disable underline
                       decoration: InputDecoration(
                         prefixIcon: const Icon(Icons.search, size: 22),
                         suffixIcon: _searchController.text.isNotEmpty
                             ? GestureDetector(
+                                // clear user input
                                 child: const Icon(Icons.close,
                                     color: Colors.blueGrey, size: 22),
                                 onTap: () {
                                   _searchController.clear();
                                   FocusScope.of(context).requestFocus(
-                                      FocusNode()); //TextField outfocused
+                                      FocusNode()); // Textfield outfocused
+                                  searchStream(_searchController
+                                      .text); // show full Streaming List again
                                 })
                             : null,
                         hintText: "Movie or Series",
@@ -129,17 +139,16 @@ class _SearchPageState extends State<SearchPage> {
                                 const BorderSide(color: Colors.blueAccent),
                             borderRadius: BorderRadius.circular(30.0)),
                         filled: true,
-                        fillColor: Colors.grey.shade300,
+                        fillColor: _color.bodyTextColor,
                         isDense: true,
                       ),
                       onChanged: searchStream,
                     ),
                   ),
                   Positioned(
-                    //padding: const EdgeInsets.only(left: 354, top: 37),
                     left: MediaQuery.of(context).size.width - 40,
-                    bottom: MediaQuery.of(context).size.height -
-                        769, //766 when isDense = false
+                    bottom: MediaQuery.of(context).size.height - 769,
+                    // The Filter icon left to the Search Textfield:
                     child: InkWell(
                       onTap: () {
                         showDialog(
@@ -149,10 +158,10 @@ class _SearchPageState extends State<SearchPage> {
                                 backgroundColor:
                                     _color.backgroundColor.withOpacity(0.5),
                                 insetPadding: EdgeInsets.zero,
-                                //full width and height
+                                // full width and height of Dialog
                                 shape: const RoundedRectangleBorder(
                                     borderRadius: BorderRadius.zero),
-                                //remove rounded border
+                                // remove rounded border of Dialog
                                 child: FilterPage(),
                               );
                             });
@@ -168,12 +177,12 @@ class _SearchPageState extends State<SearchPage> {
                 Expanded(
                     child: Padding(
                   padding: const EdgeInsets.fromLTRB(10.0, 0.0, 10.0, 3.0),
+                  // The ListView of all current Streams:
                   child: ListView.builder(
-                    itemCount: streams.length,
+                    itemCount: _streams.length,
                     itemBuilder: (context, index) {
-                      final stream = streams[index];
-                      //widget.streams.sort((a, b) => a.toString().toLowerCase().compareTo(b.toString().toLowerCase()));
-                      return buildStream(stream);
+                      final stream = _streams[index]; // get current Stream
+                      return buildStreamTile(stream); // show the corresponding Stream Tile
                     },
                   ),
                 ))
@@ -185,21 +194,23 @@ class _SearchPageState extends State<SearchPage> {
     );
   }
 
-  /// Function that searches after a stream if a keyword is entered in the text field
+  /// A function that searches streams based on the keyword entered by the user
+  /// enteredKeyword: The entered keyword of the user
   void searchStream(String enteredKeyword) {
-    final suggestions = allStreams.where((stream) {
+    final suggestions = allStreams.where((stream) { // search all Streams to find one or more matches
       final streamTitle = stream.title.toLowerCase();
       final input = enteredKeyword.toLowerCase();
 
       return streamTitle.contains(input);
     }).toList();
 
-    setState(() => streams = suggestions);
+    setState(() => _streams = suggestions); // show all found Streams
   }
 
-  /// Function that returns the clicked stream site with information about the movie or series
-  Widget buildStream(Streams stream) => ListTile(
-        leading: CachedNetworkImage(
+  /// A function that displays the Stream Tile of each Movie or Series and returns the clicked Stream screen with information about the movie or series
+  /// stream: The stream whose Tile is build
+  Widget buildStreamTile(Streams stream) => ListTile(
+        leading: CachedNetworkImage( // generate corresponding Stream image
           imageUrl: stream.image,
           key: UniqueKey(),
           fit: BoxFit.cover,
@@ -208,7 +219,7 @@ class _SearchPageState extends State<SearchPage> {
           placeholder: (context, url) => _cav.streamImagePlaceholder,
           errorWidget: (context, url, error) => _cav.imageErrorWidgetLittle,
         ),
-        title: Text(
+        title: Text( // generate corresponding Stream text
           stream.title,
           style:
               TextStyle(color: _color.bodyTextColor, height: _cav.textHeight),
@@ -216,10 +227,11 @@ class _SearchPageState extends State<SearchPage> {
         onTap: () => Navigator.push(
             context,
             MaterialPageRoute(
-              builder: (context) => StreamDetailsPage(stream: stream),
+              builder: (context) => StreamDetailsPage(stream: stream), // show corresponding movie or series information
             )),
       );
 
+  /// A function that fetches the current user's data based on the email
   getUserProfileData() {
     _user = FirebaseAuth.instance.currentUser;
     final email = _user?.email;
