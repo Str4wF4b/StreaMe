@@ -210,7 +210,7 @@ class _HomePageState extends State<HomePage> {
                   // Text of the home button:
                   Padding(
                       padding: const EdgeInsets.only(top: 100),
-                      child: addHomeCardText(title, icon)),
+                      child: addHomeButtonText(title, icon)),
                 ],
               ),
             ),
@@ -223,7 +223,7 @@ class _HomePageState extends State<HomePage> {
   /// A function that adds a text to its corresponding home button on the Home Page
   /// title: The title of a home button
   /// icon: The icon of a home button followed by the title
-  Padding addHomeCardText(String title, IconData icon) {
+  Padding addHomeButtonText(String title, IconData icon) {
     return Padding(
       padding: const EdgeInsets.fromLTRB(12.0, 6.0, 17.0, 0.0),
       child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
