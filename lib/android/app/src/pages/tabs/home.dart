@@ -14,114 +14,110 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-/// Body of the home page of the app.
-/// The stack widget connects a container with a Logout button inside and a container with icon buttons
 class _HomePageState extends State<HomePage> {
   final ColorPalette _color = ColorPalette();
   final Images _image = Images();
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: _color.middleBackgroundColor,
-      child: Column(
-        children: [
-          Padding(
-            padding: const EdgeInsets.only(top: 20, bottom: 65.0),
-            child: Image.asset(_image.streameIconWhite, width: 165),
-          ),
-          Expanded(
-            child: Container(
-              color: _color.middleBackgroundColor,
-              child: SingleChildScrollView(
-                child: Padding(
-                  padding: const EdgeInsets.only(left: 7.0, right: 7.0),
-                  child: Column(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceAround,
-                        children: [
-                          Column(children: [
-                            addHomeButtons(
-                                Icons.favorite,
-                                "Favourites",
-                                2, //6
-                                _image.favourites),
-                            const SizedBox(
-                              height: 45, //17,
-                            ),
-                            addHomeButtons(
-                                Icons.travel_explore_outlined,
-                                "Explore",
-                                3, //5
-                                _image.explore),
-                          ]),
-                          Column(
-                            children: [
-                              addHomeButtons(
-                                  Icons.format_list_bulleted_rounded,
-                                  "Watchlist",
-                                  4, //8
-                                  _image.watchlist),
-                              const SizedBox(height: 45 /*17*/),
-                              addHomeButtons(
-                                  Icons.help_outline,
-                                  "Help",
-                                  5, //9
-                                  _image.help),
-                            ],
-                          ),
-                        ],
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.only(top: 55.0),
-                        child: ClipRRect(
-                          borderRadius: BorderRadius.circular(20.0),
-                          child: Container(
-                            color: _color.backgroundColor,
-                            width: 130,
-                            height: 45,
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.center,
+    return Scaffold(
+      backgroundColor: _color.backgroundColor,
+      body: Container(
+        color: _color.middleBackgroundColor,
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.only(top: 20, bottom: 65.0),
+              child: Image.asset(_image.streameIconWhite, width: 165),
+            ),
+            Expanded(
+              child: Container(
+                color: _color.middleBackgroundColor,
+                child: SingleChildScrollView(
+                  child: Padding(
+                    padding: const EdgeInsets.only(left: 7.0, right: 7.0),
+                    child: Column(
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            // First Column with 2 clickable home buttons Favourites and Explore:
+                            Column(children: [
+                              addHomeButtons(Icons.favorite, "Favourites", 2,
+                                  _image.favourites),
+                              const SizedBox(
+                                height: 45,
+                              ),
+                              addHomeButtons(Icons.travel_explore_outlined,
+                                  "Explore", 3, _image.explore),
+                            ]),
+                            // Second Column with 2 clickable home buttons Watchlist and Help:
+                            Column(
                               children: [
-                                const SizedBox(width: 12.0),
-                                const Text(
-                                  "Logout",
-                                  style: TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                  ),
-                                ),
-                                IconButton(
-                                  onPressed: () async {
-                                    await FirebaseAuth.instance.signOut().then(
-                                        (value) => Navigator.of(context)
-                                            .pushAndRemoveUntil(
-                                                MaterialPageRoute(
-                                                    builder: (context) =>
-                                                        const AuthPage()),
-                                                (route) => false));
-                                  },
-                                  icon: const Icon(Icons.logout_outlined),
-                                  color: Colors.white,
-                                )
+                                addHomeButtons(
+                                    Icons.format_list_bulleted_rounded,
+                                    "Watchlist",
+                                    4,
+                                    _image.watchlist),
+                                const SizedBox(height: 45),
+                                addHomeButtons(
+                                    Icons.help_outline, "Help", 5, _image.help),
                               ],
+                            ),
+                          ],
+                        ),
+                        // The Logout button at the bottom of the screen:
+                        Padding(
+                          padding: const EdgeInsets.only(top: 55.0),
+                          child: ClipRRect(
+                            borderRadius: BorderRadius.circular(20.0),
+                            child: Container(
+                              color: _color.backgroundColor,
+                              width: 130,
+                              height: 45,
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  const SizedBox(width: 12.0),
+                                  const Text(
+                                    "Logout",
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontSize: 16,
+                                    ),
+                                  ),
+                                  IconButton(
+                                    onPressed: () async {
+                                      await FirebaseAuth.instance
+                                          .signOut()
+                                          .then((value) => Navigator.of(context)
+                                              .pushAndRemoveUntil(
+                                                  MaterialPageRoute(
+                                                      builder: (context) =>
+                                                          const AuthPage()),
+                                                  (route) => false));
+                                    },
+                                    icon: const Icon(Icons.logout_outlined),
+                                    color: Colors.white,
+                                  )
+                                ],
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
 
-  /// A function that adds the home buttons to the Home Page with integrated navigation to
+  /// A function that adds the home buttons to the Home Page with integrated navigation
   /// icon: The icon of a home button followed by the title
   /// title: The title of a home button
   /// index: The index of the tab to navigates to
@@ -131,7 +127,8 @@ class _HomePageState extends State<HomePage> {
     return GestureDetector(
       onTap: () {
         if (index != 5) {
-          //prevent to navigate to non existing 6th (index = 5) navigation bar item Help
+          setState(() {});
+          // prevent to navigate to non existing 6th (index = 5) bottom navigation bar item "Help"
           Navigator.push(
               context,
               PageRouteBuilder(
@@ -151,6 +148,8 @@ class _HomePageState extends State<HomePage> {
         }
       },
       child: AbsorbPointer(
+        // The home button with rounded images:
+        // Border around the home button:
         child: Container(
           decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(100.0),
@@ -161,7 +160,7 @@ class _HomePageState extends State<HomePage> {
                     spreadRadius: 1,
                     blurRadius: 4),
               ]),
-          height: 150, //200, 180
+          height: 150,
           width: 150,
           child: Padding(
             padding: const EdgeInsets.only(
@@ -170,14 +169,15 @@ class _HomePageState extends State<HomePage> {
               alignment: Alignment.topCenter,
               child: Stack(
                 children: [
+                  // Home button picture:
                   ClipRRect(
                       borderRadius: BorderRadius.circular(100.0),
                       child: InkWell(
                         onTap: () {},
                         child: Image.asset(
                           image,
-                          height: 140, //135,
-                          width: 140, //135,
+                          height: 140,
+                          width: 140,
                           fit: BoxFit.cover,
                         ),
                       )),
@@ -186,6 +186,7 @@ class _HomePageState extends State<HomePage> {
                     child: Padding(
                       padding: const EdgeInsets.only(top: 102.0, bottom: 10.0),
                       child: Container(
+                        // Faded effect of the text background:
                         decoration: const BoxDecoration(
                             gradient: LinearGradient(
                                 begin: FractionalOffset.topCenter,
@@ -205,6 +206,7 @@ class _HomePageState extends State<HomePage> {
                       ),
                     ),
                   ),
+                  // Text of the home button:
                   Padding(
                       padding: const EdgeInsets.only(top: 100),
                       child: addHomeCardText(title, icon)),
@@ -226,12 +228,11 @@ class _HomePageState extends State<HomePage> {
       child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
         Icon(
           icon,
-          color: Colors.grey.shade300,
+          color: _color.bodyTextColor,
           size: 17,
         ),
         const SizedBox(width: 4),
-        Text(title,
-            style: TextStyle(color: Colors.grey.shade300, fontSize: 13))
+        Text(title, style: TextStyle(color: _color.bodyTextColor, fontSize: 13))
       ]),
     );
   }
