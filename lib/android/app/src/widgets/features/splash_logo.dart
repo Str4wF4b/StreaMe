@@ -42,7 +42,7 @@ class _SplashLogoState extends State<SplashLogo> {
 
   void playSound() {
     _player.seek(const Duration(seconds: 3));
-    _player.setVolume(0.5);
+    _player.setVolume(0.2);
     _player.play();
   }
 }
