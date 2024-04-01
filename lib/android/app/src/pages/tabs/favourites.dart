@@ -238,7 +238,7 @@ class _FavouritesPageState extends State<FavouritesPage>
     });
 
     if (!_addFavourites) {
-      // if clicked on full heart, i.e. _addFavourites = false => remove from Favourites
+      // if clicked on filled heart, i.e. _addFavourites = false => remove from Favourites
       await _favouritesRepo.removeFromFavourites(id!, stream.id.toString());
     }
 

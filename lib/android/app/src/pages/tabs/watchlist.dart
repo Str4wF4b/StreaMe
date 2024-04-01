@@ -262,7 +262,7 @@ class _WatchlistPageState extends State<WatchlistPage>
     });
 
     if (!_addWatchlist) {
-      // if clicked on unchecked list, i.e. _addWatchlist = false => remove from Watchlist
+      // if clicked on checked list, i.e. _addWatchlist = false => remove from Watchlist
       await _watchlistRepo.removeFromWatchlist(id!, stream.id.toString());
     }
 
