@@ -23,8 +23,10 @@ class WatchlistPage extends StatefulWidget {
 
 class _WatchlistPageState extends State<WatchlistPage>
     with TickerProviderStateMixin {
+  // Utils:
   final ColorPalette _color = ColorPalette();
 
+  // Instances:
   late final TabController _tabController =
       TabController(length: 3, vsync: this);
 
@@ -34,18 +36,6 @@ class _WatchlistPageState extends State<WatchlistPage>
   final _watchlistRepo = WatchlistData();
   late bool _addWatchlist = true; // true because it's already in the Watchlist
 
-  List all = allStreams;
-  List movies = allStreams
-      .where((element) => (element.type.toString() == "Movie"))
-      .toList();
-  List series = allStreams
-      .where((element) => (element.type.toString() == "Series"))
-      .toList();
-  List alreadyWatched =
-      allStreams.where((element) => element.id < 7 && element.id > 2).toList();
-  List watch =
-      allStreams.where((element) => element.id < 3 || element.id > 6).toList();
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -54,20 +44,16 @@ class _WatchlistPageState extends State<WatchlistPage>
         child: Container(
           color: _color.middleBackgroundColor,
           child: Column(
-            //crossAxisAlignment: CrossAxisAlignment.start,
-            //mainAxisSize: MainAxisSize.min,
-            mainAxisAlignment: MainAxisAlignment.start,
             children: [
               Align(
                   alignment: Alignment.centerLeft,
                   child: TabBar(
-                    //dividerHeight: 0.0,
-                    tabAlignment: TabAlignment.start,
-                    dividerColor: Colors.transparent,
                     physics: const ClampingScrollPhysics(),
-                    isScrollable: true,
+                    dividerHeight: 0.0,
+                    // remove Divider below Tabs
                     labelColor: _color.backgroundColor,
                     unselectedLabelColor: Colors.grey,
+                    tabAlignment: TabAlignment.start,
                     indicator: BoxDecoration(
                       borderRadius: BorderRadius.circular(30.0),
                       color: _color.bodyTextColor,
@@ -75,10 +61,9 @@ class _WatchlistPageState extends State<WatchlistPage>
                     indicatorSize: TabBarIndicatorSize.label,
                     indicatorPadding:
                         const EdgeInsets.fromLTRB(0.0, 10.5, 0.0, 11.0),
-                    onTap: (int index) => //setState(() {
-                        _tabController.index = index,
-                    //}),
+                    onTap: (int index) => _tabController.index = index,
                     controller: _tabController,
+                    isScrollable: true,
                     tabs: [
                       watchlistTab("All", 0),
                       watchlistTab("Movies", 1),
@@ -90,7 +75,7 @@ class _WatchlistPageState extends State<WatchlistPage>
                       controller: _tabController,
                       physics: const BouncingScrollPhysics(),
                       children: [
-                    SizedBox(width: 110, child: watchlistTabColumn("All")),
+                    watchlistTabColumn("All"),
                     watchlistTabColumn("Movie"),
                     watchlistTabColumn("Series")
                   ]))
@@ -114,15 +99,15 @@ class _WatchlistPageState extends State<WatchlistPage>
                 isWatchlist: true)),
       );
 
-
   /// A function that returns the All, Movies and Series columns inside the tabs
-  /// type: The type of the current Tab (Movie or Series)
+  /// type: The type of the current Tab (All, Movie or Series)
   Padding watchlistTabColumn(String type) {
-    List typeList = allStreams;
+    List typeList =
+        allStreams; // type "All" contains both, Movies and Series, i.e. all Streams
     if (!(type == "All")) {
       typeList = allStreams
           .where((element) => (element.type.toString() == type))
-          .toList();
+          .toList(); // filter all Streams based on the type (Movies or Series) if "All"-type is already excluded
     }
     return Padding(
       padding: const EdgeInsets.fromLTRB(10.0, 2.0, 10.0, 5.0),
@@ -131,30 +116,43 @@ class _WatchlistPageState extends State<WatchlistPage>
           Expanded(
             child: FutureBuilder(
               future: getWatchlistStreams(),
+              // fetch user's watchlist movies and series
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.done) {
                   if (snapshot.hasData) {
-                    List<WatchlistModel> watchlistStreams =
-                        snapshot.data as List<WatchlistModel>;
+                    List<WatchlistModel> watchlistStreams = snapshot.data as List<
+                        WatchlistModel>; // List of all saved Watchlist Streams
 
+                    // Filter Watchlist depending on the type (Movie or Series), don't filter if type is "All":
                     if (!(type == "All")) {
                       typeList =
-                          typeList // Check full movies or series list if movie or series is in user's Watchlist
+                          typeList // check in type list whether the movie or series is also in the user's Watchlist
                               .where((stream) => watchlistStreams.any(
                                   (watchlistStream) =>
-                                      stream.type == type && // check corresponding type to add Stream to Movies or Series Tab
+                                      stream.type ==
+                                          type && // check corresponding type to add Stream from Watchlist to Movies or Series Tab
                                       stream.id.toString() ==
                                           watchlistStream.streamId))
                               .toList();
                     } else {
-                      typeList = typeList.where((stream) => watchlistStreams.any(
-                              (watchlistStream) =>
+                      typeList = typeList
+                          .where((stream) => watchlistStreams.any(
+                              (watchlistStream) => // add any type because the type is "All"
                                   stream.id.toString() ==
-                                  watchlistStream.streamId)).toList();
+                                  watchlistStream.streamId))
+                          .toList();
                     }
+
+                    typeList.sort((a, b) => a.title
+                        .toString()
+                        .toLowerCase()
+                        .compareTo(b.title
+                            .toString()
+                            .toLowerCase())); // sort final type list alphabetically
 
                     return CustomRefreshIndicator(
                       onRefresh: () {
+                        // refresh page
                         setState(() {});
                         return Future.delayed(
                             const Duration(milliseconds: 1200));
@@ -173,22 +171,23 @@ class _WatchlistPageState extends State<WatchlistPage>
                         shrinkWrap: true,
                         itemBuilder: (context, index) {
                           Streams currentStream = typeList.elementAt(index);
+                          // Generate watchlisted Stream instance with streamId, title and type:
                           WatchlistModel watchlist = WatchlistModel(
                               streamId: currentStream.id.toString(),
                               title: currentStream.title,
-                              type: currentStream.type,
-                              rating: watchlistStreams.elementAt(index).rating);
+                              type: currentStream.type);
                           StreamTile currentTile = StreamTile(
                               stream: currentStream,
                               image: currentStream.image,
                               title: currentStream.title,
                               year: currentStream.year,
                               pg: currentStream.pg,
-                              rating: 4.7,
                               cast: currentStream.cast,
                               provider: currentStream.provider,
                               fromHomeButton: widget.fromHomeButton,
-                              onPressed: () {watchlistActions(watchlist, currentStream);},
+                              onPressed: () async {
+                                watchlistActions(watchlist, currentStream);
+                              },
                               icon: Icon(
                                 Icons.playlist_add_check,
                                 color: Colors.green.shade600,
@@ -196,6 +195,7 @@ class _WatchlistPageState extends State<WatchlistPage>
 
                           if (currentStream == typeList.last &&
                               currentStream != typeList.first) {
+                            // if only one element in list, return it without space below
                             return currentTile;
                           } else {
                             return Column(
@@ -226,14 +226,14 @@ class _WatchlistPageState extends State<WatchlistPage>
     );
   }
 
-  /// A function that fetches the user's Watchlist
+  /// A function that fetches the user's Watchlist based on his id
   getWatchlistStreams() async {
     UserModel user = await getUserProfileData();
     String? id = user.id;
     return _watchlistRepo.getWatchlist(id!);
   }
 
-  /// A function to fetch the current user's data
+  /// A function that fetches the current user's data based on the email
   getUserProfileData() {
     _user = FirebaseAuth.instance.currentUser;
     final email = _user?.email;
@@ -242,11 +242,11 @@ class _WatchlistPageState extends State<WatchlistPage>
     }
   }
 
-  /// A function that handles the Favourites actions of a user,
-  /// i.e. showing a snackbar and adding or removing a Stream to its Favourites
-  /// favourite: The current stream that will be added or removed from the user's Favourites list
+  /// A function that handles the Watchlist actions of a user,
+  /// i.e. showing a snackbar and adding or removing a Stream to his Watchlist
+  /// watchlist: The current stream that will be added or removed from the user's Watchlist
   /// stream: The current stream
-  void watchlistActions(WatchlistModel favourite, Streams stream) async {
+  void watchlistActions(WatchlistModel watchlist, Streams stream) async {
     UserModel user = await getUserProfileData();
     String? id =
         user.id; // get user's id for adding or removing a movie or series
@@ -254,35 +254,32 @@ class _WatchlistPageState extends State<WatchlistPage>
     if (mounted) {
       ScaffoldMessenger.of(context)
         ..removeCurrentSnackBar()
-        ..showSnackBar(removedSnackBar(stream.type, favourite,
-            id!)); // show Snackbar when adding or removing a stream to Favourites list
+        ..showSnackBar(actionsSnackBar(stream.type, watchlist,
+            id!)); // show Snackbar when adding or removing a stream to or from Watchlist
     }
 
     setState(() {
       _addWatchlist = !_addWatchlist;
     });
 
-    _addWatchlist
-        ? await _watchlistRepo.addToWatchlist(id!,
-        favourite) // if clicked on empty heart, i.e. _addFavourites = true => add to Favourites
-        : await _watchlistRepo.removeFromWatchlist(
-        id!,
-        stream.id
-            .toString()); // if clicked on full heart, i.e. _addFavourites = false => remove from Favourites
+    if (!_addWatchlist) {
+      // if clicked on unchecked list, i.e. _addWatchlist = false => remove from Watchlist
+      await _watchlistRepo.removeFromWatchlist(id!, stream.id.toString());
+    }
 
     _addWatchlist = true;
   }
 
   /// A function that shows a Snackbar if the user removes the movie from his Watchlist by clicking on the icon of the Stream tile inside Watchlist-Tab
   /// type: The type of the current stream (Movie or Series)
-  /// watchlist: The current stream that will has been removed from the user's Watchlist
+  /// watchlist: The current stream that has been removed from the user's Watchlist
   /// id: The id of the current user
-  removedSnackBar(String type, WatchlistModel watchlist, String id) {
+  actionsSnackBar(String type, WatchlistModel watchlist, String id) {
     if (_addWatchlist) {
       return SnackBar(
           elevation: 0.0,
           shape:
-          RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
           behavior: SnackBarBehavior.floating,
           margin: EdgeInsets.only(
               left: 28.0,
@@ -303,7 +300,6 @@ class _WatchlistPageState extends State<WatchlistPage>
                 child: const Text("Undo.",
                     style: TextStyle(
                         color: Colors.blueAccent,
-                        //decoration: TextDecoration.underline,
                         decorationColor: Colors.blueAccent)),
               )
             ],
@@ -312,13 +308,13 @@ class _WatchlistPageState extends State<WatchlistPage>
   }
 
   /// A function that allows the user to undo the action of removing a movie or series from his Watchlist
-  /// watchlist: The current stream that will has been removed from the user's Watchlist
+  /// watchlist: The current stream that has been removed from the user's Watchlist and should be re-added to it
   /// id: The id of the current user
   undoWatchlistRemoved(WatchlistModel watchlist, String id) async {
     // If clicked on "Undo", i.e. _addFavourites = true => add to Favourites again:
     await _watchlistRepo.addToWatchlist(id, watchlist).then((value) =>
-    ScaffoldMessenger.of(context)
-      ..removeCurrentSnackBar()); // to avoid double clicks, remove Snackbar after clicking "Undo"
+        ScaffoldMessenger.of(context)
+          ..removeCurrentSnackBar()); // to avoid double clicks, remove Snackbar after clicking "Undo"
 
     setState(() {
       _addWatchlist = true;

@@ -1,5 +1,3 @@
-import 'dart:async';
-
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -9,7 +7,6 @@ import 'package:stream_me/android/app/src/services/functions/favourites_data.dar
 import 'package:stream_me/android/app/src/services/functions/user_data.dart';
 import 'package:stream_me/android/app/src/services/models/favourites_model.dart';
 import 'package:stream_me/android/app/src/services/models/user_model.dart';
-
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
 import '../../widgets/features/stream_tile.dart';
 import '../../widgets/global/streame_tab.dart';
@@ -25,11 +22,14 @@ class FavouritesPage extends StatefulWidget {
 
 class _FavouritesPageState extends State<FavouritesPage>
     with TickerProviderStateMixin {
+  // Utils:
   final ColorPalette _color = ColorPalette();
 
+  // Instances:
   late final TabController _tabController =
       TabController(length: 2, vsync: this);
 
+  // Database:
   User? _user = FirebaseAuth.instance.currentUser;
   final _userRepo = UserData();
   final _favouritesRepo = FavouritesData();
@@ -40,15 +40,15 @@ class _FavouritesPageState extends State<FavouritesPage>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: _color.backgroundColor,
-      body: Scaffold(
-        backgroundColor: _color.middleBackgroundColor,
-        body: SafeArea(
+      body: SafeArea(
+        child: Container(
+          color: _color.middleBackgroundColor,
           child: Column(children: [
             Align(
               alignment: Alignment.centerLeft,
               child: TabBar(
                 physics: const ClampingScrollPhysics(),
-                dividerHeight: 0.0,
+                dividerHeight: 0.0, // remove Divider below Tabs
                 labelColor: _color.backgroundColor,
                 unselectedLabelColor: Colors.grey,
                 indicator: BoxDecoration(
@@ -58,12 +58,7 @@ class _FavouritesPageState extends State<FavouritesPage>
                 indicatorSize: TabBarIndicatorSize.label,
                 indicatorPadding:
                     const EdgeInsets.fromLTRB(25.0, 10.5, 25.0, 10.5),
-                onTap: (int index) {
-                  _tabController.index = index;
-                },
-                /*setState(() {
-                  _tabController.index = index;
-                })*/
+                onTap: (int index) => _tabController.index = index,
                 controller: _tabController,
                 tabs: [
                   Padding(
@@ -107,81 +102,67 @@ class _FavouritesPageState extends State<FavouritesPage>
             isWatchlist: false),
       );
 
-  /// A function that fetches the user's Favourite list
-  getFavouriteStreams() async {
-    UserModel user = await getUserProfileData();
-    print("------ ${user.id}");
-    String? id = user.id;
-    print(_favouritesRepo.getFavourites(id!));
-    return _favouritesRepo.getFavourites(id);
-  }
-
-  /// A function to fetch the current user's data
-  getUserProfileData() {
-    _user = FirebaseAuth.instance.currentUser;
-    final email = _user?.email;
-    if (email != null) {
-      return _userRepo.getUserData(email);
-    }
-  }
-
   /// A function that returns the Movies and Series columns inside the tabs
   /// type: The type of the current Tab (Movie or Series)
   Column favouriteTabColumn(String type) {
     List typeList = allStreams
         .where((element) => (element.type.toString() == type))
-        .toList();
+        .toList(); // filter all Streams based on the type (Movies or Series)
     return Column(
       children: [
         Expanded(
           child: FutureBuilder(
-            future: getFavouriteStreams(),
+            future: getFavouriteStreams(), // fetch user's favourite movies and series
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 if (snapshot.hasData) {
                   List<FavouritesModel> favourites = snapshot.data
-                      as List<FavouritesModel>; // List of all saved Favourites
+                  as List<FavouritesModel>; // List of all saved Favourites
 
+                  // Filter Favourite list depending on the type (Movie or Series):
                   typeList =
-                      typeList // Check full movies or series list if movie or series is in user's Favourites list
+                      typeList // check in type list whether the movie or series is also in the user's Favourites list
                           .where((stream) => favourites.any((favouriteStream) =>
-                              stream.type == type && // check corresponding type to add Stream to Movies or Series Tab
-                              stream.id.toString() == favouriteStream.streamId))
+                      stream.type ==
+                          type && // check corresponding type to add Stream from Favourite list to Movies or Series Tab
+                          stream.id.toString() == favouriteStream.streamId))
                           .toList();
 
+                  typeList.sort((a, b) => a.title.toString().toLowerCase().compareTo(
+                      b.title.toString().toLowerCase())); // sort final type list alphabetically
+
                   return CustomRefreshIndicator(
-                      onRefresh: () {
+                      onRefresh: () { // refresh page
                         setState(() {});
                         return Future.delayed(
                             const Duration(milliseconds: 1200));
                       },
                       builder: MaterialIndicatorDelegate(
                           builder: (context, controller) {
-                        return Icon(
-                          Icons.camera,
-                          color: _color.backgroundColor,
-                          size: 30,
-                        );
-                      }),
+                            return Icon(
+                              Icons.camera,
+                              color: _color.backgroundColor,
+                              size: 30,
+                            );
+                          }),
                       child: ListView.builder(
                           itemCount: typeList.length,
                           scrollDirection: Axis.vertical,
                           shrinkWrap: true,
                           itemBuilder: (context, index) {
                             Streams currentStream = typeList.elementAt(index);
+                            // Generate favourited Stream instance with streamId, title and type:
                             FavouritesModel favourite = FavouritesModel(
-                                streamId: currentStream.id.toString(),
-                                title: currentStream.title,
-                                type: currentStream.type,
-                                rating: favourites.elementAt(index).rating);
+                              streamId: currentStream.id.toString(),
+                              title: currentStream.title,
+                              type: currentStream.type,
+                            );
                             StreamTile currentTile = StreamTile(
                                 stream: currentStream,
                                 image: currentStream.image,
                                 title: currentStream.title,
                                 year: currentStream.year,
                                 pg: currentStream.pg,
-                                rating: favourites.elementAt(index).rating,
-                                //TODO
                                 cast: currentStream.cast,
                                 provider: currentStream.provider,
                                 fromHomeButton: widget.fromHomeButton,
@@ -193,7 +174,7 @@ class _FavouritesPageState extends State<FavouritesPage>
                                   color: Colors.red,
                                 ));
                             if (currentStream == typeList.last &&
-                                currentStream != typeList.first) {
+                                currentStream != typeList.first) { // if only one element in list, return it without space below
                               return currentTile;
                             } else {
                               return Column(
@@ -220,8 +201,24 @@ class _FavouritesPageState extends State<FavouritesPage>
     );
   }
 
+  /// A function that fetches the user's Favourite list based on his id
+  getFavouriteStreams() async {
+    UserModel user = await getUserProfileData();
+    String? id = user.id;
+    return _favouritesRepo.getFavourites(id!);
+  }
+
+  /// A function that fetches the current user's data based on the email
+  getUserProfileData() {
+    _user = FirebaseAuth.instance.currentUser;
+    final email = _user?.email;
+    if (email != null) {
+      return _userRepo.getUserData(email);
+    }
+  }
+
   /// A function that handles the Favourites actions of a user,
-  /// i.e. showing a snackbar and adding or removing a Stream to its Favourites
+  /// i.e. showing a snackbar and adding or removing a Stream to his Favourites
   /// favourite: The current stream that will be added or removed from the user's Favourites list
   /// stream: The current stream
   void favouriteActions(FavouritesModel favourite, Streams stream) async {
@@ -232,30 +229,27 @@ class _FavouritesPageState extends State<FavouritesPage>
     if (mounted) {
       ScaffoldMessenger.of(context)
         ..removeCurrentSnackBar()
-        ..showSnackBar(removedSnackBar(stream.type, favourite,
-            id!)); // show Snackbar when adding or removing a stream to Favourites list
+        ..showSnackBar(actionsSnackBar(stream.type, favourite,
+            id!)); // show Snackbar when adding or removing a stream to or from Favourites list
     }
 
     setState(() {
       _addFavourites = !_addFavourites;
     });
 
-    _addFavourites
-        ? await _favouritesRepo.addToFavourites(id!,
-            favourite) // if clicked on empty heart, i.e. _addFavourites = true => add to Favourites
-        : await _favouritesRepo.removeFromFavourites(
-            id!,
-            stream.id
-                .toString()); // if clicked on full heart, i.e. _addFavourites = false => remove from Favourites
+    if (!_addFavourites) {
+      // if clicked on full heart, i.e. _addFavourites = false => remove from Favourites
+      await _favouritesRepo.removeFromFavourites(id!, stream.id.toString());
+    }
 
     _addFavourites = true;
   }
 
   /// A function that shows a Snackbar if the user removes the movie from his Favourites list by clicking on the icon of the Stream tile inside Favourites-Tab
   /// type: The type of the current stream (Movie or Series)
-  /// favourite: The current stream that will has been removed from the user's Favourites list
+  /// favourite: The current stream that has been removed from the user's Favourites list
   /// id: The id of the current user
-  removedSnackBar(String type, FavouritesModel favourite, String id) {
+  actionsSnackBar(String type, FavouritesModel favourite, String id) {
     if (_addFavourites) {
       return SnackBar(
           elevation: 0.0,
@@ -281,7 +275,6 @@ class _FavouritesPageState extends State<FavouritesPage>
                 child: const Text("Undo.",
                     style: TextStyle(
                         color: Colors.blueAccent,
-                        //decoration: TextDecoration.underline,
                         decorationColor: Colors.blueAccent)),
               )
             ],
@@ -290,7 +283,7 @@ class _FavouritesPageState extends State<FavouritesPage>
   }
 
   /// A function that allows the user to undo the action of removing a movie or series from his Favourites list
-  /// favourite: The current stream that will has been removed from the user's Favourites list
+  /// favourite: The current stream that has been removed from the user's Favourites list and should be re-added to it
   /// id: The id of the current user
   undoFavRemoved(FavouritesModel favourite, String id) async {
     // If clicked on "Undo", i.e. _addFavourites = true => add to Favourites again:
