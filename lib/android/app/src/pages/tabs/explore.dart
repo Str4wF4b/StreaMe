@@ -24,64 +24,57 @@ class ExplorePage extends StatefulWidget {
 
 class _ExplorePageState extends State<ExplorePage>
     with SingleTickerProviderStateMixin {
-  final ColorPalette color = ColorPalette();
-  final Styles style = Styles();
-  late double screenHeight;
-  late double screenWidth;
+  // Utils:
+  final ColorPalette _color = ColorPalette();
+  final Styles _style = Styles();
 
-  late List randomStreamList = [];
-  late Streams currentStream;
-
-  //bool _buttonReady = false;
-
+  // Instances:
   final AppinioSwiperController _swipeCardController =
       AppinioSwiperController();
 
-/*  late final AnimationController _exploreAnimation; */
+  // Local Instances:
+  late List _randomStreamList = [];
+  late Streams _currentStream;
+  late double _screenHeight;
   bool _fromHomeButton = false;
+  bool _buttonActivity = false;
 
   // Database:
   User? _user = FirebaseAuth.instance.currentUser;
   final UserData _userRepo = UserData();
   final FavouritesData _favouritesRepo = FavouritesData();
   final WatchlistData _watchlistRepo = WatchlistData();
-  List favourites = [];
-  List watchlistStreams = [];
-  late FavouritesModel favourite;
-  late WatchlistModel watchlist;
+  late FavouritesModel _favourite;
+  late WatchlistModel _watchlist;
   late bool _addFavourites =
       false; // flag to trigger the favourites button option
   late bool _addWatchlist =
       false; // flag to trigger the watchlist button option
+  List _favouriteStreams = [];
+  List _watchlistStreams = [];
 
   @override
   void initState() {
-    /*Future.delayed(const Duration(seconds: 1)).then((_) {
-      _shakeCard();
-    });*/
     super.initState();
-    getFavourites();
+    getFavouriteStreams();
     getWatchlistStreams();
-    randomStreamList = allStreams..shuffle();
-    currentStream = randomStreamList.elementAt(0);
-    screenHeight = 0;
-    screenWidth = 0;
+    _randomStreamList = allStreams..shuffle();
+    _currentStream = _randomStreamList.elementAt(0);
+    _screenHeight = 0;
     _fromHomeButton = widget.fromHomeButton;
   }
 
   @override
   Widget build(BuildContext context) {
-    screenHeight = MediaQuery.of(context).size.height;
-    screenWidth = MediaQuery.of(context).size.width;
-    //print(currentStream.title);
+    _screenHeight =
+        MediaQuery.of(context).size.height; // get current screen height
 
     return Scaffold(
-      backgroundColor: color.backgroundColor,
+      backgroundColor: _color.backgroundColor,
       body: SafeArea(
           child: Container(
         alignment: Alignment.center,
-        color: color.middleBackgroundColor,
-        //height: MediaQuery.of(context).size.height,
+        color: _color.middleBackgroundColor,
         padding: const EdgeInsets.only(left: 18.0, right: 15.0, top: 5.0),
         child: Column(
           children: [
@@ -92,49 +85,44 @@ class _ExplorePageState extends State<ExplorePage>
                     height: MediaQuery.of(context).size.height,
                     child: Padding(
                       padding: const EdgeInsets.all(21.5),
+                      // Building stacked cards:
                       child: AppinioSwiper(
                         cardBuilder: (context, index) {
-                          getFavourites();
+                          getFavouriteStreams();
                           getWatchlistStreams();
                           int? currentIndex = _swipeCardController.cardIndex;
                           currentIndex ??=
                               0; // if null, index = 0 (first index)
-                          currentStream =
-                              randomStreamList.elementAt(currentIndex);
+                          _currentStream =
+                              _randomStreamList.elementAt(currentIndex);
 
-                          favourite = FavouritesModel(
-                              streamId: currentStream.id.toString(),
-                              title: currentStream.title,
-                              type: currentStream.type,
-                              rating: favourites.isEmpty
-                                  ? 1
-                                  : 4.5); /*(favourites.isEmpty && !_addFavourites)
-                                  ? 1
-                                  : (_addFavourites ? favourites
-                                      .where((favourite) {
-                                        print("---------------------- ${favourite.title} -- ${currentStream.title}");
-                                        return favourite.streamId == currentStream.id;
-                                      }).single.rating : 4.5));*/ // until await is not finished, return default value 1
-                          watchlist = WatchlistModel(
-                              streamId: currentStream.id.toString(),
-                              title: currentStream.title,
-                              type: currentStream.type,
-                              rating: watchlistStreams.isEmpty ? 1 : 4.5);
+                          // Generate favourited Stream instance with streamId, title and type:
+                          _favourite = FavouritesModel(
+                            streamId: _currentStream.id.toString(),
+                            title: _currentStream.title,
+                            type: _currentStream.type,
+                          );
+
+                          // Generate watchlisted Stream instance with streamId, title and type:
+                          _watchlist = WatchlistModel(
+                              streamId: _currentStream.id.toString(),
+                              title: _currentStream.title,
+                              type: _currentStream.type);
                           return SwipeCard(
-                            stream: randomStreamList.elementAt(index),
+                            stream: _randomStreamList.elementAt(index),
                           );
                         },
-                        cardCount: randomStreamList.length,
+                        cardCount: _randomStreamList.length,
                         swipeOptions: const SwipeOptions.only(
                             left: true, right: true, up: true),
                         controller: _swipeCardController,
                         maxAngle: 80,
+                        // the angle a swipe is possible
                         loop: true,
-                        //restart again if list is empty
+                        // restart again if list is empty
                         onSwipeEnd: _swipe,
                         onUnSwipe: _unswipe,
                         allowUnlimitedUnSwipe: true,
-                        //onSwipeCancelled: _swipeCancel,
                         threshold: 100,
                       ),
                     ),
@@ -144,16 +132,15 @@ class _ExplorePageState extends State<ExplorePage>
             ),
             Padding(
               padding: EdgeInsets.only(
-                  bottom: screenHeight * 0.073, left: 38.0, right: 41.0),
+                  bottom: _screenHeight * 0.073, left: 38.0, right: 41.0),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
+                  // The skip Button that has a left swipe effect:
                   ElevatedButton(
                     onPressed: () {
-                      //if (_buttonReady) {
                       _swipeCardController.swipeLeft();
                       ScaffoldMessenger.of(context).removeCurrentSnackBar();
-                      //}
                     },
                     style: ButtonStyle(
                         shape: MaterialStateProperty.all<CircleBorder>(
@@ -168,33 +155,40 @@ class _ExplorePageState extends State<ExplorePage>
                     child: Icon(
                       Icons.close,
                       size: 30,
-                      color: color.bodyTextColor,
+                      color: _color.bodyTextColor,
                     ),
                   ),
+                  // The add to Watchlist button that has an up swipe effect:
                   ElevatedButton(
                     onPressed: () {
-                      watchlistActions(watchlist, currentStream);
+                      watchlistActions(_watchlist, _currentStream);
+                      _buttonActivity = true;
+                      _swipeCardController.swipeUp();
                     },
-                    style: style.exploreButtonStyle,
+                    style: _style.exploreButtonStyle,
                     child: Icon(
                       _addWatchlist
                           ? Icons.playlist_add_check
                           : Icons.playlist_add,
                       size: 30,
-                      color: color.bodyTextColor,
+                      color: _color.bodyTextColor,
                     ),
                   ),
+                  // The add to Favourites button that has an right swipe effect:
                   ElevatedButton(
-                    onPressed: () {
-                      favouriteActions(favourite, currentStream);
+                    onPressed: () async {
+                      favouriteActions(_favourite, _currentStream);
+                      _buttonActivity = true;
+                      _swipeCardController.swipeRight();
                     },
-                    style: style.exploreButtonStyle,
+                    style: _style.exploreButtonStyle,
                     child: Icon(
                       _addFavourites ? Icons.favorite : Icons.favorite_outline,
                       size: 30,
-                      color: color.bodyTextColor,
+                      color: _color.bodyTextColor,
                     ),
                   ),
+                  // The unswipe button that has an unswipe effect:
                   ElevatedButton(
                     onPressed: () {
                       _swipeCardController.unswipe();
@@ -213,7 +207,7 @@ class _ExplorePageState extends State<ExplorePage>
                     child: Icon(
                       Icons.undo_outlined,
                       size: 30,
-                      color: color.bodyTextColor,
+                      color: _color.bodyTextColor,
                     ),
                   ),
                 ],
@@ -225,32 +219,31 @@ class _ExplorePageState extends State<ExplorePage>
     );
   }
 
-  /// A function that generates a snackbar if clicked on the heart icon.
-  /// If the heart is filled, the "added to Favourites" snack bar is shown,
-  /// if not, the "removed from Favourites" snack bar is shown
-  /// stream:
-  SnackBar favSnackBar(String stream) => SnackBar(
+  /// A function that generates a snackbar if clicked on the heart icon
+  /// if the icon changes to a filled heart, the "added to Favourites" Snackbar is shown,
+  /// if the icon changes to an empty heart, the "removed from Favourites" snack bar is shown
+  /// stream: The current stream whose type is shown in the Snackbar
+  SnackBar favouriteSnackBar(String stream) => SnackBar(
       elevation: 0.0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
       behavior: SnackBarBehavior.floating,
       margin: EdgeInsets.only(
           left: 28.0,
           right: 28.0,
-          bottom: _fromHomeButton ? 4.0 : 64.0 /* 6.0*/),
-      //BottomAppBar has height 60.0
+          bottom: _fromHomeButton ? 4.0 : 64.0),
       duration: const Duration(milliseconds: 1500),
       content: Text(
         _addFavourites
             ? "$stream removed from Favourites"
             : "$stream added to Favourites",
-        style: TextStyle(color: color.bodyTextColor),
+        style: TextStyle(color: _color.bodyTextColor),
         textAlign: TextAlign.center,
       ));
 
-  /// A function that generates a snackbar if clicked on the plus, respectively check icon.
-  /// If the icon changes to a check icon, the "added to Watchlist" snack bar is shown,
-  /// if the icon changes to a plus icon, the "removed from Watchlist" snack bar is shown
-  /// stream:
+  /// A function that generates a snackbar if clicked on the list icon
+  /// if the icon changes to a checked list, the "added to Watchlist" Snackbar is shown,
+  /// if the icon changes to an unchecked list, the "removed from Watchlist" Snackbar is shown
+  /// stream: The current stream whose type is shown in the Snackbar
   SnackBar watchlistSnackBar(String stream) => SnackBar(
       elevation: 0.0,
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
@@ -258,18 +251,19 @@ class _ExplorePageState extends State<ExplorePage>
       margin: EdgeInsets.only(
           left: 28.0,
           right: 28.0,
-          bottom: _fromHomeButton ? 4.0 : 64.0 /* 6.0*/),
-      //BottomAppBar has height 60.0
+          bottom: _fromHomeButton ? 4.0 : 64.0),
       duration: const Duration(milliseconds: 1500),
       content: Text(
         _addWatchlist
             ? "$stream removed from Watchlist"
             : "$stream added to Watchlist",
-        style: TextStyle(color: color.bodyTextColor),
+        style: TextStyle(color: _color.bodyTextColor),
         textAlign: TextAlign.center,
       ));
 
-  /// A function
+  /// A function that returns a color of type MaterialStateProperty
+  /// color: The color of the buttons below the stacked cards
+  /// pressedColor: The color that is shown if a button below the stacked cards is pressed
   MaterialStateProperty<Color> getColor(Color color, Color pressedColor) {
     getColor(Set<MaterialState> states) {
       if (states.contains(MaterialState.pressed)) {
@@ -278,83 +272,84 @@ class _ExplorePageState extends State<ExplorePage>
         return color;
       }
     }
-
     return MaterialStateProperty.resolveWith(getColor);
   }
 
-  ///
-  ///
-  ///
+  /// A function that handles the left, up and right swipes
   void _swipe(int previousIndex, int targetIndex, SwiperActivity activity) {
-    double threshold = 100.0;
+    double threshold = 100.0; // the minimum value a user has to move the card to make a swipe possible
+    // Right swipe, i.e. add Stream to Favourites:
     if (activity.direction == AxisDirection.right &&
         activity.currentOffset >= Offset(threshold, 0)) {
-      //check Offset to avoid _shakeCard() to add it automatically to Favourites and make Offset same as threshold
-      print(activity.direction);
-      favouriteActions(favourite, currentStream);
+      // offset needs to have at least the same value as threshold to enable swipe
+      if (!_buttonActivity) {
+        favouriteActions(_favourite, _currentStream);
+      }
     }
 
+    // Left swipe, i.e. add Stream to Watchlist:
     if (activity.direction == AxisDirection.up &&
         activity.currentOffset <= Offset(0, -threshold)) {
-      //check Offset to avoid _shakeCard() to add it automatically to Watchlist and make Offset same as threshold
-      print(activity.direction);
-      watchlistActions(watchlist, currentStream);
+      // offset needs to have at least the same value as threshold to enable swipe
+      if (!_buttonActivity) {
+        watchlistActions(_watchlist, _currentStream);
+      }
     }
+
+    _buttonActivity = false;
   }
 
-  /// A function to unswipe a card
+  /// A function that unswipes a card
   void _unswipe(SwiperActivity? swiperActivity) {}
 
-  /// A function that fetches the favourite movies and series of a user
-  getFavourites() async {
+  /// A function that fetches the user's Favourite list based on his id
+  getFavouriteStreams() async {
     UserModel user = await getUserProfileData();
-    String? id = user.id; // get user's id for Favourites list
+    String? id = user.id;
 
-    favourites = await _favouritesRepo.getFavourites(id!);
+    _favouriteStreams = await _favouritesRepo.getFavourites(id!);
 
     if (mounted) {
       setState(() {
-        _addFavourites = favourites
-            .where((favourite) => favourite.title == currentStream.title)
-            .isNotEmpty;
+        _addFavourites = _favouriteStreams
+            .where((favourite) => favourite.title == _currentStream.title)
+            .isNotEmpty; // if current Stream is in Favourites list, set the Favourites-boolean to true
       });
     }
   }
 
-  /// A function that fetches the Watchlist movies and series of a user
+  /// A function that fetches the user's Watchlist based on his id
   getWatchlistStreams() async {
     UserModel user = await getUserProfileData();
-    String? id = user.id; // get user's id for Favourites list
+    String? id = user.id;
 
-    watchlistStreams = await _watchlistRepo.getWatchlist(id!);
+    _watchlistStreams = await _watchlistRepo.getWatchlist(id!);
 
     if (mounted) {
       setState(() {
-        _addWatchlist = watchlistStreams
+        _addWatchlist = _watchlistStreams
             .where((watchlistStream) =>
-                watchlistStream.title == currentStream.title)
-            .isNotEmpty;
+                watchlistStream.title == _currentStream.title)
+            .isNotEmpty; // if current Stream is in Watchlist, set the Watchlist-boolean to true
       });
     }
   }
 
   /// A function that handles the Favourites actions of a user,
-  /// i.e. showing a snackbar and adding or removing a Stream to its Favourites
+  /// i.e. showing a snackbar and adding or removing a Stream to his Favourites
   /// favourite: The current stream that will be added or removed from the user's Favourites list
   /// stream: The current stream
   void favouriteActions(FavouritesModel favourite, Streams stream) async {
     ScaffoldMessenger.of(context)
       ..removeCurrentSnackBar()
-      ..showSnackBar(favSnackBar(currentStream
-          .type)); // show Snackbar when adding a stream to Favourites list
+      ..showSnackBar(favouriteSnackBar(_currentStream
+          .type)); // show Snackbar when adding or removing a stream to or from Favourites list
 
     UserModel user = await getUserProfileData();
     String? id =
         user.id; // get user's id for adding or removing a movie or series
 
-    setState(() {
-      _addFavourites = !_addFavourites;
-    });
+    _addFavourites = !_addFavourites;
 
     _addFavourites
         ? await _favouritesRepo.addToFavourites(id!,
@@ -362,7 +357,7 @@ class _ExplorePageState extends State<ExplorePage>
         : await _favouritesRepo.removeFromFavourites(
             id!,
             stream.id
-                .toString()); // if clicked on full heart, i.e. _addFavourites = false => remove from Favourites
+                .toString()); // if clicked on filled heart, i.e. _addFavourites = false => remove from Favourites
   }
 
   /// A function that handles the Watchlist actions of a user,
@@ -371,27 +366,25 @@ class _ExplorePageState extends State<ExplorePage>
   void watchlistActions(WatchlistModel watchlist, Streams stream) async {
     ScaffoldMessenger.of(context)
       ..removeCurrentSnackBar()
-      ..showSnackBar(watchlistSnackBar(currentStream
-          .type)); // show Snackbar when adding or removing a stream to Watchlist
+      ..showSnackBar(watchlistSnackBar(_currentStream
+          .type)); // show Snackbar when adding or removing a stream to or from Watchlist
 
     UserModel user = await getUserProfileData();
     String? id =
         user.id; // get user's id for adding or removing a movie or series
 
-    setState(() {
-      _addWatchlist = !_addWatchlist;
-    });
+    _addWatchlist = !_addWatchlist;
 
     _addWatchlist
         ? await _watchlistRepo.addToWatchlist(id!,
-            watchlist) // if clicked on unchecked (add) list, i.e. _addWatchlist = true => add to Watchlist
+            watchlist) // if clicked on unchecked list, i.e. _addWatchlist = true => add to Watchlist
         : await _watchlistRepo.removeFromWatchlist(
             id!,
             stream.id
                 .toString()); // if clicked on checked list, i.e. _addWatchlist = false => remove from Watchlist
   }
 
-  /// A function to fetch the current user's data
+  /// A function that fetches the current user's data based on the email
   getUserProfileData() {
     _user = FirebaseAuth.instance.currentUser;
     final email = _user?.email;
@@ -399,26 +392,4 @@ class _ExplorePageState extends State<ExplorePage>
       return _userRepo.getUserData(email);
     }
   }
-
-/*Future<void> _shakeCard() async {
-    const double distance = 3;
-
-    await shakeDirection(const Offset(0, -distance), 200); //shake card up
-    await shakeDirection(const Offset(0, 0), 200); //shake card to center
-    await shakeDirection(const Offset(-distance, 0), 200); //shake card left
-    await shakeDirection(const Offset(distance, 0), 400); //shake card right
-    await shakeDirection(
-        const Offset(0, 0), 200); //animate back manually to center
-
-    _buttonReady =
-    true; //After the quick animation the card can be cancel swiped
-  }
-
-  Future<void> shakeDirection(Offset offset, int ms) async {
-    await _swipeCardController.animateTo(
-      offset,
-      duration: Duration(milliseconds: ms),
-      curve: Curves.easeInOut,
-    );
-  }*/
 }
