@@ -9,7 +9,6 @@ import 'package:stream_me/android/app/src/services/models/user_model.dart';
 import 'package:stream_me/android/app/src/services/models/watchlist_model.dart';
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
 import 'package:stream_me/android/app/src/widgets/features/stream_tile.dart';
-
 import '../../widgets/global/streame_tab.dart';
 
 class WatchlistPage extends StatefulWidget {
