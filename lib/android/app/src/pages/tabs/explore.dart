@@ -68,6 +68,9 @@ class _ExplorePageState extends State<ExplorePage>
   Widget build(BuildContext context) {
     _screenHeight =
         MediaQuery.of(context).size.height; // get current screen height
+    _addFavourites = _favouriteStreams
+        .where((favourite) => favourite.title == _currentStream.title)
+        .isNotEmpty;
 
     return Scaffold(
       backgroundColor: _color.backgroundColor,
@@ -228,9 +231,7 @@ class _ExplorePageState extends State<ExplorePage>
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
       behavior: SnackBarBehavior.floating,
       margin: EdgeInsets.only(
-          left: 28.0,
-          right: 28.0,
-          bottom: _fromHomeButton ? 4.0 : 64.0),
+          left: 28.0, right: 28.0, bottom: _fromHomeButton ? 4.0 : 64.0),
       duration: const Duration(milliseconds: 1500),
       content: Text(
         _addFavourites
@@ -249,9 +250,7 @@ class _ExplorePageState extends State<ExplorePage>
       shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
       behavior: SnackBarBehavior.floating,
       margin: EdgeInsets.only(
-          left: 28.0,
-          right: 28.0,
-          bottom: _fromHomeButton ? 4.0 : 64.0),
+          left: 28.0, right: 28.0, bottom: _fromHomeButton ? 4.0 : 64.0),
       duration: const Duration(milliseconds: 1500),
       content: Text(
         _addWatchlist
@@ -272,26 +271,29 @@ class _ExplorePageState extends State<ExplorePage>
         return color;
       }
     }
+
     return MaterialStateProperty.resolveWith(getColor);
   }
 
   /// A function that handles the left, up and right swipes
-  void _swipe(int previousIndex, int targetIndex, SwiperActivity activity) {
-    double threshold = 100.0; // the minimum value a user has to move the card to make a swipe possible
-    // Right swipe, i.e. add Stream to Favourites:
-    if (activity.direction == AxisDirection.right &&
-        activity.currentOffset >= Offset(threshold, 0)) {
-      // offset needs to have at least the same value as threshold to enable swipe
-      if (!_buttonActivity) {
+  /// activity: The activity that helps to determine the swipe direction
+  void _swipe(
+      int previousIndex, int targetIndex, SwiperActivity activity) async {
+    double threshold =
+        100.0; // the minimum value a user has to move the card to make a swipe possible
+
+    if (!_buttonActivity) {
+      // Right swipe, i.e. add Stream to Favourites:
+      if (activity.direction == AxisDirection.right &&
+          activity.currentOffset >= Offset(threshold, 0)) {
+        // offset needs to have at least the same value as threshold to enable swipe
         favouriteActions(_favourite, _currentStream);
       }
-    }
 
-    // Left swipe, i.e. add Stream to Watchlist:
-    if (activity.direction == AxisDirection.up &&
-        activity.currentOffset <= Offset(0, -threshold)) {
-      // offset needs to have at least the same value as threshold to enable swipe
-      if (!_buttonActivity) {
+      // Up swipe, i.e. add Stream to Watchlist:
+      if (activity.direction == AxisDirection.up &&
+          activity.currentOffset <= Offset(0, -threshold)) {
+        // offset needs to have at least the same value as threshold to enable swipe
         watchlistActions(_watchlist, _currentStream);
       }
     }
@@ -299,8 +301,31 @@ class _ExplorePageState extends State<ExplorePage>
     _buttonActivity = false;
   }
 
-  /// A function that unswipes a card
-  void _unswipe(SwiperActivity? swiperActivity) {}
+  /// A function that unswipes a card to the previous card
+  void _unswipe(SwiperActivity? activity) {
+    int currentStreamIndex = _randomStreamList.indexWhere((element) =>
+        element.title == _currentStream.title &&
+        element.type == _currentStream.type); // get index of current Stream
+    if (currentStreamIndex == 0) {
+      // if the current index is 0, set previous index at last element in list to get the previous Stream
+      _currentStream =
+          _randomStreamList.elementAt(_randomStreamList.length - 1);
+    } else {
+      _currentStream = _randomStreamList
+          .elementAt(currentStreamIndex - 1); // set index to previous Stream
+    }
+
+    _addFavourites =
+        _favouriteStreams // change _addFavourites value depending on current Stream
+            .where((favourite) => favourite.title == _currentStream.title)
+            .isNotEmpty;
+
+    _addWatchlist =
+        _watchlistStreams // change _addWatchlist value depending on current Stream
+            .where((watchlistStream) =>
+                watchlistStream.title == _currentStream.title)
+            .isNotEmpty;
+  }
 
   /// A function that fetches the user's Favourite list based on his id
   getFavouriteStreams() async {
@@ -342,14 +367,23 @@ class _ExplorePageState extends State<ExplorePage>
   void favouriteActions(FavouritesModel favourite, Streams stream) async {
     ScaffoldMessenger.of(context)
       ..removeCurrentSnackBar()
-      ..showSnackBar(favouriteSnackBar(_currentStream
+      ..showSnackBar(favouriteSnackBar(stream
           .type)); // show Snackbar when adding or removing a stream to or from Favourites list
 
     UserModel user = await getUserProfileData();
     String? id =
         user.id; // get user's id for adding or removing a movie or series
 
-    _addFavourites = !_addFavourites;
+    if (!_buttonActivity) {
+      _currentStream = stream; // set to actual current Stream
+      _addFavourites = _favouriteStreams
+          .where((favourite) => favourite.title == _currentStream.title)
+          .isNotEmpty; // if current Stream is in Favourites list, set the Favourites-boolean to true
+    }
+
+    setState(() {
+      _addFavourites = !_addFavourites;
+    });
 
     _addFavourites
         ? await _favouritesRepo.addToFavourites(id!,
@@ -372,6 +406,14 @@ class _ExplorePageState extends State<ExplorePage>
     UserModel user = await getUserProfileData();
     String? id =
         user.id; // get user's id for adding or removing a movie or series
+
+    if (!_buttonActivity) {
+      _currentStream = stream; // set to actual current Stream
+      _addWatchlist = _watchlistStreams
+          .where((watchlistStream) =>
+              watchlistStream.title == _currentStream.title)
+          .isNotEmpty; // if current Stream is in Watchlist, set the Watchlist-boolean to true
+    }
 
     _addWatchlist = !_addWatchlist;
 
