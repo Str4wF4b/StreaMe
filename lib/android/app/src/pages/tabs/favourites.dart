@@ -8,6 +8,7 @@ import 'package:stream_me/android/app/src/services/functions/user_data.dart';
 import 'package:stream_me/android/app/src/services/models/favourites_model.dart';
 import 'package:stream_me/android/app/src/services/models/user_model.dart';
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
+import 'package:stream_me/android/app/src/utils/functions.dart';
 import '../../widgets/features/stream_tile.dart';
 import '../../widgets/global/streame_tab.dart';
 
@@ -24,6 +25,7 @@ class _FavouritesPageState extends State<FavouritesPage>
     with TickerProviderStateMixin {
   // Utils:
   final ColorPalette _color = ColorPalette();
+  final Functions _functions = Functions();
 
   // Instances:
   late final TabController _tabController =
@@ -43,49 +45,56 @@ class _FavouritesPageState extends State<FavouritesPage>
       body: SafeArea(
         child: Container(
           color: _color.middleBackgroundColor,
-          child: Column(children: [
-            Align(
-              alignment: Alignment.centerLeft,
-              child: TabBar(
-                physics: const ClampingScrollPhysics(),
-                dividerHeight: 0.0, // remove Divider below Tabs
-                labelColor: _color.backgroundColor,
-                unselectedLabelColor: Colors.grey,
-                indicator: BoxDecoration(
-                  borderRadius: BorderRadius.circular(30.0),
-                  color: _color.bodyTextColor,
-                ),
-                indicatorSize: TabBarIndicatorSize.label,
-                indicatorPadding:
-                    const EdgeInsets.fromLTRB(25.0, 10.5, 25.0, 10.5),
-                onTap: (int index) => _tabController.index = index,
-                controller: _tabController,
-                tabs: [
-                  Padding(
-                      padding: const EdgeInsets.fromLTRB(25.0, 5.0, 25.0, 3.0),
-                      child: favouritesTab("Movies", 0)),
-                  Padding(
-                      padding: const EdgeInsets.fromLTRB(25.0, 5.0, 25.0, 3.0),
-                      child: favouritesTab("Series", 1))
-                ],
-              ),
-            ),
-            Expanded(
-                child: TabBarView(
-              controller: _tabController,
-              physics: const BouncingScrollPhysics(),
-              children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(10.0, 2.0, 10.0, 5.0),
-                  child: favouriteTabColumn("Movie"),
-                ),
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(10.0, 2.0, 10.0, 5.0),
-                  child: favouriteTabColumn("Series"),
-                )
-              ],
-            ))
-          ]),
+          child: _user!.isAnonymous
+              ? _functions.anonLoggedIn(context, true)
+              : Column(children: [
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: TabBar(
+                      physics: const ClampingScrollPhysics(),
+                      dividerHeight: 0.0,
+                      // remove Divider below Tabs
+                      labelColor: _color.backgroundColor,
+                      unselectedLabelColor: Colors.grey,
+                      indicator: BoxDecoration(
+                        borderRadius: BorderRadius.circular(30.0),
+                        color: _color.bodyTextColor,
+                      ),
+                      indicatorSize: TabBarIndicatorSize.label,
+                      indicatorPadding:
+                          const EdgeInsets.fromLTRB(25.0, 10.5, 25.0, 10.5),
+                      onTap: (int index) => _tabController.index = index,
+                      controller: _tabController,
+                      tabs: [
+                        Padding(
+                            padding:
+                                const EdgeInsets.fromLTRB(25.0, 5.0, 25.0, 3.0),
+                            child: favouritesTab("Movies", 0)),
+                        Padding(
+                            padding:
+                                const EdgeInsets.fromLTRB(25.0, 5.0, 25.0, 3.0),
+                            child: favouritesTab("Series", 1))
+                      ],
+                    ),
+                  ),
+                  Expanded(
+                      child: TabBarView(
+                    controller: _tabController,
+                    physics: const BouncingScrollPhysics(),
+                    children: [
+                      Padding(
+                        padding:
+                            const EdgeInsets.fromLTRB(10.0, 2.0, 10.0, 5.0),
+                        child: favouriteTabColumn("Movie"),
+                      ),
+                      Padding(
+                        padding:
+                            const EdgeInsets.fromLTRB(10.0, 2.0, 10.0, 5.0),
+                        child: favouriteTabColumn("Series"),
+                      )
+                    ],
+                  ))
+                ]),
         ),
       ),
     );
@@ -112,39 +121,45 @@ class _FavouritesPageState extends State<FavouritesPage>
       children: [
         Expanded(
           child: FutureBuilder(
-            future: getFavouriteStreams(), // fetch user's favourite movies and series
+            future: getFavouriteStreams(),
+            // fetch user's favourite movies and series
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.done) {
                 if (snapshot.hasData) {
                   List<FavouritesModel> favourites = snapshot.data
-                  as List<FavouritesModel>; // List of all saved Favourites
+                      as List<FavouritesModel>; // List of all saved Favourites
 
                   // Filter Favourite list depending on the type (Movie or Series):
                   typeList =
                       typeList // check in type list whether the movie or series is also in the user's Favourites list
                           .where((stream) => favourites.any((favouriteStream) =>
-                      stream.type ==
-                          type && // check corresponding type to add Stream from Favourite list to Movies or Series Tab
-                          stream.id.toString() == favouriteStream.streamId))
+                              stream.type ==
+                                  type && // check corresponding type to add Stream from Favourite list to Movies or Series Tab
+                              stream.id.toString() == favouriteStream.streamId))
                           .toList();
 
-                  typeList.sort((a, b) => a.title.toString().toLowerCase().compareTo(
-                      b.title.toString().toLowerCase())); // sort final type list alphabetically
+                  typeList.sort((a, b) => a.title
+                      .toString()
+                      .toLowerCase()
+                      .compareTo(b.title
+                          .toString()
+                          .toLowerCase())); // sort final type list alphabetically
 
                   return CustomRefreshIndicator(
-                      onRefresh: () { // refresh page
+                      onRefresh: () {
+                        // refresh page
                         setState(() {});
                         return Future.delayed(
                             const Duration(milliseconds: 1200));
                       },
                       builder: MaterialIndicatorDelegate(
                           builder: (context, controller) {
-                            return Icon(
-                              Icons.camera,
-                              color: _color.backgroundColor,
-                              size: 30,
-                            );
-                          }),
+                        return Icon(
+                          Icons.camera,
+                          color: _color.backgroundColor,
+                          size: 30,
+                        );
+                      }),
                       child: ListView.builder(
                           itemCount: typeList.length,
                           scrollDirection: Axis.vertical,
@@ -174,7 +189,8 @@ class _FavouritesPageState extends State<FavouritesPage>
                                   color: Colors.red,
                                 ));
                             if (currentStream == typeList.last &&
-                                currentStream != typeList.first) { // if only one element in list, return it without space below
+                                currentStream != typeList.first) {
+                              // if only one element in list, return it without space below
                               return currentTile;
                             } else {
                               return Column(
@@ -271,7 +287,7 @@ class _FavouritesPageState extends State<FavouritesPage>
               ),
               const SizedBox(width: 5),
               GestureDetector(
-                onTap: () => undoFavRemoved(favourite, id),
+                onTap: () => undoFavouriteRemoved(favourite, id),
                 child: const Text("Undo.",
                     style: TextStyle(
                         color: Colors.blueAccent,
@@ -285,7 +301,7 @@ class _FavouritesPageState extends State<FavouritesPage>
   /// A function that allows the user to undo the action of removing a movie or series from his Favourites list
   /// favourite: The current stream that has been removed from the user's Favourites list and should be re-added to it
   /// id: The id of the current user
-  undoFavRemoved(FavouritesModel favourite, String id) async {
+  undoFavouriteRemoved(FavouritesModel favourite, String id) async {
     // If clicked on "Undo", i.e. _addFavourites = true => add to Favourites again:
     await _favouritesRepo.addToFavourites(id, favourite).then((value) =>
         ScaffoldMessenger.of(context)

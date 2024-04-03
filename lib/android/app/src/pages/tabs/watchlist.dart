@@ -8,6 +8,7 @@ import 'package:stream_me/android/app/src/services/functions/watchlist.data.dart
 import 'package:stream_me/android/app/src/services/models/user_model.dart';
 import 'package:stream_me/android/app/src/services/models/watchlist_model.dart';
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
+import 'package:stream_me/android/app/src/utils/functions.dart';
 import 'package:stream_me/android/app/src/widgets/features/stream_tile.dart';
 import '../../widgets/global/streame_tab.dart';
 
@@ -24,6 +25,7 @@ class _WatchlistPageState extends State<WatchlistPage>
     with TickerProviderStateMixin {
   // Utils:
   final ColorPalette _color = ColorPalette();
+  final Functions _functions = Functions();
 
   // Instances:
   late final TabController _tabController =
@@ -42,44 +44,46 @@ class _WatchlistPageState extends State<WatchlistPage>
       body: SafeArea(
         child: Container(
           color: _color.middleBackgroundColor,
-          child: Column(
-            children: [
-              Align(
-                  alignment: Alignment.centerLeft,
-                  child: TabBar(
-                    physics: const ClampingScrollPhysics(),
-                    dividerHeight: 0.0,
-                    // remove Divider below Tabs
-                    labelColor: _color.backgroundColor,
-                    unselectedLabelColor: Colors.grey,
-                    tabAlignment: TabAlignment.start,
-                    indicator: BoxDecoration(
-                      borderRadius: BorderRadius.circular(30.0),
-                      color: _color.bodyTextColor,
-                    ),
-                    indicatorSize: TabBarIndicatorSize.label,
-                    indicatorPadding:
-                        const EdgeInsets.fromLTRB(0.0, 10.5, 0.0, 11.0),
-                    onTap: (int index) => _tabController.index = index,
-                    controller: _tabController,
-                    isScrollable: true,
-                    tabs: [
-                      watchlistTab("All", 0),
-                      watchlistTab("Movies", 1),
-                      watchlistTab("Series", 2)
-                    ],
-                  )),
-              Expanded(
-                  child: TabBarView(
-                      controller: _tabController,
-                      physics: const BouncingScrollPhysics(),
-                      children: [
-                    watchlistTabColumn("All"),
-                    watchlistTabColumn("Movie"),
-                    watchlistTabColumn("Series")
-                  ]))
-            ],
-          ),
+          child: _user!.isAnonymous
+              ? _functions.anonLoggedIn(context, true)
+              : Column(
+                  children: [
+                    Align(
+                        alignment: Alignment.centerLeft,
+                        child: TabBar(
+                          physics: const ClampingScrollPhysics(),
+                          dividerHeight: 0.0,
+                          // remove Divider below Tabs
+                          labelColor: _color.backgroundColor,
+                          unselectedLabelColor: Colors.grey,
+                          tabAlignment: TabAlignment.start,
+                          indicator: BoxDecoration(
+                            borderRadius: BorderRadius.circular(30.0),
+                            color: _color.bodyTextColor,
+                          ),
+                          indicatorSize: TabBarIndicatorSize.label,
+                          indicatorPadding:
+                              const EdgeInsets.fromLTRB(0.0, 10.5, 0.0, 11.0),
+                          onTap: (int index) => _tabController.index = index,
+                          controller: _tabController,
+                          isScrollable: true,
+                          tabs: [
+                            watchlistTab("All", 0),
+                            watchlistTab("Movies", 1),
+                            watchlistTab("Series", 2)
+                          ],
+                        )),
+                    Expanded(
+                        child: TabBarView(
+                            controller: _tabController,
+                            physics: const BouncingScrollPhysics(),
+                            children: [
+                          watchlistTabColumn("All"),
+                          watchlistTabColumn("Movie"),
+                          watchlistTabColumn("Series")
+                        ]))
+                  ],
+                ),
         ),
       ),
     );
