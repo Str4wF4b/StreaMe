@@ -38,6 +38,7 @@ class _ExplorePageState extends State<ExplorePage>
   late double _screenHeight;
   bool _fromHomeButton = false;
   bool _buttonActivity = false;
+  late bool isAnon;
 
   // Database:
   User? _user = FirebaseAuth.instance.currentUser;
@@ -56,8 +57,12 @@ class _ExplorePageState extends State<ExplorePage>
   @override
   void initState() {
     super.initState();
-    getFavouriteStreams();
-    getWatchlistStreams();
+    isAnon = _user!.isAnonymous;
+    if (!isAnon) {
+      // only fetch data if user is not anonymous
+      getFavouriteStreams();
+      getWatchlistStreams();
+    }
     _randomStreamList = allStreams..shuffle();
     _currentStream = _randomStreamList.elementAt(0);
     _screenHeight = 0;
@@ -66,11 +71,9 @@ class _ExplorePageState extends State<ExplorePage>
 
   @override
   Widget build(BuildContext context) {
-    _screenHeight =
-        MediaQuery.of(context).size.height; // get current screen height
-    _addFavourites = _favouriteStreams
-        .where((favourite) => favourite.title == _currentStream.title)
-        .isNotEmpty;
+    _screenHeight = MediaQuery.of(context)
+        .size
+        .height; // get current screen height (only needed if user is not anonymous)
 
     return Scaffold(
       backgroundColor: _color.backgroundColor,
@@ -91,26 +94,32 @@ class _ExplorePageState extends State<ExplorePage>
                       // Building stacked cards:
                       child: AppinioSwiper(
                         cardBuilder: (context, index) {
-                          getFavouriteStreams();
-                          getWatchlistStreams();
+                          if (!isAnon) {
+                            // only fetch data if user is not anonymous
+                            getFavouriteStreams();
+                            getWatchlistStreams();
+                          }
                           int? currentIndex = _swipeCardController.cardIndex;
                           currentIndex ??=
                               0; // if null, index = 0 (first index)
                           _currentStream =
                               _randomStreamList.elementAt(currentIndex);
 
-                          // Generate favourited Stream instance with streamId, title and type:
-                          _favourite = FavouritesModel(
-                            streamId: _currentStream.id.toString(),
-                            title: _currentStream.title,
-                            type: _currentStream.type,
-                          );
-
-                          // Generate watchlisted Stream instance with streamId, title and type:
-                          _watchlist = WatchlistModel(
+                          if (!isAnon) {
+                            // only fetch data if user is not anonymous
+                            // Generate favourited Stream instance with streamId, title and type:
+                            _favourite = FavouritesModel(
                               streamId: _currentStream.id.toString(),
                               title: _currentStream.title,
-                              type: _currentStream.type);
+                              type: _currentStream.type,
+                            );
+
+                            // Generate watchlisted Stream instance with streamId, title and type:
+                            _watchlist = WatchlistModel(
+                                streamId: _currentStream.id.toString(),
+                                title: _currentStream.title,
+                                type: _currentStream.type);
+                          }
                           return SwipeCard(
                             stream: _randomStreamList.elementAt(index),
                           );
@@ -137,7 +146,9 @@ class _ExplorePageState extends State<ExplorePage>
               padding: EdgeInsets.only(
                   bottom: _screenHeight * 0.073, left: 38.0, right: 41.0),
               child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: isAnon
+                    ? MainAxisAlignment.spaceEvenly
+                    : MainAxisAlignment.spaceBetween,
                 children: [
                   // The skip Button that has a left swipe effect:
                   ElevatedButton(
@@ -162,35 +173,41 @@ class _ExplorePageState extends State<ExplorePage>
                     ),
                   ),
                   // The add to Watchlist button that has an up swipe effect:
-                  ElevatedButton(
-                    onPressed: () {
-                      watchlistActions(_watchlist, _currentStream);
-                      _buttonActivity = true;
-                      _swipeCardController.swipeUp();
-                    },
-                    style: _style.exploreButtonStyle,
-                    child: Icon(
-                      _addWatchlist
-                          ? Icons.playlist_add_check
-                          : Icons.playlist_add,
-                      size: 30,
-                      color: _color.bodyTextColor,
-                    ),
-                  ),
+                  isAnon // enable if user is not anonymous
+                      ? Container()
+                      : ElevatedButton(
+                          onPressed: () {
+                            watchlistActions(_watchlist, _currentStream);
+                            _buttonActivity = true;
+                            _swipeCardController.swipeUp();
+                          },
+                          style: _style.exploreButtonStyle,
+                          child: Icon(
+                            _addWatchlist
+                                ? Icons.playlist_add_check
+                                : Icons.playlist_add,
+                            size: 30,
+                            color: _color.bodyTextColor,
+                          ),
+                        ),
                   // The add to Favourites button that has an right swipe effect:
-                  ElevatedButton(
-                    onPressed: () async {
-                      favouriteActions(_favourite, _currentStream);
-                      _buttonActivity = true;
-                      _swipeCardController.swipeRight();
-                    },
-                    style: _style.exploreButtonStyle,
-                    child: Icon(
-                      _addFavourites ? Icons.favorite : Icons.favorite_outline,
-                      size: 30,
-                      color: _color.bodyTextColor,
-                    ),
-                  ),
+                  isAnon // enable if user is not anonymous
+                      ? Container()
+                      : ElevatedButton(
+                          onPressed: () async {
+                            favouriteActions(_favourite, _currentStream);
+                            _buttonActivity = true;
+                            _swipeCardController.swipeRight();
+                          },
+                          style: _style.exploreButtonStyle,
+                          child: Icon(
+                            _addFavourites
+                                ? Icons.favorite
+                                : Icons.favorite_outline,
+                            size: 30,
+                            color: _color.bodyTextColor,
+                          ),
+                        ),
                   // The unswipe button that has an unswipe effect:
                   ElevatedButton(
                     onPressed: () {
