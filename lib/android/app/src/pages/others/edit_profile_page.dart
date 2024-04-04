@@ -1,11 +1,8 @@
 import 'dart:async';
 import 'dart:io';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:get/get_rx/src/rx_types/rx_types.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:stream_me/android/app/src/services/functions/auth_popups.dart';
 import 'package:stream_me/android/app/src/services/functions/user_data.dart';
@@ -15,7 +12,6 @@ import 'package:stream_me/android/app/src/utils/images.dart';
 import 'package:stream_me/android/app/src/widgets/global/selection_button.dart';
 import '../../widgets/features/edit_text_field.dart';
 
-
 class EditProfilePage extends StatefulWidget {
   const EditProfilePage({super.key});
 
@@ -24,31 +20,32 @@ class EditProfilePage extends StatefulWidget {
 }
 
 class _EditProfilePageState extends State<EditProfilePage> {
-  XFile? _imageFile;
-  final ImagePicker _picker = ImagePicker();
-  late UploadTask _uploadTask;
-  Images image = Images();
-  bool showPassword = true;
+  // Utils:
   final ColorPalette _color = ColorPalette();
+  final Images _image = Images();
+  final AuthPopups _popups = AuthPopups();
 
-  User? _user = FirebaseAuth.instance.currentUser;
-  late Rx<User?> firebaseUser; //_authRep = Rx<User?>(widget.user);
-  final _userRepo = UserData();
-
-  bool _isNotLoading = true;
-
-  late String _oldEmail;
-  late String _oldPassword;
-  bool _updateToFirebase = false;
-  late String _urlDownload = "";
-  bool _pickedImage = false;
-
+  // Instances:
   final TextEditingController _usernameCtrl = TextEditingController();
   final TextEditingController _fullNameCtrl = TextEditingController();
   final TextEditingController _emailCtrl = TextEditingController();
   final TextEditingController _passwordCtrl = TextEditingController();
+  final ImagePicker _picker = ImagePicker();
 
-  final AuthPopups _popups = AuthPopups();
+  // Local instances:
+  XFile? _imageFile;
+  bool _pickedImage = false;
+  late UploadTask _uploadTask;
+  bool _isNotLoading = true; // flag to trigger button loading
+
+  // Database:
+  User? _user = FirebaseAuth.instance.currentUser;
+  final _userRepo = UserData();
+  late String _oldEmail;
+  late String _oldPassword;
+  bool _updateToFirebase =
+      false; // flag to trigger if the database should be updated
+  late String _urlDownload = ""; // download path of Firebase storage
 
   @override
   Widget build(BuildContext context) {
@@ -61,28 +58,28 @@ class _EditProfilePageState extends State<EditProfilePage> {
           future: getUserProfileData(),
           builder: (context, snapshot) {
             if (snapshot.connectionState == ConnectionState.done) {
-              //data is completely fetched
+              // data is completely fetched
 
-              //print("----------------------------------------------------------- _user? - Email: ${_user?.email}");
               if (snapshot.hasData) {
                 UserModel user = snapshot.data as UserModel;
                 final id = TextEditingController(text: user.id);
-                _oldEmail = user.email;
-                _oldPassword = user.password;
-                //print("----------------------------------------------------------- user - Username: ${user.username}");
+                _oldEmail =
+                    user.email; // set old email for possible re-authentication
+                _oldPassword = user
+                    .password; // set old password for possible re-authentication
+
                 return ListView(
                   children: [
                     Center(
-                      //centering the profile picture
                       child: Stack(
                         children: [
                           Container(
-                            //container for profile picture
+                            // Profile picture attributes:
                             width: 130,
                             height: 130,
                             decoration: BoxDecoration(
                               border: Border.all(
-                                //border around profile picture
+                                // border around profile picture
                                 width: 3,
                                 color:
                                     Theme.of(context).scaffoldBackgroundColor,
@@ -95,15 +92,14 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                 )
                               ],
                               shape: BoxShape.circle,
-                              //profile picture in circle shape
+                              // profile picture in circle shape
                               image: DecorationImage(
-                                  //default profile picture
                                   fit: BoxFit.cover,
                                   image: getProfilePicture(user.imageUrl)),
                             ),
                           ),
                           Positioned(
-                              //positioning the "change picture" item
+                              // positioning the "change picture" item
                               bottom: 0,
                               right: 0,
                               child: Container(
@@ -111,7 +107,7 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                 width: 35,
                                 decoration: BoxDecoration(
                                   border: Border.all(
-                                    //border around profile picture
+                                    // border around edit icon
                                     width: 1,
                                     color: Theme.of(context)
                                         .scaffoldBackgroundColor,
@@ -128,12 +124,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
                                 child: InkWell(
                                   onTap: () {
                                     showModalBottomSheet(
-                                      context: context,
-                                      builder: ((builder) =>
-                                          bottomProfileSheet()),
-                                      backgroundColor: _color.backgroundColor,
-                                      elevation: 0.0
-                                    );
+                                        context: context,
+                                        builder: ((builder) =>
+                                            bottomProfileSheet()),
+                                        backgroundColor: _color.backgroundColor,
+                                        elevation: 0.0);
                                   },
                                   child: const Icon(
                                     Icons.edit,
@@ -145,27 +140,30 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       ),
                     ),
                     const SizedBox(
-                      //spacing between profile picture and text field
                       height: 58,
                     ),
+                    // User's Username:
                     EditTextField(
                         controller: _usernameCtrl,
                         labelText: "Username: ",
                         placeholder: "Enter new Username here",
                         isPassword: false,
                         userInput: user.username),
+                    // User's Full Name:
                     EditTextField(
                         controller: _fullNameCtrl,
                         labelText: "Full Name: ",
                         placeholder: "Enter new Full Name here",
                         isPassword: false,
                         userInput: user.fullName),
+                    // User's Email:
                     EditTextField(
                         controller: _emailCtrl,
                         labelText: "E-Mail: ",
                         placeholder: "Enter new E-Mail address here",
                         isPassword: false,
                         userInput: user.email),
+                    // User's Password:
                     EditTextField(
                         controller: _passwordCtrl,
                         labelText: "Password: ",
@@ -179,9 +177,11 @@ class _EditProfilePageState extends State<EditProfilePage> {
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          saveButton(id, user),
+                          saveButton(id, user), // button to save changes to DB
                           SelectionButton(
+                              // button to reset changes in Textfields
                               onTap: () {
+                                // Clear all controllers if clicked on "Reset":
                                 _usernameCtrl.clear();
                                 _fullNameCtrl.clear();
                                 _emailCtrl.clear();
@@ -209,6 +209,25 @@ class _EditProfilePageState extends State<EditProfilePage> {
     );
   }
 
+  /// A function that returns the profile picture depending if the user saved a picture or not (yet)
+  /// imageUrl: The path of the image url of a user (whether person_icon image if no picture saved yet or saved picture)
+  getProfilePicture(String imageUrl) {
+    if (imageUrl.contains("person_icon.png") && !_pickedImage) {
+      // if the path of the image refers to the blank profile image and no image is picked
+      return AssetImage(_image.blank); // show blank profile picture image
+    } else if (!_pickedImage) {
+      // if the path of the image is given and no picture is picked
+      return NetworkImage(imageUrl); // show current saved picture from user
+    } else {
+      if (_imageFile != null) {
+        // if imageFile (contains picked image) is not null
+        return FileImage(File(_imageFile!
+            .path)); // show imageFile, i.e. user's picked and not yet saved image
+      }
+    }
+  }
+
+  /// A function that shows the opportunities (via Camera or Gallery) to upload a profile picture
   Widget bottomProfileSheet() {
     return Container(
       height: 92.0,
@@ -285,60 +304,44 @@ class _EditProfilePageState extends State<EditProfilePage> {
   /// A function that changes the current profile picture by picking from a source
   /// source: The source the picture is picked from, i.e. from camera or gallery
   void changePicture(ImageSource source) async {
-    final pickedFile = await _picker.pickImage(source: source);
+    final pickedFile = await _picker.pickImage(
+        source: source); // currently picked picture from a source
     if (pickedFile != null) {
-      _pickedImage = true;
+      _pickedImage = true; // an image is picked
     }
     setState(() {
-      print("Now");
       _imageFile = pickedFile;
     });
-    print("Image saving");
-    uploadPicture(_imageFile);
-  }
-
-  /// A function
-  /// pickedFile:
-  Future uploadPicture(XFile? pickedFile) async {
-    /*if (_updateToFirebase && (_oldEmail != _user?.email)) {
-      // Delete the path of the old email when changing the user's email:
-      final oldPath = "profilePictures/$_oldEmail";
-      await File(oldPath).delete();
-    }*/
-
-    // Add the path to Firestore storage:
-    final path = "profilePictures/${_user?.email}/${_imageFile!.name}";
-    print("Path: $path");
-    final file = File(pickedFile!.path);
-    final ref = FirebaseStorage.instance.ref().child(path);
-    _uploadTask = ref.putFile(file);
-
-    final snapshot = await _uploadTask;
-    _urlDownload = await snapshot.ref.getDownloadURL();
-    print(_urlDownload);
-    print("--------------------------------------------------------------------- ${_imageFile!.path}");
-  }
-
-  /// A function
-  /// user:
-  getProfilePicture(String imageUrl) {
-    if (imageUrl == "" && !_pickedImage) {
-        return AssetImage(image.blank);
-    } else if (!_pickedImage){
-      return NetworkImage(imageUrl);//FileImage(File(user.imageUrl));
-    } else {
-      return FileImage(File(_imageFile!.path));
+    if (_imageFile != null) {
+      uploadPicture(_imageFile); // upload picture to DB process
     }
   }
 
-  /// The save button that updates all changes in the edit profile page and loads them into the Firestore DB
-  /// id:
-  /// user:
+  /// A function that uploads the picked picture from the user and that generates a download link inside the Firebase storage
+  /// pickedFile: The currently picked picture from the user
+  Future uploadPicture(XFile? pickedFile) async {
+    final path =
+        "profilePictures/${_user?.email}/${_imageFile!.name}"; // add the path to Firestore storage
+
+    final file = File(pickedFile!.path);
+    final ref =
+        FirebaseStorage.instance.ref().child(path); // Firebase reference
+    _uploadTask = ref.putFile(file); // put the picture into an upload file
+
+    final snapshot = await _uploadTask; // upload the picture
+    _urlDownload =
+        await snapshot.ref.getDownloadURL(); // get download link of picture
+  }
+
+  /// The save button that updates all changes and loads them into the Firestore DB
+  /// id: The id of the current user
+  /// user: The current user whose information is changed
   Widget saveButton(TextEditingController id, UserModel user) =>
       GestureDetector(
           onTap: () async {
-            _updateToFirebase = true; // save changes to firebase
-            List<UserModel> allUsersData = await _userRepo.getAllUserData(); // get all user's data to check for duplicate emails
+            _updateToFirebase = true; // save changes to Firebase
+            List<UserModel> allUsersData = await _userRepo
+                .getAllUserData(); // get all user's data to check for duplicate emails
             setState(() {
               _isNotLoading = false; // change button state to a loading button
             });
@@ -347,11 +350,12 @@ class _EditProfilePageState extends State<EditProfilePage> {
                 id: id.text,
                 email: _emailCtrl.text.isEmpty
                     ? user.email
-                    : checkDuplicatedEmail(_emailCtrl.text.trim(), user.email, allUsersData),
+                    : checkDuplicatedEmail(
+                        _emailCtrl.text.trim(), user.email, allUsersData),
                 fullName: _fullNameCtrl.text.isEmpty
                     ? user.fullName
                     : _fullNameCtrl.text,
-                imageUrl: /*_imageFile?.path == null ? user.imageUrl : _imageFile!.path*/ _urlDownload == "" ? user.imageUrl : _urlDownload,
+                imageUrl: _urlDownload == "" ? user.imageUrl : _urlDownload,
                 password: _passwordCtrl.text.isEmpty
                     ? user.password
                     : _passwordCtrl.text,
@@ -359,20 +363,15 @@ class _EditProfilePageState extends State<EditProfilePage> {
                     ? user.username
                     : _usernameCtrl.text);
 
-            // Clear text field inputs after saving:
-
             if (_updateToFirebase) await updateUserProfileData(updatedUserData);
+            // Clear text field inputs after saving:
             _usernameCtrl.clear();
             _fullNameCtrl.clear();
             _emailCtrl.clear();
             _passwordCtrl.clear();
-            if (mounted) setState(() {});
-            //print(
-            //    "----------------------------------------------------------- user - Password: ${user.password}");
-            //print("-----------------------------------------------------------  updatedUserData - updated Password: ${updatedUserData
-            //    .password}");
 
-            _isNotLoading = true;
+            if (mounted) setState(() {}); // show changes
+            _isNotLoading = true; // change button state back to normal
           },
           child: Container(
               padding: _isNotLoading
@@ -382,9 +381,10 @@ class _EditProfilePageState extends State<EditProfilePage> {
               height: 53,
               decoration: BoxDecoration(
                   color: _isNotLoading ? Colors.blueAccent : Colors.transparent,
-                  //removing the left and right background color after the button is pressed
+                  // removing left and right background color after the button is pressed to show loading circle
                   borderRadius: BorderRadius.circular(30.0)),
               child: _isNotLoading
+                  // If no data is saving, show normal button:
                   ? const Center(
                       child: Text("Save",
                           style: TextStyle(
@@ -393,30 +393,56 @@ class _EditProfilePageState extends State<EditProfilePage> {
                               color: Colors.white,
                               fontWeight: FontWeight.w500)),
                     )
+                  // If data is being saved, show loading circle
                   : Container(
-                decoration: const BoxDecoration(shape: BoxShape.circle, color: Colors.blueAccent),
-                child: Transform.scale(
-                    scaleX: 0.19,
-                    scaleY: 0.42,
-                    child: const CircularProgressIndicator(color: Colors.white)),
-              )));
+                      decoration: const BoxDecoration(
+                          shape: BoxShape.circle, color: Colors.blueAccent),
+                      child: Transform.scale(
+                          scaleX: 0.19,
+                          scaleY: 0.42,
+                          child: const CircularProgressIndicator(
+                              color: Colors.white)),
+                    )));
 
-  /// A function
+  /// A function that checks if a changed email is already in use or not
+  /// newEmail: The new email a user wants to use and which is checked for duplicate
+  /// email: The current email of a user
+  /// allUsersData: The full data stack of all users
+  String checkDuplicatedEmail(
+      String newEmail, String email, List allUsersData) {
+    bool duplicateEmail = false;
+    for (UserModel user in allUsersData) {
+      if (user.email == newEmail) {
+        duplicateEmail = true; // the email is already in use
+      }
+    }
+
+    if (duplicateEmail) {
+      if (mounted) {
+        _isNotLoading = true; // stop loading, i.e. stop saving data
+        _emailCtrl.clear();
+        _popups
+            .duplicateEmailDialog(context); // inform user about duplicate email
+        _updateToFirebase =
+            false; // stop saving changes to Firebase because of duplicate email
+      }
+      return email; // return current user email before the change attempt because new email is a duplicate
+    } else {
+      return newEmail; // return new email, i.e. no duplicate email
+    }
+  }
+
+  /// A function that fetches the current user's data based on the email
   getUserProfileData() {
-    //firebaseUser = Rx<User?>(_user);
-    //final email = firebaseUser.value?.email;
     _user = FirebaseAuth.instance.currentUser;
     final email = _user?.email;
-    print("----------------------------------------------------------- getUserProfileData - Email: $email");
-    //print("Firebase User: $email");
-    //final id = _user?.uid;
     if (email != null) {
       return _userRepo.getUserData(email);
     }
   }
 
-  /// A function
-  /// user:
+  /// A function that updates the user changes to Firestore
+  /// user: The current user whose information is changed
   updateUserProfileData(UserModel user) async {
     await updateData(user);
     if (_updateToFirebase) {
@@ -425,64 +451,38 @@ class _EditProfilePageState extends State<EditProfilePage> {
   }
 
   /// A function that updates the Firebase user data of the current user
-  /// user:
+  /// user: The current user whose information is changed
   updateData(UserModel user) async {
     try {
+      // Update currently edited user changes:
       await _user?.updateDisplayName(user.username);
-      //await _user?.reload();
       await _user?.updateEmail(user.email);
       await _user?.updatePassword(user.password);
       await _user?.reload();
 
       _user = FirebaseAuth.instance
           .currentUser; // new user data, i.e. username, full name, email and password will be fetched from new current user
-      _updateToFirebase = true;
-      //String? newDisplayName = _user?.displayName;
-      //String? newEmail = _user?.email;
-      //print("----------------------------------------------------------- updateData - New Display Name: $newDisplayName");
-      //print("----------------------------------------------------------- updateData - New Email: $newEmail");
+      _updateToFirebase = true; // the update to Firestore DB is now opened
     } on FirebaseAuthException catch (e) {
-      //await _user?.reload();
+      // If a recent login is required because of longer inactivity:
       if (e.code == "requires-recent-login") {
         AuthCredential newCredential = EmailAuthProvider.credential(
-            email: _oldEmail, password: _oldPassword);
+            email: _oldEmail,
+            password:
+                _oldPassword); // Login with old credential before being allowed to make changes
         _user = FirebaseAuth.instance.currentUser;
-        print("----------------------------------------------------------- Requires recent login: ${user.email} ${_user?.email}");
-        print("----------------------------------------------------------- oldEmail: $_oldEmail | oldPassword: $_oldPassword");
+
+        // Clear text field inputs and don't update changes:
         _usernameCtrl.clear();
         _fullNameCtrl.clear();
         _emailCtrl.clear();
         _passwordCtrl.clear();
+
         if (mounted) _popups.reauthenticateDialog(context);
-        _updateToFirebase = false;
-        await _user?.reauthenticateWithCredential(newCredential);
+        _updateToFirebase = false; // don't update changes to Firestore DB
+        await _user?.reauthenticateWithCredential(
+            newCredential); // reauthenticate user with new Login
       }
-    }
-  }
-
-  /// A function that checks if a changed email is already in use or not
-  /// newEmail: The new email a user wants to use and which is checked for duplicate
-  /// email: The current email of a user
-  /// allUsersData: The full data stack of all users
-  String checkDuplicatedEmail(String newEmail, String email, List allUsersData) {
-    bool duplicateEmail = false;
-    for (UserModel user in allUsersData) {
-      if (user.email == newEmail) {
-        print(newEmail);
-       duplicateEmail = true; // the email is already in use
-      }
-    }
-
-    if (duplicateEmail) {
-      if (mounted) {
-        _isNotLoading = true; // stop loading, i.e. stop saving data
-        _emailCtrl.clear();
-        _popups.duplicateEmailDialog(context); // inform user about duplicate email
-        _updateToFirebase = false; // stop saving changes to firebase because of duplicate email
-      }
-      return email; // return user email before the duplicate change
-    } else {
-      return newEmail; // return new email, i.e. no duplicate email
     }
   }
 }
