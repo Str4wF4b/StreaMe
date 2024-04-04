@@ -162,7 +162,7 @@ class _SearchPageState extends State<SearchPage> {
                                 shape: const RoundedRectangleBorder(
                                     borderRadius: BorderRadius.zero),
                                 // remove rounded border of Dialog
-                                child: FilterPage(),
+                                child: const FilterPage(),
                               );
                             });
                       },
