@@ -1,6 +1,5 @@
 import 'dart:io';
 import 'dart:typed_data';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:custom_refresh_indicator/custom_refresh_indicator.dart';
 import 'package:expand_widget/expand_widget.dart';
@@ -20,9 +19,13 @@ import 'package:stream_me/android/app/src/model/sd_model.dart';
 import 'package:stream_me/android/app/src/model/hd_model.dart';
 import 'package:stream_me/android/app/src/model/uhd_model.dart';
 import 'package:stream_me/android/app/src/services/functions/favourites_data.dart';
+import 'package:stream_me/android/app/src/services/functions/rating_data.dart';
 import 'package:stream_me/android/app/src/services/functions/user_data.dart';
+import 'package:stream_me/android/app/src/services/functions/watchlist.data.dart';
 import 'package:stream_me/android/app/src/services/models/favourites_model.dart';
+import 'package:stream_me/android/app/src/services/models/rating_model.dart';
 import 'package:stream_me/android/app/src/services/models/user_model.dart';
+import 'package:stream_me/android/app/src/services/models/watchlist_model.dart';
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
 import 'package:url_launcher/url_launcher.dart';
 import '../../utils/constants_and_values.dart';
@@ -39,55 +42,81 @@ class StreamDetailsPage extends StatefulWidget {
 
 class _StreamDetailsPageState extends State<StreamDetailsPage>
     with TickerProviderStateMixin {
+  // Utils:
   final ColorPalette _color = ColorPalette();
-  final ConstantsAndValues _cons = ConstantsAndValues();
+  final ConstantsAndValues _cav = ConstantsAndValues();
 
+  // Instances:
   final _screenshotController =
       ScreenshotController(); // controller to manage screenshots
   late final TabController _tabController =
       TabController(length: 3, vsync: this);
 
+  // Local instances:
   final keyRating =
       GlobalKey(); // GlobalKey to determine the size and position of the rating icon
-  Size? sizeRating; // the size of the rating icon
-  Offset? positionRating; // the position of the rating icon
 
+  // Local instances:
+  late bool _isAnon;
+  Offset? _positionRating; // the position of the rating icon
+
+  // Database:
+  final FavouritesData _favouritesRepo = FavouritesData();
+  final WatchlistData _watchlistRepo = WatchlistData();
+  final RatingData _ratingRepo = RatingData();
   late bool _addFavourites =
       false; // flag to trigger the favourites button option
-  List favourites = [];
-  bool addWatchlist = false; // boolean to trigger the watchlist button option
-  List watchlist = [];
-  double rating = 1; // initial rating
-
-  final FavouritesData _favouritesRepo = FavouritesData();
-
-  late List actorsDirectors = allActors;
-  late List allSdStreams = allSd;
+  late bool _addWatchlist =
+      false; // flag to trigger the watchlist button option
+  List _favouriteStreams = [];
+  List _watchlistStreams = [];
+  List _ratedStreams = [];
+  double _rating = 1; // initial average rating
+  double _userRating = 1; // initial user rating
 
   @override
   void initState() {
-    getFavourites();
+    _isAnon = FirebaseAuth.instance.currentUser!.isAnonymous;
+    if (!_isAnon) {
+      // only fetch data if user is not anonymous
+      getFavouriteStreams();
+      getWatchlistStreams();
+      getRatings();
+    }
+    calculateRating(); // calculate average rating
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    getSizeAndPosition();
-    final Sd sdProvider = allSd[widget.stream.id];
-    final Hd hdProvider = allHd[widget.stream.id];
-    final Uhd uhdProvider = allUhd[widget.stream.id];
+    getRatingIconPosition();
+    calculateRating();
 
+    final Sd sdProvider =
+        allSd[widget.stream.id]; // get current stream's sd platform provider
+    final Hd hdProvider =
+        allHd[widget.stream.id]; // get current stream's hd platform provider
+    final Uhd uhdProvider =
+        allUhd[widget.stream.id]; // get current stream's uhd platform provider
+
+    // Generate favourited Stream instance with streamId, title and type:
     FavouritesModel favourite = FavouritesModel(
         streamId: widget.stream.id.toString(),
         title: widget.stream.title,
-        type: widget.stream.type,
-        rating: 4.5);
+        type: widget.stream.type);
+
+    // Generate watchlist Stream instance with streamId, title and type:
+    WatchlistModel watchlist = WatchlistModel(
+        streamId: widget.stream.id.toString(),
+        title: widget.stream.title,
+        type: widget.stream.type);
 
     return Screenshot(
       controller: _screenshotController,
       child: Scaffold(
           backgroundColor: _color.backgroundColor,
           body: CustomRefreshIndicator(
+            // refresh page
             onRefresh: () {
               setState(() {});
               return Future.delayed(const Duration(milliseconds: 1200));
@@ -114,7 +143,9 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                       Icons.arrow_back,
                       color: Colors.white,
                     ),
-                    onPressed: () => Navigator.pop(context)),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    }),
                 pinned: true,
                 expandedHeight: 300,
                 flexibleSpace: FlexibleSpaceBar(
@@ -127,13 +158,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                   color: _color.backgroundColor,
                   child: SingleChildScrollView(
                     child: Column(children: [
-                      //Image:
-                      /* Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: isOnline(),
-                      ),*/
-
-                      // First row with share, rating, add to watchlist and add to favourites:
+                      // First row with Share, Rating, add to Watchlist and add to Favourites Buttons:
                       Padding(
                         padding: const EdgeInsets.only(
                             left: 15.0, right: 15.0, top: 10.0),
@@ -151,12 +176,14 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                                   color: _color.bodyTextColor, size: 28.0),
                             ),
                             Stack(children: [
-                              // Rating Button + overall Rating: //TODO: Function for overall rating in Text widget
+                              // Rating Button + overall average Rating:
                               IconButton(
                                   onPressed: () async {
-                                    await makeRating();
-                                    setState(
-                                        () {}); //needed in addition to async to update the rating inside the Stream Page
+                                    if (!_isAnon) {
+                                      // only handle data if user is not anonymous
+                                      await makeRating(); // function for star icon
+                                      setState(() {});
+                                    }
                                   },
                                   icon: Icon(
                                     Icons.star,
@@ -169,11 +196,14 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                                     left: 40.0, top: 10.0),
                                 child: GestureDetector(
                                   onTap: () async {
-                                    await makeRating();
-                                    setState(
-                                        () {}); //needed in addition to async to update the rating inside the Stream Page
+                                    if (!_isAnon) {
+                                      // only handle data if user is not anonymous
+                                      await makeRating(); // function for rating text
+                                      setState(() {});
+                                    }
                                   },
-                                  child: Text("$rating",
+                                  child: Text(_rating.toStringAsFixed(1),
+                                      // show only decimal rounded number
                                       style: TextStyle(
                                           fontSize: 20.0,
                                           color: _color.bodyTextColor)),
@@ -182,39 +212,36 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                             ]),
                             IconButton(
                                 // Add to Watchlist Button:
-                                onPressed: () {
-                                  ScaffoldMessenger.of(context)
-                                    ..removeCurrentSnackBar()
-                                    ..showSnackBar(
-                                        listSnackBar(widget.stream.type));
-                                  if (!addWatchlist) {}
-                                  setState(() {
-                                    addWatchlist = !addWatchlist;
-                                    addWatchlist
-                                        ? watchlist.add(widget.stream)
-                                        : watchlist.remove(widget.stream);
-                                    //TODO: Save Stream to Firestore watchlist for specific user
-                                  });
+                                onPressed: () async {
+                                  if (!_isAnon) {
+                                    // only handle data if user is not anonymous
+                                    watchlistActions(watchlist);
+                                  }
                                 },
-                                icon: addWatchlist
-                                    ? Icon(Icons.check_rounded,
-                                        color: _color.bodyTextColor, size: 34.0)
-                                    : Icon(Icons.add_rounded,
+                                icon: _isAnon
+                                    ? Icon(Icons.playlist_add,
+                                        color: Colors.grey.shade800, size: 34.0)
+                                    : Icon(
+                                        _addWatchlist
+                                            ? Icons.playlist_add_check
+                                            : Icons.playlist_add,
                                         color: _color.bodyTextColor,
                                         size: 34.0)),
                             IconButton(
-                                // Favourites Button:
+                                // Add to Favourites Button:
                                 onPressed: () async {
-                                  favouriteActions(favourite);
+                                  if (!_isAnon) {
+                                    // only handle data if user is not anonymous
+                                    favouriteActions(favourite);
+                                  }
                                 },
-                                icon: _addFavourites
-                                    ? const Icon(
-                                        Icons.favorite,
-                                        color: Colors.red,
-                                        size: 32.0,
-                                      )
-                                    : const Icon(
-                                        Icons.favorite_border_outlined,
+                                icon: _isAnon
+                                    ? Icon(Icons.favorite_border_outlined,
+                                        color: Colors.grey.shade800, size: 32.0)
+                                    : Icon(
+                                        _addFavourites
+                                            ? Icons.favorite
+                                            : Icons.favorite_border_outlined,
                                         color: Colors.red,
                                         size: 32.0,
                                       )),
@@ -243,7 +270,6 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                                       2.2, 0.0, 2.2, 0.0),
                                   height: 23,
                                   width: 35.5,
-                                  //25.5 for only numbers
                                   color: Colors.grey.shade400,
                                   child: Text(
                                     widget.stream.pg,
@@ -252,7 +278,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                                         color: _color.backgroundColor,
                                         fontSize: 18,
                                         fontWeight: FontWeight.bold,
-                                        height: _cons.textHeight),
+                                        height: _cav.textHeight),
                                   ),
                                 )),
                             const SizedBox(width: 25.0),
@@ -296,27 +322,20 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                       Padding(
                           padding: const EdgeInsets.only(
                               left: 15.0, right: 15.0, top: 18.0),
-                          //top only 18 instead of 20, because the text in checkForMaxLines gets added 2 top-padding
                           child: LayoutBuilder(builder: (context, constraints) {
-                            return /*checkForMaxLines(
-                                widget.stream.plot, context, constraints);*/
-                                ExpandText(widget.stream.plot,
-                                    style: TextStyle(
-                                        color: _color.bodyTextColor,
-                                        fontSize: 16 *
-                                            1 /
-                                            MediaQuery.of(context)
-                                                .textScaleFactor,
-                                        height: _cons.textHeight),
-                                    indicatorIcon: Icons.keyboard_arrow_down,
-                                    indicatorIconColor: Colors.grey.shade400,
-                                    indicatorPadding:
-                                        const EdgeInsets.only(bottom: 1.0),
-                                    maxLines: /*MediaQuery.of(context).textScaleFactor == 1.1 ? 6 : 5*/
-                                        6,
-                                    //TODO: !!
-                                    expandIndicatorStyle:
-                                        ExpandIndicatorStyle.icon);
+                            return ExpandText(widget.stream.plot,
+                                style: TextStyle(
+                                    color: _color.bodyTextColor,
+                                    fontSize: MediaQuery.textScalerOf(context)
+                                        .scale(16),
+                                    height: _cav.textHeight),
+                                indicatorIcon: Icons.keyboard_arrow_down,
+                                indicatorIconColor: Colors.grey.shade400,
+                                indicatorPadding:
+                                    const EdgeInsets.only(bottom: 1.0),
+                                maxLines: 6,
+                                expandIndicatorStyle:
+                                    ExpandIndicatorStyle.icon);
                           })),
 
                       // Fifth row with cast:
@@ -351,7 +370,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                             ],
                           )),
 
-                      // Sixth row with director:
+                      // Sixth row with directors:
                       Padding(
                         padding: const EdgeInsets.only(
                             left: 15.0, right: 15.0, top: 10.0),
@@ -394,7 +413,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                           children: [
                             Align(
                               alignment: Alignment.centerLeft,
-                              child: Text(/*checkEmptyList()*/ "Available on:",
+                              child: Text("Available on:",
                                   style: TextStyle(
                                       color: _color.bodyTextColor,
                                       fontSize: 18,
@@ -405,7 +424,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                               child: Align(
                                 alignment: Alignment.centerLeft,
                                 child: Container(
-                                  //Container that includes the 3 Tabs SD, HD and 4k and its streaming providers
+                                  // Container that includes the 3 Tabs SD, HD and 4k and its streaming providers
                                   decoration: BoxDecoration(
                                     color: _color.middleBackgroundColor,
                                     border: Border.all(
@@ -413,7 +432,6 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                                         color: _color.bodyTextColor),
                                     borderRadius: const BorderRadius.all(
                                         Radius.circular(25.0)),
-                                    // shape: BoxShape.rectangle
                                   ),
                                   child: ClipRRect(
                                     borderRadius: BorderRadius.circular(25.0),
@@ -576,6 +594,233 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
     );
   }
 
+  /// A function that calculates the average rating of the current stream in real time
+  calculateRating() async {
+    List<RatingModel> ratedStreams = await _ratingRepo.getAllStreamRatings(
+        widget.stream.id.toString()); // get all Rating instances
+    List<double> streamRatings = [];
+
+    for (var stream in ratedStreams) {
+      streamRatings
+          .add(stream.rating); // fill the ratings list with all ratings
+    }
+
+    int numberOfRatings = streamRatings.length;
+    double sum = streamRatings.fold(
+        0.0,
+        (previousValue, element) =>
+            previousValue! + element); // sum up all ratings
+
+    if (numberOfRatings != 0) {
+      _rating = (sum /
+          numberOfRatings); // get the average rating if at least one rating is submitted
+    } else {
+      _rating = 0.0;
+    }
+  }
+
+  /// A function that enables the user to submit a rating and after, calculates the new average rating
+  Future makeRating() {
+    calculateRating(); // calculate current ratings
+    _userRating = getUserRating(); // get current user rating
+
+    return showDialog(
+        context: context,
+        builder: (context) => StatefulBuilder(
+              builder: (context, setState) => Stack(
+                children: [
+                  // Custom user rating:
+                  Positioned(
+                    top: _positionRating?.dy,
+                    child: SizedBox(
+                        width: 370.0,
+                        // Enable user rating input inside a new Dialog:
+                        child: Dialog(
+                          backgroundColor: _color.backgroundColor,
+                          elevation: 0.0,
+                          shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(25.0),
+                              side: BorderSide(color: _color.bodyTextColor)),
+                          insetPadding:
+                              const EdgeInsets.only(left: 125.0, top: 10.0),
+                          child: Column(
+                            children: [
+                              Row(
+                                children: [
+                                  Padding(
+                                    padding: const EdgeInsets.fromLTRB(
+                                        10.0, 8.0, 6.0, 5.0),
+                                    child: RatingBar.builder(
+                                      minRating: 1,
+                                      maxRating: 5,
+                                      initialRating: getUserRating(),
+                                      allowHalfRating: true,
+                                      itemSize: 32.0,
+                                      itemPadding: const EdgeInsets.all(2.0),
+                                      glowColor: Colors.blueAccent,
+                                      glowRadius: 3.0,
+                                      updateOnDrag: true,
+                                      itemBuilder: (context, _) => const Icon(
+                                        Icons.star,
+                                        color: Colors.amber,
+                                      ),
+                                      onRatingUpdate: (rating) {
+                                        setState(() {
+                                          _userRating =
+                                              rating; // save the new user rating
+                                        });
+                                      },
+                                    ),
+                                  ),
+                                  Padding(
+                                      padding: const EdgeInsets.only(
+                                          left: 3.0, top: 5.0),
+                                      child: Text("$_userRating",
+                                          // show new rating of user
+                                          style: TextStyle(
+                                              color: Colors.grey.shade300,
+                                              fontSize: 19,
+                                              fontWeight: FontWeight.w600)))
+                                ],
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceEvenly,
+                                children: [
+                                  // The Button to submit the user's rating for new average rating calculation:
+                                  IconButton(
+                                    onPressed: () {
+                                      // Generate rating Stream instance with streamId, title, type and rating:
+                                      RatingModel ratedStream = RatingModel(
+                                          streamId: widget.stream.id.toString(),
+                                          title: widget.stream.title,
+                                          type: widget.stream.type,
+                                          rating: _userRating);
+                                      saveUserRating(ratedStream,
+                                          _ratedStreams); // add or update user's rating for current stream
+                                      Navigator.of(context).pop();
+                                    },
+                                    icon: Icon(Icons.check_circle_rounded,
+                                        size: 30, color: Colors.green.shade700),
+                                  )
+                                ],
+                              )
+                            ],
+                          ),
+                        )),
+                  ),
+                ],
+              ),
+            ));
+  }
+
+  /// A function that checks and fetches the user's rating for the current stream
+  getUserRating() {
+    bool noRating = _ratedStreams
+        .where((ratedStream) =>
+            ratedStream.streamId == widget.stream.id.toString())
+        .isEmpty; // boolean that indicates if the current stream is in the user's rated streams
+
+    if (!noRating) {
+      // if user has rated the stream, fetch his rating
+      RatingModel streamRating = _ratedStreams
+          .where((ratedStream) =>
+              ratedStream.streamId == widget.stream.id.toString())
+          .single;
+
+      return streamRating.rating;
+    } else {
+      // if not, return a constant value
+      return 1.0;
+    }
+  }
+
+  /// A function that adds or updates a movie or series in the user's Rating-collection
+  /// rating: The RatingModel which contains the user's (new) rating for the current stream
+  /// ratedStreams: The list of the user's rated streams
+  saveUserRating(RatingModel rating, List ratedStreams) async {
+    getRatings(); // fetch all current ratings
+    UserModel user = await getUserProfileData();
+    String? userId =
+        user.id; // get user's id for adding a rating to a movie or series
+    bool isAlreadyRated = false;
+
+    if (ratedStreams.isNotEmpty) {
+      for (RatingModel ratedStream in ratedStreams) {
+        if (ratedStream.streamId == rating.streamId) {
+          // the stream is already in the user's Rating-collection, i.e. update existing document
+          isAlreadyRated = true; // the stream already exists
+          final ratedStreamId = TextEditingController(text: ratedStream.id);
+          await _ratingRepo.updateRating(rating, userId!, ratedStreamId.text);
+        }
+      }
+    }
+
+    if (!isAlreadyRated) {
+      // the stream has been rated for the first time, i.e. add to Rating-collection
+      await _ratingRepo.addToRatings(userId!, rating);
+    }
+  }
+
+  /// A function that fetches all current user's ratings
+  getRatings() async {
+    UserModel user = await getUserProfileData();
+    String? userId = user.id;
+    _ratedStreams = await _ratingRepo.getUserRating(userId!);
+  }
+
+  /// A function that determines the position of the rating star icon to show the user rating below it, in case the page is scrolled
+  void getRatingIconPosition() =>
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        final RenderBox box =
+            keyRating.currentContext!.findRenderObject() as RenderBox;
+
+        setState(() {
+          _positionRating = box.localToGlobal(Offset.zero); // coordinate system
+        });
+      });
+
+  /// A function that opens the full cover image of a movie or stream
+  Widget loadCoverImage() => GestureDetector(
+        onTap: () {
+          showDialog(
+              context: context,
+              builder: (context) => Dialog(
+                    // open image in a Dialog
+                    backgroundColor: Colors.transparent,
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(20.0),
+                      child: CachedNetworkImage(
+                        imageUrl: widget.stream.image,
+                        placeholder: (context, url) =>
+                            _cav.streamImagePlaceholder,
+                        errorWidget: (context, url, error) =>
+                            _cav.imageErrorWidget,
+                      ),
+                    ),
+                  ));
+        },
+        child: CachedNetworkImage(
+          imageUrl: widget.stream.image,
+          fit: BoxFit.cover,
+          height: MediaQuery.of(context).size.height,
+          placeholder: (context, url) => _cav.streamDetailsPlaceholder,
+          errorWidget: (context, url, error) => _cav.imageErrorWidget,
+        ),
+      );
+
+  /// A function that shares an actual screenshot when pressing the share icon
+  /// imgBytes: Bytes to load image
+  void share(Uint8List imgBytes) async {
+    final directory = await getApplicationDocumentsDirectory();
+    final img = File("${directory.path}/flutter.png");
+    img.writeAsBytes(imgBytes); // write image to bytes
+
+    await Share.shareXFiles(text: "Gefunden auf StreaMe ☺", [
+      XFile(img.path) // share message and Link
+    ]);
+  }
+
   /// A function that divides the different genres with a "•" for better overview
   String divideGenres() {
     List<String> genres = widget.stream.genre;
@@ -592,138 +837,21 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
     }
   }
 
-  /// A function that checks if the provider list is empty
-  /// If so, only a Text is returned that explains that the movie or stream cannot be streamed anywhere
-  /// If not, a title is returned above the listed provider tile cards
-  String checkEmptyList() {
-    if (widget.stream.provider.isNotEmpty) {
-      return "Available on:";
-    } else {
-      return "This ${widget.stream.type} is not streamable at the moment.";
-    }
-  }
-
-  /// A function that shares an actual screenshot when pressing the share icon
-  /// imgBytes: Bytes to load image
-  void share(Uint8List imgBytes) async {
-    final directory = await getApplicationDocumentsDirectory();
-    final img = File("${directory.path}/flutter.png");
-    img.writeAsBytes(imgBytes);
-
-    await Share.shareXFiles(text: "Gefunden auf StreaMe ☺", [
-      XFile(img.path)
-    ]); //TODO: Wenn man erste mal auf share icon drückt, geht nicht, erst beim 2. Mal
-  }
-
-  /// A function that generates a snackbar if clicked on the heart icon.
-  /// If the heart is filled, the "added to Favourites" snack bar is shown,
-  /// if not, the "removed from Favourites" snack bar is shown
-  /// stream: The current stream that is added to or removed from Favourites
-  SnackBar favSnackBar(String stream) => SnackBar(
-      elevation: 0.0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-      behavior: SnackBarBehavior.floating,
-      margin: const EdgeInsets.only(left: 28.0, right: 28.0, bottom: 6.0),
-      duration: const Duration(milliseconds: 1500),
-      content: Text(
-        _addFavourites
-            ? "$stream removed from Favourites"
-            : "$stream added to Favourites",
-        style: TextStyle(color: Colors.grey.shade300),
-        textAlign: TextAlign.center,
-      ));
-
-  /// A function that generates a snackbar if clicked on the plus, respectively check icon.
-  /// If the icon changes to a check icon, the "added to Watchlist" snack bar is shown,
-  /// if the icon changes to a plus icon, the "removed from Watchlist" snack bar is shown
-  /// /// stream: The current stream that is added to or removed from Watchlist
-  SnackBar listSnackBar(String stream) => SnackBar(
-      elevation: 0.0,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-      behavior: SnackBarBehavior.floating,
-      margin: const EdgeInsets.only(left: 28.0, right: 28.0, bottom: 6.0),
-      duration: const Duration(milliseconds: 1500),
-      content: Text(
-        addWatchlist
-            ? "$stream removed from Watchlist"
-            : "$stream added to Watchlist",
-        style: TextStyle(color: Colors.grey.shade300),
-        textAlign: TextAlign.center,
-      ));
-
-  /// A function
-  Future makeRating() => showDialog(
-      context: context,
-      builder: (context) => StatefulBuilder(
-            builder: (context, setState) => Stack(
-              children: [
-                Positioned(
-                  top: positionRating?.dy,
-                  child: SizedBox(
-                    width: 370.0,
-                    child: Dialog(
-                        backgroundColor: _color.backgroundColor,
-                        elevation: 0.0,
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(30.0),
-                            side: BorderSide(color: _color.bodyTextColor)),
-                        insetPadding:
-                            const EdgeInsets.only(left: 125.0, top: 10.0),
-                        child: Row(
-                          children: [
-                            Padding(
-                              padding: const EdgeInsets.fromLTRB(
-                                  10.0, 5.0, 6.0, 5.0),
-                              child: RatingBar.builder(
-                                  minRating: 1,
-                                  maxRating: 5,
-                                  initialRating: rating,
-                                  allowHalfRating: true,
-                                  itemSize: 32.0,
-                                  itemPadding: const EdgeInsets.all(2.0),
-                                  glowColor: Colors.blueAccent,
-                                  glowRadius: 3.0,
-                                  updateOnDrag: true,
-                                  itemBuilder: (context, _) => const Icon(
-                                        Icons.star,
-                                        color: Colors.amber,
-                                      ),
-                                  onRatingUpdate: (rating) => setState(() {
-                                        this.rating = rating;
-                                        this.setState(
-                                            () {}); //changing value inside Dialog and inside the Stream Page
-                                      })),
-                            ),
-                            Padding(
-                                padding: const EdgeInsets.only(left: 5.0),
-                                child: Text("$rating",
-                                    style: TextStyle(
-                                        color: Colors.grey.shade300,
-                                        fontSize: 19,
-                                        fontWeight: FontWeight.w600)))
-                          ],
-                        )),
-                  ),
-                ),
-              ],
-            ),
-          ));
-
-  /// A function
-  /// years:
+  /// A function that determines if a stream has a release date or is a long-term show
+  /// years: The year(s) of the current stream
   String streamYears(List years) {
     String streamYears = "";
     for (String year in years) {
-      //if movie or series was produced in one year only:
       if (years.length == 1) {
+        // if movie or series was produced in one year only
         streamYears = year;
       } else {
         String currentYear = DateTime.timestamp().year.toString();
         if (year.contains(currentYear)) {
-          //if movie or series is still in production
+          // if movie or series is still running
           streamYears = "${years.first} - current";
         } else {
-          //if series is longer than one year
+          // if series is longer than one year
           streamYears = "${years.first} - ${years.last}";
         }
       }
@@ -731,37 +859,26 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
     return streamYears;
   }
 
-  /// A function that
-  void getSizeAndPosition() =>
-      WidgetsBinding.instance.addPostFrameCallback((_) {
-        final RenderBox box =
-            keyRating.currentContext!.findRenderObject() as RenderBox;
-
-        setState(() {
-          positionRating = box.localToGlobal(Offset.zero); //coordinate system
-          //sizeRating = box.size;
-        });
-      });
-
   /// A function that returns a GestureDetector of a Button with the actors/directors
   /// When tapping on Button, the corresponding actor/director screen should be shown
-  /// actorDirector:
+  /// actorDirector: The actor or director whose Button is being generated
   Widget castAndDirectorButton(String actorDirector) {
     EdgeInsets outsidePadding = const EdgeInsets.fromLTRB(
-        10.0, 7.0, 0.0, 7.0); //Normal padding between actor/director buttons
+        10.0, 7.0, 0.0, 7.0); // normal padding between actor/director buttons
 
     if (widget.stream.cast.first == actorDirector ||
         widget.stream.direction.first == actorDirector) {
-      //No padding left if first actor/director button
+      // no left-padding if actor/director is first in actor/director list
       outsidePadding = const EdgeInsets.fromLTRB(0.0, 7.0, 0.0, 7.0);
     }
 
-    //Button with GestureDetector to navigate to actor/director screen if clicked on
+    // Button with GestureDetector to navigate to actor/director screen if clicked:
     return GestureDetector(
       onTap: () => Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => ActorDirectorDetailsPage(
+                // open actor/director page
                 actorDirector: currentActorDirector(actorDirector)),
           )),
       child: Container(
@@ -770,7 +887,6 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
         margin: outsidePadding,
         // padding outside button
         decoration: BoxDecoration(
-            //border: Border.all(color: Colors.white70),
             color: Colors.grey.shade600,
             borderRadius: BorderRadius.circular(15.0)),
         child: Center(
@@ -783,105 +899,17 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
     );
   }
 
-  /// A function that
-  Widget loadCoverImage() {
-    //try {
-    return GestureDetector(
-      onTap: () {
-        showDialog(
-            context: context,
-            builder: (context) => Dialog(
-                  backgroundColor: Colors.transparent,
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(20.0),
-                    child: CachedNetworkImage(
-                      imageUrl: widget.stream.image,
-                      placeholder: (context, url) =>
-                          _cons.streamImagePlaceholder,
-                      errorWidget: (context, url, error) =>
-                          _cons.imageErrorWidget,
-                    ),
-                  ),
-                ));
-      },
-      child: CachedNetworkImage(
-        imageUrl: widget.stream.image,
-        //width: double.infinity, height: 320, fit: BoxFit.cover
-        fit: BoxFit.cover,
-        height: MediaQuery.of(context).size.height,
-        placeholder: (context, url) => _cons.streamDetailsPlaceholder,
-        errorWidget: (context, url, error) => _cons.imageErrorWidget,
-      ),
-    );
-    //} on SocketException catch (_) {
-    // return Image.asset(image.notOnline,
-    //     width: double.infinity, height: 320, fit: BoxFit.cover);
-    //}
-  }
-
-  /// A function that checks if the movie or series has a plot with over 5 lines
-  /// If so, make text in a scrollable container with Shader Mask for blur effect, a scrollable SizedBox and the defined Text (returnPlot) inside it,
-  /// if not, make a simple Text (returnPlot)
-  /// text:
-  /// context:
-  /// constraints:
-  Widget checkForMaxLines(
-      String text, BuildContext context, BoxConstraints constraints) {
-    final TextStyle plotStyle = TextStyle(
-        color: Colors.grey.shade400, fontSize: 16); //the TextStyle of the text
-    final span = TextSpan(
-        text: text,
-        style: plotStyle); //the text's span with the text and its style
-    final tp = TextPainter(text: span, textDirection: TextDirection.ltr);
-    tp.layout(maxWidth: constraints.maxWidth);
-    final numLines = tp
-        .computeLineMetrics()
-        .length; //the text and its style define the size of a line
-
-    //The plot text:
-    Widget returnPlot = Padding(
-      padding: const EdgeInsets.only(top: 2.0, bottom: 5.0),
-      child: Text(
-        text,
-        style: plotStyle,
-        textAlign: TextAlign.justify,
-      ),
-    );
-
-    if (numLines > 5) {
-      //only if over 5 lines make the text scrollable, if not, return the defined plot text
-      returnPlot = ShaderMask(
-        //add blur effect at the bottom of container which contains the text
-        shaderCallback: (Rect bounds) {
-          return LinearGradient(
-            begin: Alignment.topCenter,
-            end: Alignment.bottomCenter,
-            colors: [Colors.white, Colors.white.withOpacity(0.05)],
-            stops: const [0.88, 1],
-            tileMode: TileMode.mirror,
-          ).createShader(bounds);
-        },
-        child: SizedBox(
-          //the box container that enables to scroll
-          height: 100.0,
-          child: SingleChildScrollView(
-              scrollDirection: Axis.vertical, child: returnPlot),
-        ),
-      );
-    }
-
-    return returnPlot;
-  }
-
+  /// A function that returns all the actor or director information
+  /// actorDirector: The current actor or director whose information should be displayed
   Actor currentActorDirector(String actorDirector) {
     Actor currentActor = const Actor(
-        //if the actor does not exist already, i.e. this means not that this is a placeholder if the internet connection etc. is not working
+        // if the actor does not exist already
         id: 99999999,
         displayName: "No one 😢",
         firstName: "No",
         secondName: "Name",
         age: 0,
-        birthday: "never born",
+        birthday: "00.00.0000",
         placeOfBirth: "Nowhere",
         biography: "No Biography.",
         acting: {},
@@ -890,9 +918,9 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
         image:
             "https://static9.depositphotos.com/1555678/1106/i/950/depositphotos_11060156-stock-photo-3d-white-leaning-back-against.jpg");
     try {
-      currentActor = allActors
-          .where((element) => element.displayName.toString() == actorDirector)
-          .single;
+      currentActor = allActors.firstWhere(
+          (element) => element.displayName.toString() == actorDirector,
+          orElse: () => currentActor);
     } catch (e) {
       print(e);
     }
@@ -901,7 +929,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
 
   /// A function that generates the different Rows of each SD-, HD- and 4k-Tab in the Provider-overview of the specific stream, rowLabel works as a sort of headline and defines the different platforms in it
   /// rowLabel: the different options of a stream in the specific quality (stream with subscription, rent or buy)
-  /// platforms: the name of the platforms one can watch the stream, defined for each rowLabel, also indicates link to Logo pictures
+  /// platforms: the name of the platforms one can watch the stream on, defined for each rowLabel, also indicates link to Logo pictures
   /// platformLabels: the corresponding label of the platforms (including the prices)
   /// platformLinks: the corresponding link to the platforms
   Align providerRow(String rowLabel, List platforms, List platformLabels,
@@ -924,15 +952,15 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
             ),
           ),
           const SizedBox(height: 3.0),
-          //The container of each available stream platform for each "Stream on:", "Rent" and "Buy"
-          //It contains the platform logo (card) and the corresponding text of it below
+          // The tile of each available stream platform for each "Stream on:", "Rent" and "Buy":
+          // (it contains the platform logo (card) and the corresponding text of it below)
           checkEmptyCard(rowLabel, platforms, platformLabels, platformLinks),
         ],
       ),
     );
   }
 
-  /// The container of each available stream platform for each "Stream on:", "Rent" and "Buy"
+  /// The tile of each available stream platform for each "Stream on:", "Rent" and "Buy"
   /// It contains the platform logo (card) and the corresponding text of it below
   /// If the list is empty, it returns a short text instead of a platform tile
   /// rowLabel: the different options of a stream in the specific quality (stream with subscription, rent or buy)
@@ -942,7 +970,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
   Widget checkEmptyCard(String rowLabel, List platforms, List platformLabels,
       List platformLinks) {
     if (platforms.isEmpty) {
-      //Empty platform List, i.e. Stream is not available
+      // Empty platform List, i.e. Stream is not available:
       return Container(
         height: 95,
         color: Colors.transparent,
@@ -955,7 +983,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
         ),
       );
     } else {
-      //List has content, i.e. a platform tile is shown
+      // List has content, i.e. a platform tile is shown:
       return Container(
         height: 95,
         color: Colors.transparent,
@@ -974,9 +1002,9 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
     }
   }
 
-  /// A function that builds the streaming platform tiles
-  /// First it checks, if there is only on provider, if so, it is returned
-  /// Otherwise it returnes the other provider tile cards starting from the first different one in the list (if provider.last != provider)
+  /// A function that builds the streaming platform card tiles
+  /// First it checks, if there is only one provider, if so, it is returned
+  /// Otherwise it returns the other provider tile cards starting from the first different one in the list (if provider.last != provider)
   /// rowLabel: the different options of a stream in the specific quality (stream with subscription, rent or buy)
   /// platform: indicates the link to Logo pictures, also the name of the platforms one can watch the stream, defined for the corresponding rowLabel
   /// platformLabel: the corresponding label of the platforms in List "platforms" (including the prices)
@@ -984,12 +1012,12 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
   /// platformLink: the corresponding link to the platform
   Widget buildCard(String rowLabel, String platform, String platformLabel,
       List platforms, String platformLink) {
-    String assetImage = platform; //The link of the platform logo
+    String assetImage = platform; // the link of the platform logo
 
     // Create Card with platform logo in it:
     Widget card = GestureDetector(
       onTap: () {
-        //function for the platform tiles that opens an alert dialog window with a link to the corresponding stream
+        // Function for the platform tiles that opens an alert dialog window with a link to the corresponding stream:
         showDialog(
             context: context,
             builder: (BuildContext context) {
@@ -1003,11 +1031,11 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
             child: ClipRRect(
                 borderRadius: BorderRadius.circular(10.0),
                 child: Container(
-                  width: 80, //95,
-                  height: 80, //95,
+                  width: 80,
+                  height: 80,
                   color: Colors.transparent,
                   child: Image.asset(
-                      assetImage), // return the first and only streaming provider
+                      assetImage), // return the first streaming provider
                 )),
           ),
           const SizedBox(height: 1.0),
@@ -1017,7 +1045,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                 color: _color.bodyTextColor,
                 fontSize: 11.0,
                 fontWeight: FontWeight.w500,
-                height: _cons.textHeight),
+                height: _cav.textHeight),
             textAlign: TextAlign.center,
             maxLines: 1,
             overflow: TextOverflow.fade,
@@ -1027,21 +1055,19 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
     );
     assetImage = "";
 
-    //If more than one provider than create space between them
+    // If more than one provider, create space between them:
     if (platforms.length > 1) {
       if (platforms.last == platform) {
-        //if the current provider is the last named provider in the list, no space is needed at the end
+        // if the current provider is the last named provider in the list, no space is needed at the end
         return card;
       } else {
-        //else add space because the current provider is not the last named provider in the list
+        // else add space because the current provider is not the last named provider in the list
         return Padding(
           padding: const EdgeInsets.only(right: 10.0),
-          //create space on right side of the card
           child: card,
         );
       }
-
-      //If only one provider, space is not needed
+      // If only one provider, space is not needed:
     } else {
       return card;
     }
@@ -1057,7 +1083,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
       Padding(
         padding: const EdgeInsets.only(left: 15.0, right: 15.0),
         child: AlertDialog(
-          //Background style of the Alert Dialog:
+          // Background style of the Alert Dialog:
           backgroundColor: _color.middleBackgroundColor.withOpacity(0.93),
           elevation: 0.0,
           insetPadding: EdgeInsets.zero,
@@ -1073,13 +1099,13 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                   colorFilter: ColorFilter.mode(
                       Colors.black.withOpacity(0.05), BlendMode.dstATop)),
             ),
-            //Column that includes a headline, a text to the stream URL and a close Button that closes the Dialog
+            // Column that includes a headline, a text to the stream URL and a close Button that closes the Dialog:
             child: Column(
               mainAxisSize: MainAxisSize.min,
               children: [
-                //The Dialog headline (Stream, Rent or Buy)
+                // The Dialog headline (Stream, Rent or Buy):
                 Text(
-                  "${rowLabel.contains(" ") ? "Stream" : rowLabel.substring(0, rowLabel.indexOf(":"))} on " //Stream / Rent / Buy
+                  "${rowLabel.contains(" ") ? "Stream" : rowLabel.substring(0, rowLabel.indexOf(":"))} on " // Stream / Rent / Buy
                   "${platformLabel.contains(" ") && rowLabel != "Stream on:" ? platformLabel.substring(0, platformLabel.indexOf("€") - 1) : platformLabel}",
                   style: TextStyle(
                       fontSize: 18.0,
@@ -1090,7 +1116,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                 const SizedBox(
                   height: 22,
                 ),
-                //The actual content of the Alert Dialog:
+                // The actual content of the Alert Dialog:
                 RichText(
                   text: TextSpan(
                     children: [
@@ -1102,14 +1128,13 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                       WidgetSpan(
                         child: InkWell(
                             onTap: () => launchUrl(Uri.parse(platformLink)),
-                            //adding the individual URL to every stream
+                            // adding the individual URL to every stream
                             child: const Text(
                               style: TextStyle(
                                   height: 1.10,
                                   color: Colors.blueAccent,
                                   fontSize: 16,
                                   decoration: TextDecoration.underline,
-                                  //decorationThickness: 0.0,
                                   decorationColor: Colors.blueAccent),
                               "here",
                             )),
@@ -1123,14 +1148,13 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                   ),
                 ),
                 const SizedBox(height: 35),
-                //The Button to close the Dialog window:
+                // The Button to close the Dialog window:
                 GestureDetector(
                     onTap: () => Navigator.pop(context),
                     child: Container(
                       padding: const EdgeInsets.all(8.0),
                       margin: const EdgeInsets.symmetric(horizontal: 108.0),
                       decoration: BoxDecoration(
-                          //border: Border.all(color: Colors.white70),
                           color: _color.bodyTextColor.withOpacity(0.3),
                           border: Border.all(
                               color: _color.middleBackgroundColor, width: 0.5),
@@ -1147,7 +1171,6 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                           Text("Close",
                               style: TextStyle(
                                   color: _color.middleBackgroundColor,
-                                  //fontWeight: FontWeight.bold,
                                   fontSize: 14.0)),
                         ],
                       ),
@@ -1158,8 +1181,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
         ),
       );
 
-
-  /// A function that fetches the current user's data
+  /// A function that fetches the current user's data based on the email
   getUserProfileData() {
     User? user = FirebaseAuth.instance.currentUser;
     final email = user?.email;
@@ -1168,25 +1190,37 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
     }
   }
 
-  /// A function that fetches the favourite movies and series of a user
-  getFavourites() async {
+  /// A function that fetches the user's Favourite list based on his id
+  getFavouriteStreams() async {
     UserModel user = await getUserProfileData();
     String? id = user.id; // get user's id for Favourites list
 
-    favourites = await _favouritesRepo.getFavourites(id!);
-    _addFavourites = favourites
+    _favouriteStreams = await _favouritesRepo.getFavourites(id!);
+    _addFavourites = _favouriteStreams
         .where((favourite) => favourite.title == widget.stream.title)
         .isNotEmpty; // check if the current opened stream is saved in Favourites
   }
 
+  /// A function that fetches the user's Watchlist based on his id
+  getWatchlistStreams() async {
+    UserModel user = await getUserProfileData();
+    String? id = user.id; // get user's id for Watchlist
+
+    _watchlistStreams = await _watchlistRepo.getWatchlist(id!);
+    _addWatchlist = _watchlistStreams
+        .where(
+            (watchlistStream) => watchlistStream.title == widget.stream.title)
+        .isNotEmpty; // check if the current opened stream is saved in Watchlist
+  }
+
   /// A function that handles the Favourites actions of a user,
-  /// i.e. showing a snackbar and adding or removing a Stream to its Favourites
+  /// i.e. showing a snackbar and adding or removing a Stream to his Favourites
   /// favourite: The current stream that will be added or removed from the user's Favourites list
   void favouriteActions(FavouritesModel favourite) async {
     ScaffoldMessenger.of(context)
       ..removeCurrentSnackBar()
-      ..showSnackBar(favSnackBar(widget.stream
-          .type)); // show Snackbar when adding or removing a stream to Favourites list
+      ..showSnackBar(favouriteSnackBar(widget.stream
+          .type)); // show Snackbar when adding or removing a stream to or from Favourites list
 
     UserModel user = await getUserProfileData();
     String? id =
@@ -1201,7 +1235,69 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
             favourite) // if clicked on empty heart, i.e. addFavourites = true => add to Favourites
         : await _favouritesRepo.removeFromFavourites(
             id!,
-            widget.stream.id.toString(),
-            favourite); // if clicked on full heart, i.e. addFavourites = false => remove from Favourites
+            widget.stream.id
+                .toString()); // if clicked on filled heart, i.e. addFavourites = false => remove from Favourites
   }
+
+  /// A function that handles the Watchlist actions of a user,
+  /// i.e. showing a snackbar and adding or removing a Stream to his Watchlist
+  /// watchlist: The current stream that will be added or removed from the user's Watchlist
+  void watchlistActions(WatchlistModel watchlist) async {
+    ScaffoldMessenger.of(context)
+      ..removeCurrentSnackBar()
+      ..showSnackBar(watchlistSnackBar(widget.stream
+          .type)); // show Snackbar when adding or removing a stream to or from Watchlist
+
+    UserModel user = await getUserProfileData();
+    String? id =
+        user.id; // get user's id for adding or removing a movie or series
+
+    setState(() {
+      _addWatchlist = !_addWatchlist;
+    });
+
+    _addWatchlist
+        ? await _watchlistRepo.addToWatchlist(id!,
+            watchlist) // if clicked on unchecked (add) list, i.e. _addWatchlist = true => add to Watchlist
+        : await _watchlistRepo.removeFromWatchlist(
+            id!,
+            widget.stream.id
+                .toString()); // if clicked on checked list, i.e. _addWatchlist = false => remove from Watchlist
+  }
+
+  /// A function that generates a snackbar if clicked on the heart icon
+  /// If the heart is filled, the "added to Favourites" Snackbar is shown,
+  /// if not, the "removed from Favourites" Snackbar is shown
+  /// stream: The current stream that is added to or removed from Favourites
+  SnackBar favouriteSnackBar(String stream) => SnackBar(
+      elevation: 0.0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+      behavior: SnackBarBehavior.floating,
+      margin: const EdgeInsets.only(left: 28.0, right: 28.0, bottom: 6.0),
+      duration: const Duration(milliseconds: 1500),
+      content: Text(
+        _addFavourites
+            ? "$stream removed from Favourites"
+            : "$stream added to Favourites",
+        style: TextStyle(color: Colors.grey.shade300),
+        textAlign: TextAlign.center,
+      ));
+
+  /// A function that generates a snackbar if clicked on the (un-)checked list icon
+  /// If the icon changes to a checked list icon, the "added to Watchlist" Snackbar is shown,
+  /// if the icon changes to a unchecked list icon, the "removed from Watchlist" Snackbar is shown
+  /// stream: The current stream that is added to or removed from Watchlist
+  SnackBar watchlistSnackBar(String stream) => SnackBar(
+      elevation: 0.0,
+      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
+      behavior: SnackBarBehavior.floating,
+      margin: const EdgeInsets.only(left: 28.0, right: 28.0, bottom: 6.0),
+      duration: const Duration(milliseconds: 1500),
+      content: Text(
+        _addWatchlist
+            ? "$stream removed from Watchlist"
+            : "$stream added to Watchlist",
+        style: TextStyle(color: Colors.grey.shade300),
+        textAlign: TextAlign.center,
+      ));
 }
