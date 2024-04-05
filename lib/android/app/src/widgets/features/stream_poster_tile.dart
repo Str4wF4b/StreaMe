@@ -6,22 +6,22 @@ import '../../utils/constants_and_values.dart';
 import '../../utils/color_palette.dart';
 import '../../pages/others/stream_details.dart';
 
-class ActorDirectorTile extends StatefulWidget {
+class StreamPosterTile extends StatefulWidget {
   final Streams stream;
   final String imageUrl;
   final String title;
 
-  const ActorDirectorTile(
+  const StreamPosterTile(
       {super.key,
       required this.stream,
       required this.imageUrl,
       required this.title});
 
   @override
-  State<ActorDirectorTile> createState() => _ActorDirectorTileState();
+  State<StreamPosterTile> createState() => _StreamPosterTileState();
 }
 
-class _ActorDirectorTileState extends State<ActorDirectorTile> {
+class _StreamPosterTileState extends State<StreamPosterTile> {
   final ColorPalette color = ColorPalette();
   final ConstantsAndValues cons = ConstantsAndValues();
 
