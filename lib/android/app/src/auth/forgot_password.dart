@@ -123,12 +123,12 @@ class _ForgotPasswordPageState extends State<ForgotPasswordPage> {
           .sendPasswordResetEmail(email: _emailController.text.trim());
       if (mounted) {
         _popup.handleResetMailPopup(context, true,
-            _emailController); // if email is not known, show popup error message
+            _emailController); // if email is correct, show popup reset message
       }
     } on FirebaseAuthException {
       if (mounted) {
         _popup.handleResetMailPopup(context, false,
-            _emailController); // if email is not known, show popup error message
+            _emailController); // if email is wrong, show popup email error message
       }
     }
   }
