@@ -4,7 +4,6 @@ import 'package:stream_me/android/app/src/utils/color_palette.dart';
 import 'package:stream_me/android/app/src/utils/images.dart';
 import 'package:stream_me/android/app/src/widgets/features/login_divider.dart';
 import '../services/functions/auth_popups.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import '../widgets/features/login_sign_buttons.dart';
 import '../widgets/features/login_text_field.dart';
 import '../widgets/features/login_tile.dart';
@@ -17,20 +16,22 @@ class LoginPage extends StatefulWidget {
 
   const LoginPage({super.key, required this.onTap});
 
-  final String title = "Login";
-
   @override
   State<LoginPage> createState() => LoginPageState();
 }
 
 class LoginPageState extends State<LoginPage> {
+  // Utils:
   final ColorPalette _color = ColorPalette();
   final Images _image = Images();
-  final UserData _userData = UserData();
-  final AuthPopups _popup = AuthPopups();
+
+  // Instances:
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
-  //FirebaseFirestore get firestore => FirebaseFirestore.instance;
+  final AuthPopups _popup = AuthPopups();
+
+  // Database:
+  final UserData _userData = UserData();
 
   @override
   Widget build(BuildContext context) {
@@ -54,32 +55,33 @@ class LoginPageState extends State<LoginPage> {
                 children: [
                   const SizedBox(height: 50),
                   Image.asset(
-                    //logo
+                    // Logo on top of screen:
                     _image.streameIcon,
                     width: 200,
                   ),
                   const SizedBox(height: 50),
                   LoginTextField(
-                      // Email text field:
+                      // Email Textfield:
                       inputController: _emailController,
                       obscureText: false,
                       hintText: "Email",
                       prefixIcon: Icons.person),
                   const SizedBox(height: 13),
                   LoginTextField(
-                      // Password text field:
+                      // Password Textfield:
                       inputController: _passwordController,
                       obscureText: true,
                       hintText: "Password",
                       prefixIcon: Icons.lock),
                   const SizedBox(height: 18),
+                  // Forgot Password Button:
                   GestureDetector(
                     onTap: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                           builder: (context) {
-                            return ForgotPasswordPage();
+                            return const ForgotPasswordPage(); // go to Forgot Password Page
                           },
                         ),
                       );
@@ -88,25 +90,30 @@ class LoginPageState extends State<LoginPage> {
                         style: TextStyle(color: Colors.white60)),
                   ),
                   const SizedBox(height: 30),
-                  SignButton(onTap: signUserIn, text: "Sign In"),
+                  // Sign In Button:
+                  SignButton(onTap: signInUser, text: "Sign In"),
                   const SizedBox(height: 55),
                   LoginDivider(),
                   const SizedBox(height: 55),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     children: [
+                      // 3 Login Tiles with 3 Sign Methods:
+                      // Google Sign In:
                       LoginTile(
                           isIcon: false,
                           imagePath: _image.google,
                           iconData: Icons.back_hand,
                           onTap: () => AuthService().signInWithGoogle()),
                       const SizedBox(width: 12),
+                      // Apple Sign In:
                       LoginTile(
                           isIcon: false,
                           imagePath: _image.apple,
                           iconData: Icons.back_hand,
                           onTap: () => AuthService().signInWithApple()),
                       const SizedBox(width: 12),
+                      // Anonymous Sign In:
                       LoginTile(
                           isIcon: false,
                           imagePath: _image.anon,
@@ -123,8 +130,9 @@ class LoginPageState extends State<LoginPage> {
                         style: TextStyle(color: Colors.white),
                       ),
                       const SizedBox(width: 4),
+                      // Register Button (clickable Text):
                       GestureDetector(
-                        onTap: widget.onTap,
+                        onTap: widget.onTap, // open Register Page
                         child: const Text("Register now",
                             style: TextStyle(color: Colors.lightBlue)),
                       )
@@ -136,41 +144,37 @@ class LoginPageState extends State<LoginPage> {
           ),
         ),
       ),
-      //)
     );
   }
 
-  void signUserIn() async {
-    // show loading circle
+  /// A function that tries to sign in a already registered user
+  /// It checks if the email or password or both is wrong, if not: the user is signed in
+  void signInUser() async {
     showDialog(
       context: context,
       builder: (context) {
         return const Center(
-          child: CircularProgressIndicator(color: Colors.blueAccent),
+          child: CircularProgressIndicator(
+              color: Colors.blueAccent), // show loading circle
         );
       },
     );
 
-    // sign in try
+    // Sign in try:
     try {
-      await _userData.loginUser(_emailController.text, _passwordController.text);
-      // pop loading circle
-      if (mounted) Navigator.pop(context);
+      await _userData.loginUser(
+          _emailController.text, _passwordController.text);
+      if (mounted) Navigator.pop(context); // pop loading circle
     } on FirebaseAuthException catch (e) {
-      // pop loading circle
-      if (mounted) Navigator.pop(context);
+      if (mounted) Navigator.pop(context); // pop loading circle
 
-      // if email is wrong:
+      // If email is wrong:
       if (e.code == "user-not-found") {
         if (mounted) _popup.wrongInputPopup("Email", context, true);
-        // if password is wrong:
+        // If password is wrong:
       } else if (e.code == "wrong-password") {
         if (mounted) _popup.wrongInputPopup("Password", context, true);
-      } else if (e.code == "user-not-found" && e.code == "wrong-password") {
-        //wrongEmailPopup();
-      }
+      } else if (e.code == "user-not-found" && e.code == "wrong-password") {}
     }
-
-    //if(mounted) Navigator.pop(context);
   }
 }
