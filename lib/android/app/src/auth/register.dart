@@ -192,15 +192,15 @@ class _RegisterPageState extends State<RegisterPage> {
   /// A function that creates a new User Setup of the registered user and loads it into Firebase DB
   Future<void> handleUserData() async {
     String userEmail = _emailController
-        .text; // First Email is the typed in email from the user
+        .text; // first Email is the typed in email from the user
     String firstUsername = userEmail.substring(
         0,
         userEmail.indexOf(
-            "@")); // First Username consists of the email name before @-character
-    String firstFullName = ""; // First Full Name will be empty
+            "@")); // first Username consists of the email name before @-character
+    String firstFullName = ""; // first Full Name will be empty
     final ref = FirebaseStorage.instance.ref().child("person_icon.png");
     String blankPersonUrl = await ref
-        .getDownloadURL(); // First profile picture is the default person icon
+        .getDownloadURL(); // first profile picture is the default person icon
 
     // Generate User instance with username, fullName, email, password and imageUrl:
     final user = UserModel(
