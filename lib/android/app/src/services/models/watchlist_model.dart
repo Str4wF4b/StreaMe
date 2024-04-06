@@ -5,17 +5,15 @@ class WatchlistModel {
   final String streamId;
   final String title;
   final String type;
-  final double rating;
 
   const WatchlistModel(
       {this.id,
-        required this.streamId,
-        required this.title,
-        required this.type,
-        required this.rating});
+      required this.streamId,
+      required this.title,
+      required this.type});
 
-  /// A function that returns the Json value of the WatchlistModel to store it into Firestore DB
-  toJson() => {"StreamId": streamId, "Title": title, "Type": type, "Rating": rating};
+  /// A function that returns the Json value of the watchlisted Stream to store it into Firestore DB
+  toJson() => {"StreamId": streamId, "Title": title, "Type": type};
 
   /// A function that fetches data in a map from Firebase to WatchlistModel
   factory WatchlistModel.fromSnapshot(
@@ -25,7 +23,6 @@ class WatchlistModel {
         id: document.id,
         streamId: data["StreamId"],
         title: data["Title"],
-        type: data["Type"],
-        rating: data["Rating"]);
+        type: data["Type"]);
   }
 }

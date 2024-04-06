@@ -5,18 +5,15 @@ class FavouritesModel {
   final String streamId;
   final String title;
   final String type;
-  final double rating;
 
   const FavouritesModel(
       {this.id,
       required this.streamId,
       required this.title,
-      required this.type,
-      required this.rating});
+      required this.type});
 
-  /// A function that returns the Json value of the FavouritesModel to store it into Firestore DB
-  toJson() =>
-      {"StreamId": streamId, "Title": title, "Type": type, "Rating": rating};
+  /// A function that returns the Json value of the favourited Stream to store it into Firestore DB
+  toJson() => {"StreamId": streamId, "Title": title, "Type": type};
 
   /// A function that fetches data in a map from Firebase to FavouritesModel
   factory FavouritesModel.fromSnapshot(
@@ -26,7 +23,6 @@ class FavouritesModel {
         id: document.id,
         streamId: data["StreamId"],
         title: data["Title"],
-        type: data["Type"],
-        rating: data["Rating"]);
+        type: data["Type"]);
   }
 }

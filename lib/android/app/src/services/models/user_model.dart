@@ -16,8 +16,8 @@ class UserModel {
       required this.password,
       required this.imageUrl});
 
-  /// A function that returns the Json value of the UserModel to store it into Firestore DB
-  /// If it's a Google Account, the password is not known and it will return 5 dots
+  /// A function that returns the Json value of the user to store it into Firestore DB
+  /// If it's a Google Account, the password is not known and it will return an empty String
   toJson() => password != ""
       ? {
           "Email": email.toLowerCase(),
@@ -30,7 +30,7 @@ class UserModel {
           "Email": email,
           "Full_Name": fullName,
           "ImageUrl": imageUrl,
-          "Password": "•••••",
+          "Password": " ",
           "Username": username,
         };
 
