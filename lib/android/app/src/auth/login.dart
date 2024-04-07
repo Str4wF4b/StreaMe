@@ -101,23 +101,17 @@ class LoginPageState extends State<LoginPage> {
                       // 3 Login Tiles with 3 Sign Methods:
                       // Google Sign In:
                       LoginTile(
-                          isIcon: false,
                           imagePath: _image.google,
-                          iconData: Icons.back_hand,
                           onTap: () => AuthService().signInWithGoogle()),
                       const SizedBox(width: 12),
                       // Apple Sign In:
                       LoginTile(
-                          isIcon: false,
                           imagePath: _image.apple,
-                          iconData: Icons.back_hand,
                           onTap: () => AuthService().signInWithApple()),
                       const SizedBox(width: 12),
                       // Anonymous Sign In:
                       LoginTile(
-                          isIcon: false,
                           imagePath: _image.anon,
-                          iconData: Icons.back_hand,
                           onTap: () => AuthService().signInAnon()),
                     ],
                   ),

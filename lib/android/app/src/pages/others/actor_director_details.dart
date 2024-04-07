@@ -162,61 +162,65 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
                             expandIndicatorStyle: ExpandIndicatorStyle.icon);
                       }),
                       const SizedBox(height: 20),
-                      Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const Divider(
-                            thickness: 0.2,
-                            color: Colors.grey,
-                          ),
-                          const SizedBox(height: 20),
-                          Align(
-                            alignment: Alignment.centerLeft,
-                            // TabBar with the actor's / director's Acting, Production and Direction career
-                            child: TabBar(
-                              physics: const ClampingScrollPhysics(),
-                              dividerHeight: 0.0,
-                              labelColor: _color.backgroundColor,
-                              unselectedLabelColor: Colors.grey,
-                              indicator: BoxDecoration(
-                                borderRadius: BorderRadius.circular(30.0),
-                                color: _color.bodyTextColor,
-                              ),
-                              indicatorSize: TabBarIndicatorSize.label,
-                              indicatorPadding:
-                                  const EdgeInsets.fromLTRB(0.0, 6.0, 0.0, 8.0),
-                              controller: _tabController,
-                              tabs: [
-                                addTab("Acting", 0),
-                                addTab("Production", 1),
-                                addTab("Direction", 2),
+                      widget.actorDirector.age == 0
+                          ? Container()
+                          : Column(
+                              // age == 0, i.e. no element found
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const Divider(
+                                  thickness: 0.2,
+                                  color: Colors.grey,
+                                ),
+                                const SizedBox(height: 20),
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  // TabBar with the actor's / director's Acting, Production and Direction career
+                                  child: TabBar(
+                                    physics: const ClampingScrollPhysics(),
+                                    dividerHeight: 0.0,
+                                    labelColor: _color.backgroundColor,
+                                    unselectedLabelColor: Colors.grey,
+                                    indicator: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(30.0),
+                                      color: _color.bodyTextColor,
+                                    ),
+                                    indicatorSize: TabBarIndicatorSize.label,
+                                    indicatorPadding: const EdgeInsets.fromLTRB(
+                                        0.0, 6.0, 0.0, 8.0),
+                                    controller: _tabController,
+                                    tabs: [
+                                      addTab("Acting", 0),
+                                      addTab("Production", 1),
+                                      addTab("Direction", 2),
+                                    ],
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: setTabHeight(widget.actorDirector,
+                                      _tabController.index),
+                                  child: AutoScaleTabBarView(
+                                      controller: _tabController,
+                                      children: [
+                                        // Content of "Acting"-Tab:
+                                        ActorDirectorTab(
+                                            actorDirector: widget.actorDirector,
+                                            tabContent:
+                                                widget.actorDirector.acting),
+                                        // Content of "Production"-Tab:
+                                        ActorDirectorTab(
+                                            actorDirector: widget.actorDirector,
+                                            tabContent: widget
+                                                .actorDirector.production),
+                                        // Content of "Direction"-Tab:
+                                        ActorDirectorTab(
+                                            actorDirector: widget.actorDirector,
+                                            tabContent:
+                                                widget.actorDirector.directing),
+                                      ]),
+                                ),
                               ],
-                            ),
-                          ),
-                          SizedBox(
-                            height: setTabHeight(
-                                widget.actorDirector, _tabController.index),
-                            child: AutoScaleTabBarView(
-                                controller: _tabController,
-                                children: [
-                                  // Content of "Acting"-Tab:
-                                  ActorDirectorTab(
-                                      actorDirector: widget.actorDirector,
-                                      tabContent: widget.actorDirector.acting),
-                                  // Content of "Production"-Tab:
-                                  ActorDirectorTab(
-                                      actorDirector: widget.actorDirector,
-                                      tabContent:
-                                          widget.actorDirector.production),
-                                  // Content of "Direction"-Tab:
-                                  ActorDirectorTab(
-                                      actorDirector: widget.actorDirector,
-                                      tabContent:
-                                          widget.actorDirector.directing),
-                                ]),
-                          ),
-                        ],
-                      )
+                            )
                     ],
                   ),
                 ),
@@ -359,8 +363,7 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
   double getTabHeight(List movies, List series) {
     if (movies.isNotEmpty && series.isNotEmpty) {
       return 530; // max height if movies and series lists have input
-    } else if (movies.isNotEmpty &&
-            series.isEmpty ||
+    } else if (movies.isNotEmpty && series.isEmpty ||
         series.isNotEmpty && movies.isEmpty) {
       return 350; // mid height if one of the lists is empty
     } else {
