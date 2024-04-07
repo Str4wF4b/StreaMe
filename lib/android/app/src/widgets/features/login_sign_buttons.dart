@@ -16,7 +16,6 @@ class SignButton extends StatelessWidget {
         margin: const EdgeInsets.symmetric(horizontal: 100.0),
         // padding outside button
         decoration: BoxDecoration(
-            //border: Border.all(color: Colors.white70),
             color: Colors.blueAccent,
             borderRadius: BorderRadius.circular(30.0)),
         child: Center(

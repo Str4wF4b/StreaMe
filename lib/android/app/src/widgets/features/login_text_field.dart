@@ -19,6 +19,7 @@ class LoginTextField extends StatefulWidget {
 }
 
 class _LoginTextFieldState extends State<LoginTextField> {
+  // Local instances:
   bool _showPassword = true;
 
   @override
@@ -37,7 +38,7 @@ class _LoginTextFieldState extends State<LoginTextField> {
                     onPressed: () {
                       setState(() {
                         _showPassword =
-                            !_showPassword; //switch between showing and not showing password
+                            !_showPassword; // switch between showing and not showing password
                       });
                     },
                     icon: _showPassword

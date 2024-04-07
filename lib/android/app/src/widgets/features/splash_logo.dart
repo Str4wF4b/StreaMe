@@ -12,7 +12,10 @@ class SplashLogo extends StatefulWidget {
 }
 
 class _SplashLogoState extends State<SplashLogo> {
+  // Utils:
   final Images _image = Images();
+
+  // Instances:
   final AudioPlayer _player = AudioPlayer();
 
   @override
@@ -40,6 +43,7 @@ class _SplashLogoState extends State<SplashLogo> {
     );
   }
 
+  /// A function that determines the duration and volume of the sound
   void playSound() {
     _player.seek(const Duration(seconds: 3));
     _player.setVolume(0.2);

@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:stream_me/android/app/src/utils/color_palette.dart';
 
 class EditTextField extends StatefulWidget {
   final TextEditingController controller;
@@ -21,8 +20,8 @@ class EditTextField extends StatefulWidget {
 }
 
 class _EditTextFieldState extends State<EditTextField> {
-  bool showPassword = true;
-  ColorPalette color = ColorPalette();
+  // Local instances:
+  bool _showPassword = true; // flag to trigger the password visibility
 
   @override
   Widget build(BuildContext context) {
@@ -31,40 +30,34 @@ class _EditTextFieldState extends State<EditTextField> {
       child: TextField(
         controller: widget.controller,
         style: TextStyle(
-          fontWeight: FontWeight.bold,
-          fontSize: 15,
-          color: Colors.grey.shade100,
-          decorationThickness: 0.0
-        ),
-        obscureText: widget.isPassword ? showPassword : false,
+            fontWeight: FontWeight.bold,
+            fontSize: 15,
+            color: Colors.grey.shade100,
+            decorationThickness: 0.0),
+        obscureText: widget.isPassword ? _showPassword : false,
         decoration: InputDecoration(
-            //style of label
-            suffixIcon: widget.isPassword //show password icon
+            suffixIcon: widget.isPassword // "show password" icon
                 ? Padding(
-                  padding: const EdgeInsets.only(right: 3.0),
-                  child: IconButton(
+                    padding: const EdgeInsets.only(right: 3.0),
+                    child: IconButton(
                       onPressed: () {
                         setState(() {
-                          showPassword =
-                              !showPassword; //switch between showing and not showing password
+                          _showPassword =
+                              !_showPassword; // switch between showing and not showing password
                         });
                       },
-                      icon: showPassword
+                      icon: _showPassword
                           ? const Icon(Icons.visibility, color: Colors.grey)
-                          : const Icon(Icons.visibility_off, color: Colors.grey),
+                          : const Icon(Icons.visibility_off,
+                              color: Colors.grey),
                     ),
-                )
+                  )
                 : null,
             floatingLabelBehavior: FloatingLabelBehavior.always,
-            //input labels are always open
+            // Labels on top of the TextField, plus the user's input:
             labelText: "${widget.labelText} ${widget.userInput}",
             labelStyle: const TextStyle(
-              color: Colors.white,
-              fontSize: 17,
-              fontWeight: FontWeight.bold
-            ),
-            //enabledBorder: const UnderlineInputBorder(
-            //    borderSide: BorderSide(color: Colors.white)),
+                color: Colors.white, fontSize: 17, fontWeight: FontWeight.bold),
             enabledBorder: OutlineInputBorder(
                 borderSide: const BorderSide(color: Colors.white),
                 borderRadius: BorderRadius.circular(30.0)),
@@ -74,12 +67,11 @@ class _EditTextFieldState extends State<EditTextField> {
             filled: true,
             fillColor: Colors.black38,
             hintText: widget.placeholder,
-            //style of placeholder
+            // hint text as placeholder
             hintStyle: const TextStyle(
-              fontSize: 13.5,
-              color: Colors.grey,
-              fontWeight: FontWeight.w500
-            ),
+                fontSize: 13.5,
+                color: Colors.grey,
+                fontWeight: FontWeight.w500),
             contentPadding: const EdgeInsets.fromLTRB(20.0, 18.0, 18.0, 20.0)),
       ),
     );

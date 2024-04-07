@@ -22,8 +22,9 @@ class StreamPosterTile extends StatefulWidget {
 }
 
 class _StreamPosterTileState extends State<StreamPosterTile> {
-  final ColorPalette color = ColorPalette();
-  final ConstantsAndValues cons = ConstantsAndValues();
+  // Utils:
+  final ColorPalette _color = ColorPalette();
+  final ConstantsAndValues _cav = ConstantsAndValues();
 
   @override
   Widget build(BuildContext context) {
@@ -32,6 +33,7 @@ class _StreamPosterTileState extends State<StreamPosterTile> {
           context,
           MaterialPageRoute(
               builder: (context) => StreamDetailsPage(stream: widget.stream))),
+      // open corresponding Stream Page
       child: SizedBox(
         width: 140,
         child: Column(
@@ -41,20 +43,21 @@ class _StreamPosterTileState extends State<StreamPosterTile> {
               child: CachedNetworkImage(
                 imageUrl: widget.imageUrl,
                 height: 170,
-                placeholder: (context, url) => cons.streamImagePlaceholder,
-                errorWidget: (context, url, error) =>
-                    cons.imageErrorWidgetLittle,
+                placeholder: (context, url) => _cav.streamImagePlaceholder,
+                // show loading circle while loading image
+                errorWidget: (context, url, error) => _cav
+                    .imageErrorWidgetLittle, // if no connection, show error icon
               ),
             ),
             const SizedBox(height: 5.0),
             AutoSizeText(
+              // Caption of Stream cover:
               widget.stream.title,
               style: TextStyle(
-                color: color.bodyTextColor,
-                fontWeight: FontWeight.w500,
-                fontSize: 14 * 1 / MediaQuery.of(context).textScaleFactor,
-                height: cons.textHeight
-              ),
+                  color: _color.bodyTextColor,
+                  fontWeight: FontWeight.w500,
+                  fontSize: MediaQuery.textScalerOf(context).scale(14),
+                  height: _cav.textHeight),
               maxLines: 2,
               textAlign: TextAlign.center,
             )
