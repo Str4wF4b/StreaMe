@@ -613,7 +613,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
 
     if (numberOfRatings != 0) {
       _rating = (sum /
-          numberOfRatings); // get the average rating if at least one rating is submitted
+          numberOfRatings); // set the average rating if at least one rating is submitted
     } else {
       _rating = 0.0;
     }
