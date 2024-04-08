@@ -16,13 +16,14 @@ class SelectionButton extends StatelessWidget {
     return GestureDetector(
         onTap: onTap,
         child: Container(
-          padding: const EdgeInsets.only(top: 15.0, bottom: 15.0),
-          //margin: const EdgeInsets.symmetric(horizontal: 100.0),
+          padding: EdgeInsets.only(
+              top: label == "Reset" ? 14 : 15.0, // Reset Buttons have no background color, but border, i.e. more padding needed
+              bottom: label == "Reset" ? 14 : 15.0), // Reset Buttons have no background color, but border, i.e. more padding needed
           width: 120,
           decoration: BoxDecoration(
-              color: label == "Reset" ? null : color,
+              color: label == "Reset" ? null : color, // Reset Buttons have no background color
               border:
-                  label == "Reset" ? Border.all(color: color, width: 2) : null,
+                  label == "Reset" ? Border.all(color: color, width: 2) : null, // only Reset Buttons have border
               borderRadius: BorderRadius.circular(30.0)),
           child: Center(
             child: Text(
