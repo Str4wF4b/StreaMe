@@ -1,11 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:stream_me/android/app/src/model/streams_model.dart';
-import 'package:stream_me/android/app/src/services/functions/favourites_data.dart';
-import 'package:stream_me/android/app/src/services/functions/user_data.dart';
-import 'package:stream_me/android/app/src/services/models/favourites_model.dart';
-import 'package:stream_me/android/app/src/services/models/user_model.dart';
+import 'package:stream_me/android/app/src/services/functions/rating_data.dart';
+import 'package:stream_me/android/app/src/services/models/rating_model.dart';
 import 'package:stream_me/android/app/src/utils/color_palette.dart';
 import '../../utils/constants_and_values.dart';
 import '../../pages/others/stream_details.dart';
@@ -16,7 +13,6 @@ class StreamTile extends StatefulWidget {
   final String title;
   final List year;
   final String pg;
-  final double rating;
   final List cast;
   final List provider;
   final bool fromHomeButton;
@@ -30,7 +26,6 @@ class StreamTile extends StatefulWidget {
       required this.title,
       required this.year,
       required this.pg,
-      required this.rating,
       required this.cast,
       required this.provider,
       required this.fromHomeButton,
@@ -42,24 +37,25 @@ class StreamTile extends StatefulWidget {
 }
 
 class _StreamTileState extends State<StreamTile> {
-  final ColorPalette color = ColorPalette();
-  final ConstantsAndValues cons = ConstantsAndValues();
+  // Utils:
+  final ColorPalette _color = ColorPalette();
+  final ConstantsAndValues _cav = ConstantsAndValues();
 
-  final keyRow = GlobalKey();
+  // Local instances:
+  final _keyRow = GlobalKey();
 
-  //late bool _addFavourites =
-  //    true; // true because it's already in the Favourites list
-  User? _user = FirebaseAuth.instance.currentUser;
-  final _userRepo = UserData();
-  final _favouritesRepo = FavouritesData();
+  // Database:
+  final _ratingRepo = RatingData();
+  late double _rating = 0.0; // initial average rating
+
+  @override
+  void initState() {
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
-    FavouritesModel favourite = FavouritesModel(
-        streamId: widget.stream.id.toString(),
-        title: widget.stream.title,
-        type: widget.stream.type,
-        rating: 4.5);
+    calculateRating(widget.stream);
 
     return GestureDetector(
         onTap: () => Navigator.push(
@@ -68,10 +64,11 @@ class _StreamTileState extends State<StreamTile> {
               builder: (context) => StreamDetailsPage(stream: widget.stream),
             )),
         child: Row(
-            key: keyRow,
+            key: _keyRow,
             crossAxisAlignment: CrossAxisAlignment.start,
-            //at start so that the title is on left side besides the image
+            // start from left-hand side
             children: [
+              // First column contains Stream cover (on left-hand side):
               Column(children: [
                 ClipRRect(
                   borderRadius: BorderRadius.circular(15.0),
@@ -80,13 +77,15 @@ class _StreamTileState extends State<StreamTile> {
                     fit: BoxFit.cover,
                     width: 101,
                     height: 101,
-                    placeholder: (context, url) => cons.streamImagePlaceholder,
-                    errorWidget: (context, url, error) => cons.imageErrorWidget,
+                    placeholder: (context, url) => _cav.streamImagePlaceholder,
+                    // show loading circle while loading image
+                    errorWidget: (context, url, error) => _cav
+                        .imageErrorWidget, // if no connection, show error icon
                   ),
                 ),
               ]),
 
-              //Second column with 4 lines
+              // Second column contains Stream title, year and pg and rating, cast and platform providers:
               Expanded(
                 child: Padding(
                   padding: const EdgeInsets.only(left: 10.0),
@@ -94,30 +93,33 @@ class _StreamTileState extends State<StreamTile> {
                     children: [
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        //all widgets below are justified on the top left of the second column
+                        // all widgets below are set on the top left of the second column
                         children: [
-                          //First line: Title
+                          // First line: Title
                           FittedBox(
                             fit: BoxFit.fitHeight,
                             child: Text(
                               widget.title,
                               style: TextStyle(
-                                  color: color.bodyTextColor,
+                                  color: _color.bodyTextColor,
                                   fontWeight: FontWeight.bold,
                                   fontSize: 16.0),
                             ),
                           ),
                           const SizedBox(height: 5.0),
 
-                          //Second line: Year, PG and Rating
+                          // Second line: Row with Year, PG and Rating:
                           Row(
                             children: [
+                              // Year:
                               Text(
                                 streamYears(widget.year),
                                 style: TextStyle(
-                                    color: color.bodyTextColor, fontSize: 13.0),
+                                    color: _color.bodyTextColor,
+                                    fontSize: 13.0),
                               ),
                               const SizedBox(width: 13.0),
+                              // PG:
                               ClipRRect(
                                   borderRadius: BorderRadius.circular(5.0),
                                   child: Container(
@@ -125,38 +127,38 @@ class _StreamTileState extends State<StreamTile> {
                                         1.5, 0.0, 1.5, 0.0),
                                     height: 16,
                                     width: 25.5,
-                                    color: color.bodyTextColor,
+                                    color: _color.bodyTextColor,
                                     child: Text(
                                       widget.pg,
                                       textAlign: TextAlign.center,
                                       style: TextStyle(
-                                          color: color.backgroundColor,
+                                          color: _color.backgroundColor,
                                           fontSize: 13,
                                           fontWeight: FontWeight.bold,
-                                          height: cons.textHeight),
+                                          height: _cav.textHeight),
                                     ),
                                   )),
                               const SizedBox(width: 13.0),
+                              // Rating:
                               Icon(Icons.star,
-                                  color: color.bodyTextColor, size: 15.0),
+                                  color: _color.bodyTextColor, size: 15.0),
                               const SizedBox(width: 0.6),
-                              Text("${widget.rating}",
+                              Text(_rating.toStringAsFixed(1),
                                   style: TextStyle(
                                       fontSize: 13.0,
-                                      color: color.bodyTextColor)),
+                                      color: _color.bodyTextColor)),
                             ],
                           ),
                           const SizedBox(height: 5.0),
 
-                          //Third line: Cast
+                          // Third line: Cast
                           SizedBox(
                             width: MediaQuery.of(context).size.width - 160,
-                            //making place for favourite heart icon on the right
                             child: RichText(
                               text: TextSpan(
                                   text: "Starring: ",
                                   style: TextStyle(
-                                      color: color.bodyTextColor,
+                                      color: _color.bodyTextColor,
                                       fontSize: 13,
                                       fontWeight: FontWeight.bold),
                                   children: [
@@ -165,20 +167,21 @@ class _StreamTileState extends State<StreamTile> {
                                         style: const TextStyle(
                                             fontWeight: FontWeight.w400))
                                   ]),
-                              maxLines: 2,
-                              overflow: TextOverflow.ellipsis,
+                              maxLines: 2, // take only space of two lines
+                              overflow: TextOverflow
+                                  .ellipsis, // if two lines not sufficient, add "..."
                             ),
                           ),
                           const SizedBox(height: 5.0),
 
-                          //Fourth line: Streaming Platforms
+                          // Fourth line: Streaming Platform Providers
                           RichText(
                             text: TextSpan(
                                 text: widget.provider.isEmpty
                                     ? "Not streamable at the moment."
                                     : "On: ",
                                 style: TextStyle(
-                                    color: color.bodyTextColor,
+                                    color: _color.bodyTextColor,
                                     fontSize: 13,
                                     fontWeight: FontWeight.bold),
                                 children: [
@@ -190,25 +193,17 @@ class _StreamTileState extends State<StreamTile> {
                                         fontWeight: FontWeight.w400,
                                       ))
                                 ]),
-                            overflow: TextOverflow.ellipsis,
+                            overflow: TextOverflow
+                                .ellipsis, // if one line not sufficient, add "..."
                           ),
                         ],
                       ),
+                      // Favourite icon on the right-hand side:
                       Positioned(
                         left: MediaQuery.of(context).size.width - 168,
                         bottom: 24,
                         child: IconButton(
-                            onPressed: widget.onPressed,
-                            /*() async {
-                              favouriteActions(favourite);
-                            },*/
-                            icon: /*Icon(
-                              _addFavourites
-                                  ? Icons.favorite
-                                  : Icons.favorite_border_outlined,
-                              color: Colors.red,
-                            )*/
-                                widget.icon),
+                            onPressed: widget.onPressed, icon: widget.icon),
                       )
                     ],
                   ),
@@ -217,124 +212,50 @@ class _StreamTileState extends State<StreamTile> {
             ]));
   }
 
-/*  /// A function that handles the Favourites actions of a user,
-  /// i.e. showing a snackbar and adding or removing a Stream to its Favourites
-  /// favourite: The current stream that will be added or removed from the user's Favourites list
-  void favouriteActions(FavouritesModel favourite) async {
-    UserModel user = await getUserProfileData();
-    String? id =
-        user.id; // get user's id for adding or removing a movie or series
+  /// A function that calculates the average rating of the current stream in real time
+  /// currentStream: The current stream whose average rating should be calculated
+  calculateRating(Streams currentStream) async {
+    List<RatingModel> ratedStreams = await _ratingRepo.getAllStreamRatings(
+        currentStream.id.toString()); // get all Rating instances
+    List<double> streamRatings = [];
 
-    if (mounted) {
-      ScaffoldMessenger.of(context)
-        ..removeCurrentSnackBar()
-        ..showSnackBar(removedSnackBar(widget.stream.type, favourite,
-            id!)); // show Snackbar when adding or removing a stream to Favourites list
+    for (var stream in ratedStreams) {
+      streamRatings
+          .add(stream.rating); // fill the ratings list with all ratings
     }
 
-    setState(() {
-      _addFavourites = !_addFavourites;
-    });
-
-    _addFavourites
-        ? await _favouritesRepo.addToFavourites(id!,
-            favourite) // if clicked on empty heart, i.e. addFavourites = true => add to Favourites
-        : await _favouritesRepo.removeFromFavourites(
-            id!,
-            widget.stream.id.toString(),
-            favourite); // if clicked on full heart, i.e. addFavourites = false => remove from Favourites
-  }*/
-
-  String getCast(List list) {
-    String cast = "";
-
-    for (var actor in list) {
-      if (actor != list.last) {
-        cast += "$actor, ";
-      } else {
-        cast += actor;
-      }
-    }
-    return cast;
-  }
-
-  String getProvider(List list) {
-    String provider = "";
-
-    for (var platform in list) {
-      if (platform != list.last) {
-        provider += "$platform, ";
-      } else {
-        provider += platform;
-      }
-    }
-    return provider;
-  }
-
-/*  removedSnackBar(String title, FavouritesModel favourite, String id) {
-    if (_addFavourites) {
-      return SnackBar(
-          elevation: 0.0,
-          shape:
-              RoundedRectangleBorder(borderRadius: BorderRadius.circular(20.0)),
-          behavior: SnackBarBehavior.floating,
-          margin: EdgeInsets.only(
-              left: 28.0,
-              right: 28.0,
-              bottom: widget.fromHomeButton ? 4.0 : 64.0),
-          duration: const Duration(milliseconds: 2500),
-          content: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "$title removed from Favourites.",
-                style: TextStyle(color: color.bodyTextColor),
-                textAlign: TextAlign.center,
-              ),
-              const SizedBox(width: 5),
-              GestureDetector(
-                onTap: () => undoFavRemoved(favourite, id),
-                child: const Text("Undo.",
-                    style: TextStyle(
-                        color: Colors.blueAccent,
-                        //decoration: TextDecoration.underline,
-                        decorationColor: Colors.blueAccent)),
-              )
-            ],
-          ));
-    }
-  }
-
-  undoFavRemoved(FavouritesModel favourite, String id) async {
-    await _favouritesRepo.addToFavourites(id,
-        favourite); // if clicked on "Undo", i.e. addFavourites = true => add to Favourites again
-
-    setState(() {
-      _addFavourites = true;
-    });
-  }*/
-
-  /*void getRowSizeAndPosition() =>
-      WidgetsBinding.instance.addPostFrameCallback((_) {
+    int numberOfRatings = streamRatings.length;
+    double sum = streamRatings.fold(
+        0.0,
+        (previousValue, element) =>
+            previousValue! + element); // sum up all ratings
+    if (numberOfRatings != 0) {
+      if (mounted) {
         setState(() {
-          //position = box.localToGlobal(Offset.zero); //coordinate system
-          //size = box.size;
+          _rating = (sum /
+              numberOfRatings); // set the average rating if at least one rating is submitted
         });
-      });*/
+      }
+    } else {
+      _rating = 0.0;
+    }
+  }
 
+  /// A function that returns the year of a movie or the year period of a series
+  /// years: The list of years a movie has been produced or a series is running
   String streamYears(List years) {
     String streamYears = "";
     for (String year in years) {
-      //if movie or series was produced in one year only:
+      // If movie or series was produced in one year only:
       if (years.length == 1) {
         streamYears = year;
       } else {
         String currentYear = DateTime.timestamp().year.toString();
         if (year.contains(currentYear)) {
-          //if movie or series is still in production
+          // if movie or series is still in production
           streamYears = "${years.first} - curr.";
         } else {
-          //if series is longer than one year
+          // if series is longer than one year
           streamYears = "${years.first} - ${years.last}";
         }
       }
@@ -342,11 +263,35 @@ class _StreamTileState extends State<StreamTile> {
     return streamYears;
   }
 
-  getUserProfileData() {
-    _user = FirebaseAuth.instance.currentUser;
-    final email = _user?.email;
-    if (email != null) {
-      return _userRepo.getUserData(email);
+  /// A function that splits the list of actors into a String of actors
+  /// actors: The list of the whole cast
+  String getCast(List actors) {
+    String cast = "";
+
+    for (var actor in actors) {
+      if (actor != actors.last) {
+        cast += "$actor, "; // add comma and space between actors
+      } else {
+        cast +=
+            actor; // the last actor of the list is returned without comma and space
+      }
     }
+    return cast;
+  }
+
+  /// A function that splits the list of platform providers into a String of platform providers
+  /// platformProvider: The list of all platform providers
+  String getProvider(List platformProvider) {
+    String provider = "";
+
+    for (var platform in platformProvider) {
+      if (platform != platformProvider.last) {
+        provider += "$platform, "; // add comma and space between platforms
+      } else {
+        provider +=
+            platform; // the last platform of the list is returned without comma and space
+      }
+    }
+    return provider;
   }
 }
