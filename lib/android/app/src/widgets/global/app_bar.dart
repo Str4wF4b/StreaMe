@@ -20,6 +20,7 @@ class StreameAppBar extends StatefulWidget implements PreferredSizeWidget {
 }
 
 class _StreameAppBarState extends State<StreameAppBar> {
+  // Utils:
   final ColorPalette _color = ColorPalette();
 
   // Database:
@@ -49,60 +50,74 @@ class _StreameAppBarState extends State<StreameAppBar> {
             radius: 19,
             foregroundColor: Colors.white,
             backgroundColor: _color.backgroundColor,
-            child: FutureBuilder(
-              future: getUserProfileData(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.done) {
-                  // data is completely fetched
-                  if (snapshot.hasData) {
-                    UserModel user = snapshot.data as UserModel;
-                    _profilePicture = CachedNetworkImageProvider(user.imageUrl);
-
-                    return GestureDetector(
-                      child: ClipRRect(
+            child: _user!.isAnonymous
+                ? IconButton(
+                    icon: const Icon(Icons.person, size: 22),
+                    onPressed: () {
+                      setState(() {
+                        showProfileDialog();
+                      });
+                    },
+                  )
+                : FutureBuilder(
+                    future: getUserProfileData(),
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.done) {
+                        // data is completely fetched
+                        if (snapshot.hasData) {
+                          UserModel user = snapshot.data as UserModel;
+                          if (user.imageUrl != "") {
+                            _profilePicture = CachedNetworkImageProvider(user
+                                .imageUrl); // load user's current profile picture
+                          }
+                          return GestureDetector(
+                            child: ClipRRect(
+                                borderRadius: BorderRadius.circular(60.0),
+                                child: Container(
+                                    decoration: BoxDecoration(
+                                        image: DecorationImage(
+                                            fit: BoxFit.cover,
+                                            image: CachedNetworkImageProvider(
+                                                // if user has no profile picture yet, show blank profile picture
+                                                user.imageUrl))))),
+                            onTap: () {
+                              setState(() {
+                                showProfileDialog();
+                              });
+                            },
+                          );
+                        } else {
+                          return IconButton(
+                            icon: const Icon(Icons.person, size: 22),
+                            onPressed: () {
+                              setState(() {
+                                showProfileDialog();
+                              });
+                            },
+                          );
+                        }
+                      } else {
+                        return ClipRRect(
                           borderRadius: BorderRadius.circular(60.0),
-                          child: Container(
-                              decoration: BoxDecoration(
-                                  image: DecorationImage(
-                                      fit: BoxFit.cover,
-                                      image: CachedNetworkImageProvider(
-                                          user.imageUrl))))),
-                      onTap: () {
-                        setState(() {
-                          showProfileDialog();
-                        });
-                      },
-                    );
-                  } else {
-                    return IconButton(
-                      icon: const Icon(Icons.person, size: 22),
-                      onPressed: () {
-                        setState(() {
-                          showProfileDialog();
-                        });
-                      },
-                    );
-                  }
-                } else {
-                  return ClipRRect(
-                    borderRadius: BorderRadius.circular(60.0),
-                    child: _profilePicture != null
-                        ? Container(
-                            decoration: BoxDecoration(
-                                image: DecorationImage(
-                                    fit: BoxFit.cover,
-                                    image: _profilePicture as ImageProvider)))
-                        : Container(
-                            color: _color
-                                .backgroundColor), // if the current profile picture is not loaded yet, return black background
-                  );
-                }
-              },
-            ),
+                          child: _profilePicture != null
+                              ? Container(
+                                  decoration: BoxDecoration(
+                                      image: DecorationImage(
+                                          fit: BoxFit.cover,
+                                          image: _profilePicture
+                                              as ImageProvider))) // if the current profile picture is loaded, return it
+                              : Container(
+                                  color: _color
+                                      .backgroundColor), // if the current profile picture is not loaded yet, return black background
+                        );
+                      }
+                    },
+                  ),
           ),
         ),
       ),
       actions: <Widget>[
+        // Logout Button on the right-hand corner:
         IconButton(
             onPressed: () async => await FirebaseAuth.instance.signOut().then(
                 (value) => Navigator.of(context).pushAndRemoveUntil(
@@ -111,15 +126,6 @@ class _StreameAppBarState extends State<StreameAppBar> {
             icon: const Icon(Icons.logout, color: Colors.white))
       ],
     );
-  }
-
-  /// A function that fetches the current user's data
-  getUserProfileData() {
-    _user = FirebaseAuth.instance.currentUser;
-    final email = _user?.email;
-    if (email != null) {
-      return _userRepo.getUserData(email);
-    }
   }
 
   /// A function that shows the Edit Profile Dialog Screen
@@ -134,5 +140,14 @@ class _StreameAppBarState extends State<StreameAppBar> {
         return EditProfile(backgroundColor: _color.backgroundColor);
       },
     );
+  }
+
+  /// A function that fetches the current user's data
+  getUserProfileData() {
+    _user = FirebaseAuth.instance.currentUser;
+    final email = _user?.email;
+    if (email != null) {
+      return _userRepo.getUserData(email);
+    }
   }
 }
