@@ -268,8 +268,6 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
     return Tab(
         child: StreaMeTab(
       tabTitle: tabTitle,
-      tabIndex: tabIndex,
-      tabController: _tabController,
       isWatchlist: false,
     ));
   }

@@ -94,12 +94,7 @@ class _WatchlistPageState extends State<WatchlistPage>
   /// tabIndex: The index of the tab (0, 1 or 2)
   Widget watchlistTab(String tabTitle, int tabIndex) => Padding(
         padding: const EdgeInsets.fromLTRB(0.0, 5.0, 0.0, 3.0),
-        child: Tab(
-            child: StreaMeTab(
-                tabTitle: tabTitle,
-                tabIndex: tabIndex,
-                tabController: _tabController,
-                isWatchlist: true)),
+        child: Tab(child: StreaMeTab(tabTitle: tabTitle, isWatchlist: true)),
       );
 
   /// A function that returns the All, Movies and Series columns inside the tabs

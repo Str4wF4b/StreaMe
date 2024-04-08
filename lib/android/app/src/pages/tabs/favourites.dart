@@ -104,11 +104,7 @@ class _FavouritesPageState extends State<FavouritesPage>
   /// tabTitle: The title of the tab (Movie or Series)
   /// tabIndex: The index of the tab (0 or 1)
   Widget favouritesTab(String tabTitle, int tabIndex) => Tab(
-        child: StreaMeTab(
-            tabTitle: tabTitle,
-            tabIndex: tabIndex,
-            tabController: _tabController,
-            isWatchlist: false),
+        child: StreaMeTab(tabTitle: tabTitle, isWatchlist: false),
       );
 
   /// A function that returns the Movies and Series columns inside the tabs
