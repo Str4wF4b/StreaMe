@@ -326,8 +326,7 @@ class _StreamDetailsPageState extends State<StreamDetailsPage>
                             return ExpandText(widget.stream.plot,
                                 style: TextStyle(
                                     color: _color.bodyTextColor,
-                                    fontSize: MediaQuery.textScalerOf(context)
-                                        .scale(16),
+                                    fontSize: MediaQuery.textScalerOf(context).scale(14),
                                     height: _cav.textHeight),
                                 indicatorIcon: Icons.keyboard_arrow_down,
                                 indicatorIconColor: Colors.grey.shade400,

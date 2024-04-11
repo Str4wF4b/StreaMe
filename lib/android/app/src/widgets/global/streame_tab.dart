@@ -18,7 +18,7 @@ class StreaMeTab extends StatelessWidget {
         child: Text(
           tabTitle,
           style: TextStyle(
-            fontSize: MediaQuery.textScalerOf(context).scale(15),
+            fontSize: MediaQuery.textScalerOf(context).scale(12.3965),
           ),
         ),
       ),

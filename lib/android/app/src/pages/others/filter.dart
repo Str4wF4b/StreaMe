@@ -158,50 +158,51 @@ class _FilterPageState extends State<FilterPage> {
   /// label: The initial label of the Dropdown Button Form Field
   /// keyController: The key of the currently used filter
   Center makeFilter(String? selectedValue, List<String> list, String label,
-      GlobalKey keyController) => Center(
-      child: Container(
-        width: 330,
-        padding: const EdgeInsets.only(left: 25.0, right: 25.0),
-        child: DropdownButtonFormField2<String>(
-          key: keyController,
-          isExpanded: true,
-          value: selectedValue,
-          // selected value stands in field
-          items: list.map(buildMenuItem).toList(),
-          // dropdown items
-          dropdownStyleData: DropdownStyleData(
-              decoration: BoxDecoration(
-                  color: _color.middleBackgroundColor,
-                  borderRadius: BorderRadius.circular(20.0)),
-              maxHeight: MediaQuery.textScalerOf(context).scale(202)),
-          onChanged: (value) {
-            setState(() {
-              selectedValue = value
-                  .toString(); // change current value to new selected value inside Dropdown menu
-            });
-          },
-          // Decoration of the Dropdown Button including label and border decorations:
-          decoration: InputDecoration(
-            labelText: label,
-            contentPadding: const EdgeInsets.fromLTRB(20.0, 20.0, 12.0, 20.0),
-            labelStyle: TextStyle(
-                fontWeight: FontWeight.bold,
-                color: Colors.grey.shade400,
-                fontSize: 18),
-            border:
-                OutlineInputBorder(borderRadius: BorderRadius.circular(30.0)),
-            enabledBorder: OutlineInputBorder(
-                borderSide: BorderSide(color: Colors.grey.shade400),
-                borderRadius: BorderRadius.circular(30.0)),
-            focusedBorder: OutlineInputBorder(
-                borderSide: const BorderSide(color: Colors.blueAccent),
-                borderRadius: BorderRadius.circular(30.0)),
-            filled: true,
-            fillColor: Colors.black38,
+          GlobalKey keyController) =>
+      Center(
+        child: Container(
+          width: 330,
+          padding: const EdgeInsets.only(left: 25.0, right: 25.0),
+          child: DropdownButtonFormField2<String>(
+            key: keyController,
+            isExpanded: true,
+            value: selectedValue,
+            // selected value stands in field
+            items: list.map(buildMenuItem).toList(),
+            // dropdown items
+            dropdownStyleData: DropdownStyleData(
+                decoration: BoxDecoration(
+                    color: _color.middleBackgroundColor,
+                    borderRadius: BorderRadius.circular(20.0)),
+                maxHeight: MediaQuery.textScalerOf(context).scale(167)),
+            onChanged: (value) {
+              setState(() {
+                selectedValue = value
+                    .toString(); // change current value to new selected value inside Dropdown menu
+              });
+            },
+            // Decoration of the Dropdown Button including label and border decorations:
+            decoration: InputDecoration(
+              labelText: label,
+              contentPadding: const EdgeInsets.fromLTRB(20.0, 20.0, 12.0, 20.0),
+              labelStyle: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.grey.shade400,
+                  fontSize: 18),
+              border:
+                  OutlineInputBorder(borderRadius: BorderRadius.circular(30.0)),
+              enabledBorder: OutlineInputBorder(
+                  borderSide: BorderSide(color: Colors.grey.shade400),
+                  borderRadius: BorderRadius.circular(30.0)),
+              focusedBorder: OutlineInputBorder(
+                  borderSide: const BorderSide(color: Colors.blueAccent),
+                  borderRadius: BorderRadius.circular(30.0)),
+              filled: true,
+              fillColor: Colors.black38,
+            ),
           ),
         ),
-      ),
-    );
+      );
 
   /// A function that builds the selected item from the Dropdown menu
   /// item: The item selected by the user

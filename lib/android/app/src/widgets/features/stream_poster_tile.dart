@@ -56,7 +56,7 @@ class _StreamPosterTileState extends State<StreamPosterTile> {
               style: TextStyle(
                   color: _color.bodyTextColor,
                   fontWeight: FontWeight.w500,
-                  fontSize: MediaQuery.textScalerOf(context).scale(14),
+                  fontSize: MediaQuery.textScalerOf(context).scale(11.57),
                   height: _cav.textHeight),
               maxLines: 2,
               textAlign: TextAlign.center,

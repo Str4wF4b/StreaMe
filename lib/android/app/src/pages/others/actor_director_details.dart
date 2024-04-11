@@ -151,8 +151,8 @@ class _ActorDirectorDetailsPageState extends State<ActorDirectorDetailsPage>
                         return ExpandText(widget.actorDirector.biography,
                             style: TextStyle(
                                 color: _color.bodyTextColor,
-                                fontSize:
-                                    MediaQuery.textScalerOf(context).scale(16),
+                                fontSize: MediaQuery.textScalerOf(context)
+                                    .scale(13.22),
                                 height: _cav.textHeight),
                             indicatorIcon: Icons.keyboard_arrow_down,
                             indicatorIconColor: Colors.grey.shade400,
